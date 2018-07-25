@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="ppdl_files">
+      <Targets>_ppdl_files</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="ppdl_files"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_ppdl_files"
+    BeforeTargets="$(ppdl_filesBeforeTargets)"
+    AfterTargets="$(ppdl_filesAfterTargets)"
+    Condition="'@(ppdl_files)' != ''"
+    DependsOnTargets="$(ppdl_filesDependsOn);Computeppdl_filesOutput"
+    Outputs="%(ppdl_files.Outputs)"
+    Inputs="%(ppdl_files.Identity);%(ppdl_files.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <ppdl_files
+        Remove="@(ppdl_files)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <ppdl_files_tlog
+        Include="%(ppdl_files.Outputs)"
+        Condition="'%(ppdl_files.Outputs)' != '' and '%(ppdl_files.ExcludedFromBuild)' != 'true'">
+        <Source>@(ppdl_files, '|')</Source>
+      </ppdl_files_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(ppdl_files.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(ppdl_files_tlog)' != '' and '%(ppdl_files_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(ppdl_files_tlog.Source);@(ppdl_files_tlog-&gt;'%(Fullpath)')" />
+    <ppdl_files
+      Condition="'@(ppdl_files)' != '' and '%(ppdl_files.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(ppdl_files.CommandLineTemplate)"
+      AdditionalOptions="%(ppdl_files.AdditionalOptions)"
+      Inputs="%(ppdl_files.Identity)" />
+  </Target>
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            Computeppdl_filesOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            Computeppdl_filesOutput;
+          </ComputeLibInputsTargets>
+  </PropertyGroup>
+  <Target
+    Name="Computeppdl_filesOutput"
+    Condition="'@(ppdl_files)' != ''">
+    <ItemGroup>
+      <ppdl_filesDirsToMake
+        Condition="'@(ppdl_files)' != '' and '%(ppdl_files.ExcludedFromBuild)' != 'true'"
+        Include="%(ppdl_files.Outputs)" />
+      <Link
+        Include="%(ppdl_filesDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(ppdl_filesDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(ppdl_filesDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(ppdl_filesDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>

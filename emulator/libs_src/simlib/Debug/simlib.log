@@ -1,0 +1,8 @@
+﻿Сборка начата 30.09.2015 5:35:56.
+     1>Проект "C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\simlib\simlib.vcxproj" в узле 3 (целевые объекты Rebuild).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.Cpp.Platform.targets(64,5): error MSB8020: The build tools for Visual Studio 2010 (Platform Toolset = 'v100') cannot be found. To build using the v100 build tools, please install Visual Studio 2010 build tools.  Alternatively, you may upgrade to the current Visual Studio tools by selecting the Project menu or right-click the solution, and then selecting "Upgrade Solution...".
+     1>Сборка проекта "C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\simlib\simlib.vcxproj" завершена (целевые объекты Rebuild) с ошибкой.
+
+Ошибка сборки.
+
+Затраченное время: 00:00:00.02

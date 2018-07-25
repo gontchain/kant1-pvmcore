@@ -1,0 +1,46 @@
+# makefile <Dir: lib-dll>
+
+DIR_R_1 = ../..
+DIR_R_2 = ../../..
+DIR_OBJECTS_LIB  = $(DIR_R_2)
+DIR_OBJECTS  = .
+
+PROGNAME = simulator.so
+LIB_NAME = $(PROGNAME)
+
+OBJ_FILES= $(DIR_OBJECTS)/lib_dll_main.o 
+#	$(DIR_OBJECTS)/sim_thread.o
+
+#DIR_ARCH   =$(DIR_R_1)
+#OFILES_ARCH=$(DIR_ARCH)/architectureTest.o
+
+#OBJS_LINK = $(OBJ_FILES) \
+#	    $(OFILES_ARCH)
+OBJS_LINK = $(OBJ_FILES)
+
+
+CC  = g++
+INCLUDE =
+
+DIR_BASE = /home/us/common/Interstron/linux/simulat12
+DIR_HEADERS = include
+INCLUDE_HEADERS = -I$(DIR_BASE)/$(DIR_HEADERS)
+
+FLAG_C = -fPIC
+#	-lc -m486
+#FLAG_C = -fPIC -ggdb -Wall
+FLAG_O = -shared 
+
+.SUFFIXES: .o .cpp
+.cpp.o:
+	$(CC) $(FLAG_C) $(INCLUDE) $(INCLUDE_HEADERS) -c $<
+
+
+$(LIB_NAME): $(OBJS_LINK) $(DIR_ARCH)/architectureTest.o
+	$(CC) $(FLAG_O) $(INCLUDE) $(INCLUDE_HEADERS) -o $@  $(OBJ_FILES) 
+	mv  $(DIR_OBJECTS)/$@  $(DIR_OBJECTS_LIB)/
+
+clean:
+	rm -f $(DIR_OBJECTS)/*~  \
+	rm -f $(DIR_OBJECTS)/*.o \
+	rm -f $(DIR_OBJECTS_LIB)/$(LIB_NAME)

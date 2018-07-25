@@ -1,0 +1,110 @@
+﻿Сборка начата 10.07.2016 16:03:30.
+     1>Проект "C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\simlib\simlib12.vcxproj" в узле 3 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I.\headers /I..\..\headers /I..\..\dbg_interface /Zi /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _LIB /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt sources\device.cpp
+         device.cpp
+     1>c:\dropbox\projects\ppdl_linux\new_core\headers\logger.h(46): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): см. объявление "fopen"
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(693): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(707): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(709): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(712): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(713): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(714): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(723): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(732): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(741): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(744): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(746): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(748): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(750): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(752): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(754): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(756): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(758): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(762): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(764): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(769): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(783): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(857): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(860): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(865): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(881): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(894): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(897): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(900): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(903): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(936): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(970): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(976): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(980): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1030): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1044): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1051): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1054): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1062): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1069): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1076): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1089): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1092): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1097): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1101): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1106): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1111): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1118): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1126): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1134): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1139): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\libelf.h(1146): warning C4290: спецификация исключений C++ игнорируется, кроме случая, когда указывается, что функция не является __declspec(nothrow)
+     1>c:\dropbox\projects\ppdl_linux\new_core\headers\mem_bus.h(143): warning C4005: MYTHIS: изменение макроопределения
+                 c:\dropbox\projects\ppdl_linux\new_core\headers\pd_fifo.h(162): см. предыдущее определение "MYTHIS"
+     1>c:\dropbox\projects\ppdl_linux\new_core\headers\mem_bus.h(199): warning C4005: IS_IN_BLOCK: изменение макроопределения
+                 c:\dropbox\projects\ppdl_linux\new_core\headers\mem_bus.h(87): см. предыдущее определение "IS_IN_BLOCK"
+     1>c:\dropbox\projects\ppdl_linux\new_core\headers\mem_bus.h(200): warning C4005: IS_IN_SPACE: изменение макроопределения
+                 c:\dropbox\projects\ppdl_linux\new_core\headers\mem_bus.h(88): см. предыдущее определение "IS_IN_SPACE"
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\simple_block.h(52): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\simple_block.h(79): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\simple_block.h(80): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): см. объявление "fopen"
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\simple_block.h(111): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>C:\Dropbox\projects\PPDL_LINUX\new_core\headers\simple_block.h(112): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(211): см. объявление "fopen"
+     1>c:\dropbox\projects\ppdl_linux\new_core\headers\stream_txt_funcs.h(34): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+     1>sources\device.cpp(31): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+     1>sources\device.cpp(186): warning C4005: max: изменение макроопределения
+                 C:\Program Files (x86)\Windows Kits\8.1\Include\shared\minwindef.h(193): см. предыдущее определение "max"
+     1>sources\device.cpp(237): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>sources\device.cpp(239): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>sources\device.cpp(244): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>sources\device.cpp(257): warning C4018: <: несоответствие типов со знаком и без знака
+     1>sources\device.cpp(595): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>sources\device.cpp(627): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356): см. объявление "sprintf"
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1354,5): warning MSB8012: TargetPath(C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\simlib\Release\simlib12.lib) does not match the Library's OutputFile property value (C:\Dropbox\projects\PPDL_LINUX\new_core\libs\release\simlib.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1356,5): warning MSB8012: TargetName(simlib12) does not match the Library's OutputFile property value (simlib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"..\..\libs\release\simlib.lib" ..\..\libs\release\libelf.lib MSVCRT.lib /LIBPATH:..\..\libs /NOLOGO /NODEFAULTLIB Release\device.obj
+         Release\sim_dll.obj
+         Release\sim_thread.obj
+         Release\swap_man.obj
+         Release\system.obj
+         Release\system_mc.obj
+         Release\tParseCfg.obj
+     1>sim_dll.obj : warning LNK4006: _DllMain@12 єцх юяЁхфхыхэ т MSVCRT.lib(dllmain.obj); тЄюЁюх юяЁхфхыхэшх яЁюяє∙хэю
+     1>sim_dll.obj : warning LNK4221: ▌ЄюЄ Їрщы юс·хъЄр эх юяЁхфхы хЄ ъръшх-ышсю Ёрэхх эхюяЁхфхыхээ√х юЄъЁ√Є√х ёшьтюы√, яю¤Єюьє юэ эх сєфхЄ шёяюы№чютрЄ№ё  эшъръшьш юяхЁрЎш ьш ъюьяюэютъш, юсЁр∙р■∙шьшё  ъ ¤Єющ сшсышюЄхъх
+         simlib12.vcxproj -> C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\simlib\Release\simlib12.lib
+     1>Сборка проекта "C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\simlib\simlib12.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:03.60

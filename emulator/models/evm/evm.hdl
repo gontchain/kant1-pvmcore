@@ -1,0 +1,191 @@
+
+#define MAIN_TYPE int32
+#define MAIN_TYPE_SIZE 32
+#define EVM_ADDR_TYPE int32
+#define EVM_BALANCE_TYPE int32
+
+#define exit dbg_msg "@"
+
+Device EVM
+{
+  //stack pointer
+  Var int32 sp, "sp";
+  // program couter
+  Reg int32 pc,"pc";
+  Var int1  is_pc_within_inst;
+  // account specific regs
+  Reg EVM_ADDR_TYPE     cur_addr,"cur_addr";
+  Reg EVM_ADDR_TYPE     caller_addr, "caller_addr";  
+  Reg EVM_ADDR_TYPE     origin_addr, "origin_addr";
+
+  // balance specific regs
+  Reg EVM_BALANCE_TYPE  balance;
+  Reg EVM_BALANCE_TYPE  gas_price;  
+   
+  MemSpace prog_bus, 32, 32;
+  MemSpace data_bus, 32, 32;
+  MemSpace storage_bus, 32, 32;
+  
+  MAIN_TYPE GetExp(MAIN_TYPE a,MAIN_TYPE b)
+  {
+    int8 i;
+    MAIN_TYPE res = 1;
+    MAIN_TYPE mul_fact = a;
+
+    for(i = 0; i < MAIN_TYPE_SIZE; i = i+1)
+    {
+       if(b[i] == 1)
+         res = res * mul_fact;
+       mul_fact = mul_fact * mul_fact;
+    }
+    return res;
+  }
+  // pop result from stack
+  MAIN_TYPE Pop(int8 sp_offs)
+  {
+    sp = sp + 1;
+    return data_bus[sp];
+  }
+ // push result to stack
+  void Push(MAIN_TYPE val)
+  {
+    data_bus[sp] = val; 
+    sp = sp - 1;
+  }
+  
+  // extend sign 
+  MAIN_TYPE SignExtend(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    // TODO
+    return 0;
+  }
+  
+  // extract byte from word
+  MAIN_TYPE ByteFromWord(MAIN_TYPE a, MAIN_TYPE b)
+  {
+     int8 start_bit =  (int8)(a*8);
+     int8 end_bit = start_bit + 7;
+     if( a > 0)
+       return b[end_bit:start_bit]; 
+    else
+       return 0;
+  }
+  
+  MAIN_TYPE GetModule(MAIN_TYPE a, MAIN_TYPE mod)
+  {
+    MAIN_TYPE div;
+    if (mod == 0)
+      return 0;
+    else
+    {
+      div = a / mod;
+      return a - (div * mod);
+    }
+  }
+  
+  MAIN_TYPE GetModuleS(MAIN_TYPE a, MAIN_TYPE mod)
+  {
+    MAIN_TYPE div;
+    if (mod == 0)
+      return 0;
+    else
+    {
+      div = (signed)a / (signed)mod;
+      return (signed)a - (signed)(div * mod);
+    }// if(mod == 0) .. else
+  }
+  
+  
+  
+  ArgList MAIN_TYPE ArithmOps(MAIN_TYPE a, MAIN_TYPE b, MAIN_TYPE c),
+  { 
+    // 0
+    "STOP","ADD","MUL","SUB",
+    // 4
+    "DIV","MOD","SMOD","ADDMOD",
+    // 8
+    "MULMOD","EXP","SIGNEXTEND"
+  },
+  {
+    // 0
+    exit, a + b, a * b, a - b,
+    // 4
+    (b == 0) ? 0: a / b,  GetModule(a , b),  GetModuleS(a , b),  GetModule((a + b) , c),
+    // 8
+    GetModule((a  * b) , c), GetExp(a,b), SignExtend(a,b)
+  };
+    
+    
+  ArgList MAIN_TYPE CompareLogOps(MAIN_TYPE a, MAIN_TYPE b),
+  {
+    // 
+    "LT","GT","SLT","SGT",
+    "EQ","IZSERO","AND","OR",
+    "XOR","NOT","BYTE"
+  },
+  {
+    a < b, a > b, (signed)a < (signed)b, (signal)a > (signed)b, 
+    a == b, a == 0, a & b, a | b, 
+    a ^ b , ~a, ByteFromWord(a,b)
+  };   
+    
+   
+  //  instruction set;
+  ISET Main
+  {
+    INST "$opcode",(int4 opcode = ArithmOps,int4 0x0)
+    {
+      MAIN_TYPE a;
+      MAIN_TYPE b;
+      MAIN_TYPE c;
+      MAIN_TYPE res;
+      // get args;
+      a = Pop();
+      b = Pop();
+      c = ( (idx(opcode)== 7) && (idx(opcode) == 8) ) ? Pop() : 0;
+      // compute
+      res = opcode(a,b,c);
+      // push to stack
+      Push(res);   
+    }
+     
+     INST "$opcode", (int4 opcode = CompareLogOps, int4 0x1)
+     {
+        MAIN_TYPE a;
+        MAIN_TYPE b;
+        MAIN_TYPE c;
+        MAIN_TYPE res;
+        // get args;
+        a = Pop();
+        b = ((idx(opcode) == 5) | (idx(opcode) == 9)) ? 0: Pop();
+        // compute
+        res = opcode(a,b);
+        // push to stack
+        Push(res);
+     }
+ 
+      INST32 "SHA3", (int8 0x20)
+      {
+        // compute Keccak-256 hash
+      }
+              
+  }// end of ISET
+   
+   Reset
+   {
+     pc = 0;
+     sp = 0x10000;
+   }
+ 
+  Operate
+  {   
+    // reset flags
+    is_pc_within_inst = 0; 
+    // decode and execute 
+    Main.decode(prog_bus[pc]);
+    // increment pc flag if need
+    if(is_pc_within_inst == 0 )
+      pc = pc + 1;      
+  }
+  
+}

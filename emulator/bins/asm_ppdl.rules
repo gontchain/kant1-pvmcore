@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="New Rule File"
+	Version="8,00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="asm_build"
+			DisplayName="asm_gen"
+			CommandLine="build_hdl.cmd $(InputPath) $(ProjectDir) $(InputName)_asm"
+			Outputs="..\include\$(InputName)_asm.h;..\sources\$(InputName)_asm.cpp"
+			FileExtensions="*.hdl"
+			ExecutionDescription="build assembler"
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

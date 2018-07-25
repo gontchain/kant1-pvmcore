@@ -1,0 +1,1 @@
+%PPDL_DIR%\bins\cemu.exe simulator\bins\%1 %2 

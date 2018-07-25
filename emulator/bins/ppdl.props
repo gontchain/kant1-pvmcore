@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(ppdl_filesBeforeTargets)' == '' and '$(ppdl_filesAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <ppdl_filesBeforeTargets>Midl</ppdl_filesBeforeTargets>
+    <ppdl_filesAfterTargets>CustomBuild</ppdl_filesAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ppdl_filesDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(ppdl_filesDependsOn)</ppdl_filesDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ppdl_files>
+      <CommandLineTemplate>build_hdl.cmd %(FullPath) $(ProjectDir) %(Filename)_sim</CommandLineTemplate>
+      <Outputs>..\include\%(Filename)_sim.h;..\sources\%(Filename)_sim.cpp</Outputs>
+      <ExecutionDescription>Executing tool...</ExecutionDescription>
+    </ppdl_files>
+  </ItemDefinitionGroup>
+</Project>

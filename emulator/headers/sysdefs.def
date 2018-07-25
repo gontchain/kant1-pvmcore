@@ -1,0 +1,26 @@
+LIBRARY      "simulator"
+EXPORTS
+  InitSys
+  InitSysChipMem
+  CheckPostProgram
+  CreateDevice
+  SysDestroy
+  GetNextErrors
+  ProcGetMem
+  ProcSetMem
+  ProcLoadElf
+  ProcGetPc
+  ProcSetPc
+  ProcDisAsm
+  ProcGetReg
+  ProcSetReg
+  ProcSetBreakPoint
+  ProcClearBreakPoint
+  ProcStart
+  ProcStop
+  ProcReset
+  ProcIsRun
+  ProcStepInto
+  ProcGetCellSize
+  FindStackInAbs
+  GetDevCore

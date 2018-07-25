@@ -1,0 +1,31 @@
+﻿Сборка начата 30.09.2015 10:57:30.
+     1>Проект "C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\libelf\project\vs8\libelf12.vcxproj" в узле 3 (целевые объекты Build).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\include /Zi /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _LIB /D NM6403 /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\libelf_vc70.pdb" /Gd /TP /wd4290 /analyze- /errorReport:prompt ..\..\src\libelf.cpp ..\..\src\liblib.cpp
+         libelf.cpp
+     1>..\..\src\libelf.cpp(1000): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(195): см. объявление "strncpy"
+     1>..\..\src\libelf.cpp(1775): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+     1>..\..\src\libelf.cpp(1784): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+     1>..\..\src\libelf.cpp(1794): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+         liblib.cpp
+     1>..\..\src\liblib.cpp(653): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+     1>..\..\src\liblib.cpp(684): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\string.h(112): см. объявление "strcpy"
+     1>..\..\src\liblib.cpp(1106): warning C4244: =: преобразование "time_t" в "Elf32_Word", возможна потеря данных
+         Создание кода...
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1354,5): warning MSB8012: TargetPath(C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\libelf\project\vs8\Release\libelf12.lib) does not match the Library's OutputFile property value (C:\Dropbox\projects\PPDL_LINUX\new_core\libs\release\libelf.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1356,5): warning MSB8012: TargetName(libelf12) does not match the Library's OutputFile property value (libelf). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"..\..\..\..\libs\release\libelf.lib" /NOLOGO /NODEFAULTLIB Release\libelf.obj
+         Release\liblib.obj
+         libelf12.vcxproj -> C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\libelf\project\vs8\Release\libelf12.lib
+     1>Сборка проекта "C:\Dropbox\projects\PPDL_LINUX\new_core\libs_src\libelf\project\vs8\libelf12.vcxproj" завершена (целевые объекты Build).
+
+Сборка успешно завершена.
+
+Затраченное время: 00:00:01.93

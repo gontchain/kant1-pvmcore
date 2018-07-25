@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="New Rule File"
+	Version="8,00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="ppdl-files"
+			DisplayName="ppdl-files"
+			CommandLine="build_hdl.cmd $(InputPath) $(ProjectDir) $(InputName)_sim"
+			Outputs="..\include\$(InputName)_sim.h;..\sources\$(InputName)_sim.cpp"
+			FileExtensions="*.hdl"
+			ExecutionDescription="Executing tool..."
+			>
+			<Properties>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>

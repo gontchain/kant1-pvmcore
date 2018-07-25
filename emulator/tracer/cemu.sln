@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cemu", "cemu.vcproj", "{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_NM|Win32 = Debug_NM|Win32
+		debug_nmsdk|Win32 = debug_nmsdk|Win32
+		Debug|Win32 = Debug|Win32
+		DebugNM_SDK|Win32 = DebugNM_SDK|Win32
+		Release_ru|Win32 = Release_ru|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Debug_NM|Win32.ActiveCfg = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Debug_NM|Win32.Build.0 = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.debug_nmsdk|Win32.ActiveCfg = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.debug_nmsdk|Win32.Build.0 = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Debug|Win32.Build.0 = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.DebugNM_SDK|Win32.ActiveCfg = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.DebugNM_SDK|Win32.Build.0 = Debug|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Release_ru|Win32.ActiveCfg = Release|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Release_ru|Win32.Build.0 = Release|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Release|Win32.ActiveCfg = Release|Win32
+		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
