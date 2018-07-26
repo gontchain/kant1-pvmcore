@@ -1,10 +1,9 @@
 
-#define MAIN_TYPE int32
-#define MAIN_TYPE_SIZE 32
-#define EVM_ADDR_TYPE int32
+#define MAIN_TYPE int256
+#define MAIN_TYPE_SIZE 256
+#define EVM_ADDR_TYPE int160
 #define EVM_BALANCE_TYPE int32
 
-#define exit dbg_msg "@"
 
 Device EVM
 {
@@ -13,18 +12,32 @@ Device EVM
   // program couter
   Reg int32 pc,"pc";
   Var int1  is_pc_within_inst;
+  
   // account specific regs
   Reg EVM_ADDR_TYPE     cur_addr,"cur_addr";
   Reg EVM_ADDR_TYPE     caller_addr, "caller_addr";  
   Reg EVM_ADDR_TYPE     origin_addr, "origin_addr";
-
-  // balance specific regs
-  Reg EVM_BALANCE_TYPE  balance;
-  Reg EVM_BALANCE_TYPE  gas_price;  
-   
+ 
+ // balance specific regs
+  Reg EVM_BALANCE_TYPE  balance, "balance";
+  Reg EVM_BALANCE_TYPE  gas_price, "gas_price";  
+  Reg EVM_BALANCE_TYPE  gas_available, "gas_available";
+  
+  // size of active memory 
+  Reg int32 mem_size; // active memory size (filled outside of simulation)
+  
+  
   MemSpace prog_bus, 32, 32;
+  // memory access  (256 size data bus)
   MemSpace data_bus, 32, 32;
   MemSpace storage_bus, 32, 32;
+  MemSpace log_bus, 32, 32;
+  
+  // log pointer
+  Reg int32 log_ptr, "log_ptr";
+  
+  PCOUNT pc;
+  
   
   MAIN_TYPE GetExp(MAIN_TYPE a,MAIN_TYPE b)
   {
@@ -41,7 +54,7 @@ Device EVM
     return res;
   }
   // pop result from stack
-  MAIN_TYPE Pop(int8 sp_offs)
+  MAIN_TYPE Pop()
   {
     sp = sp + 1;
     return data_bus[sp];
@@ -95,8 +108,14 @@ Device EVM
     }// if(mod == 0) .. else
   }
   
+  MAIN_TYPE Stop()
+  {
+    dbg_msg "@";
+    return (MAIN_TYPE)0;
+  }
+
   
-  
+    
   ArgList MAIN_TYPE ArithmOps(MAIN_TYPE a, MAIN_TYPE b, MAIN_TYPE c),
   { 
     // 0
@@ -108,7 +127,7 @@ Device EVM
   },
   {
     // 0
-    exit, a + b, a * b, a - b,
+    Stop(), a + b, a * b, a - b,
     // 4
     (b == 0) ? 0: a / b,  GetModule(a , b),  GetModuleS(a , b),  GetModule((a + b) , c),
     // 8
@@ -124,16 +143,142 @@ Device EVM
     "XOR","NOT","BYTE"
   },
   {
-    a < b, a > b, (signed)a < (signed)b, (signal)a > (signed)b, 
+    a < b, a > b, (signed)a < (signed)b, (signed)a > (signed)b, 
     a == b, a == 0, a & b, a | b, 
     a ^ b , ~a, ByteFromWord(a,b)
   };   
     
+    
+  ArgList MAIN_TYPE MemOps,
+  {
+    "POP", "MLOAD", "MSTORE", "MSTORE8",
+    "SLOAD","SSTORE", "JUMP","JUMPI", 
+    "PC", "MSIZE","GAS", "JUMPDEST"
+  };
+   
    
   //  instruction set;
   ISET Main
   {
-    INST "$opcode",(int4 opcode = ArithmOps,int4 0x0)
+    
+    INST "PUSH$count", (8,int3 0b011,int5 count)
+    {
+      int32 i;
+      MAIN_TYPE a = 0;
+      is_pc_within_inst = 1;
+      for(i = 0; i < count; i=i+1)
+      {
+        a = a | (((MAIN_TYPE)prog_bus[pc + i + 1]) << (8*i));
+      }
+      Push(a);
+      pc = pc + 1 + count;
+    }
+    
+    INST "DUP$count", (8,int4 0x8,int4 count)
+    {
+      MAIN_TYPE a;
+      a = data_bus[sp  + (count + 1)];
+      Push(a);
+    }
+    
+    
+    INST "SWAP$count", (8,int4 0x9,int4 count)
+    {
+      MAIN_TYPE first_el = data_bus[sp + 1];
+      data_bus[sp + 1] = data_bus[sp + count + 2];
+      data_bus[sp + count + 2] = first_el;
+    }
+    
+    INST "LOG$count", (8,int4 0xa, int1 0, int3 count)
+    {
+      int32 i;
+      MAIN_TYPE l1_data = Pop();
+      MAIN_TYPE l2_data = Pop();
+      log_bus[log_ptr] = l1_data;
+      log_bus[log_ptr + 1] = l2_data;
+
+      // write log data
+      for(i = 0; i < count; i = i + 1)
+      {
+        log_bus[log_ptr + 2 + count] = Pop();
+      }
+      log_ptr = count + 2;
+    }
+    
+    
+    INST "$opcode", (8,int4 opcode = MemOps,int4 0xb0101)
+    {
+      MAIN_TYPE addr_val;
+      MAIN_TYPE data_val;
+      MAIN_TYPE pc_val;
+      
+      switch(opcode)
+      {
+        case 0: 
+          Pop(); 
+          break;
+        
+        case 1: // MLOAD 
+          addr_val = Pop();
+          Push(data_bus[(int32)addr_val]);
+          break;
+          
+        case 2: // MSTORE
+          addr_val = Pop();
+          data_val = Pop();
+          data_bus[addr_val] = data_val;
+          break;
+        
+        case 3: // MSTORE8
+          addr_val = Pop();
+          data_val = Pop() & 0xFF | (data_bus[addr_val] & 0xFFFFFF00);
+          data_bus[addr_val] = data_val;
+          break;
+          
+        case 4: // SLOAD
+          addr_val = Pop();
+          Push(storage_bus[addr_val]);
+          break;
+          
+        case 5: // sstore
+          addr_val = Pop();
+          data_val = Pop();
+          storage_bus[addr_val] = data_val;
+          break;
+
+        case 6: // JUMP 
+          pc = (int32)Pop();
+          is_pc_within_inst = 1;
+          break;
+          
+        case 7: // JUMPI
+          pc_val = (int32)Pop();
+          if(Pop()!=0)
+          {
+            pc = pc_val; // set new pc
+            is_pc_within_inst = 1;
+          }
+          break;
+          
+         case 8: // PC
+           Push(pc); 
+           break;
+           
+         case 9: // MSIZE 
+           Push((MAIN_TYPE)mem_size);
+           break;
+           
+         case 10: // GAS
+           Push((MAIN_TYPE)gas_available);
+           break;
+           
+         case 11: // JUMPDEST
+           break; // do nothing
+      }// end of switch
+      
+    } // end of instruction
+    
+    INST "$opcode",(8,int4 opcode = ArithmOps,int4 0x0)
     {
       MAIN_TYPE a;
       MAIN_TYPE b;
@@ -149,7 +294,7 @@ Device EVM
       Push(res);   
     }
      
-     INST "$opcode", (int4 opcode = CompareLogOps, int4 0x1)
+     INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
      {
         MAIN_TYPE a;
         MAIN_TYPE b;
@@ -157,21 +302,23 @@ Device EVM
         MAIN_TYPE res;
         // get args;
         a = Pop();
-        b = ((idx(opcode) == 5) | (idx(opcode) == 9)) ? 0: Pop();
+        b = ((idx(opcode) == 5) || (idx(opcode) == 9)) ? 0: Pop();
         // compute
         res = opcode(a,b);
         // push to stack
         Push(res);
      }
  
-      INST32 "SHA3", (int8 0x20)
-      {
-        // compute Keccak-256 hash
-      }
+     INST "SHA3", (8,int8 0x20)
+     {
+       // compute Keccak-256 hash
+     }
+      
+      
               
   }// end of ISET
    
-   Reset
+   RESET
    {
      pc = 0;
      sp = 0x10000;
@@ -188,4 +335,3 @@ Device EVM
       pc = pc + 1;      
   }
   
-}
