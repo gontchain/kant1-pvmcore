@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#
+# Copyright (c) 2017 Perov Maxim <coder@frtk.ru>
+#
+
+sudo apt-get update
+sudo apt-get install python3.6
+sudo apt install python3-pip
+sudo pip3 install jsonschema
+sudo pip3 uninstall sha3
+sudo pip3 install pysha3
