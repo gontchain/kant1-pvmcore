@@ -18,20 +18,24 @@ Device EVM
   Reg EVM_ADDR_TYPE     caller_addr, "caller_addr";  
   Reg EVM_ADDR_TYPE     origin_addr, "origin_addr";
  
- // balance specific regs
-  Reg EVM_BALANCE_TYPE  balance, "balance";
   Reg EVM_BALANCE_TYPE  gas_price, "gas_price";  
   Reg EVM_BALANCE_TYPE  gas_available, "gas_available";
   
+  Reg MAIN_TYPE  code_size,"code_size";
+  Reg MAIN_TYPE  ext_code_size,"ext_code_size";
+  Reg MAIN_TYPE inp_data_size,"inp_data_size"; 
   // size of active memory 
   Reg int32 mem_size; // active memory size (filled outside of simulation)
-  
+  // current block
+   
+   
   
   MemSpace prog_bus, 32, 32;
   // memory access  (256 size data bus)
-  MemSpace data_bus, 32, 32;
-  MemSpace storage_bus, 32, 32;
-  MemSpace log_bus, 32, 32;
+  MemSpace data_bus, 32, MAIN_TYPE_SIZE;
+  MemSpace storage_bus, 32, MAIN_TYPE_SIZE;
+  MemSpace log_bus, 32, MAIN_TYPE_SIZE;
+  MemSpace input_data, 32,MAIN_TYPE_SIZE;
   
   // log pointer
   Reg int32 log_ptr, "log_ptr";
@@ -157,9 +161,65 @@ Device EVM
   };
    
    
+  MAIN_TYPE CallValue()
+  {
+    return (MAIN_TYPE)0;
+  }
+  
+  MAIN_TYPE CallDataCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c)
+  {
+    return (MAIN_TYPE)0;
+  }
+  
+  MAIN_TYPE CodeCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c)
+  {
+    /
+    return (MAIN_TYPE)0;
+  }
+   
+  MAIN_TYPE ExtCodeCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c,MAIN_TYPE d)
+  {
+    // copy from prog bus to memory
+    return (MAIN_TYPE)0;
+  }
+   
+   // get balance of gived account
+  MAIN_TYPE GetBalance(MAIN_TYPE a)
+  {
+    return (MAIN_TYPE)0;
+  }  
+   
+   // accounts dataa
+  ArgList MAIN_TYPE AccountsData(),
+  {
+    "ADDRESS", "BALANCE","ORIGIN","CALLER",
+    "CALLVALUE","CALLDATALOAD","CALLDATASIZE","CALLDATACOPY",
+    "CODESIZE","CODECOPY","GASPRICE", "EXTCODESIZE",
+    "EXTCODECOPY"    
+  },
+  {
+    cur_addr,GetBalance(Pop()),origin_addr,caller_addr,
+    CallValue(),input_data[Pop()], inp_data_size,CallDataCopy(Pop(),Pop(),Pop()),
+    code_size, CodeCopy(Pop(),Pop(),Pop()),gas_price,ext_code_size, 
+    ExtCodeCopy(Pop(),Pop(),Pop(),Pop())
+  };
+  
+  
+  
+   
   //  instruction set;
   ISET Main
   {
+    
+    INST "$opcode",(8,int4 0x3,int4 opcode = AccountsData)
+    {
+      MAIN_TYPE res = opcode;
+      if( (idx(opcode)=0x7)  && (idx(opcode)!=9) && (idx(opcode)!=0xc))
+        Push(res);      
+    }
+    
+    
+    
     
     INST "PUSH$count", (8,int3 0b011,int5 count)
     {
