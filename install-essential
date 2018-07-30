@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #
-# Copyright (c) 2017 Perov Maxim <coder@frtk.ru>
+# Copyright (c) 2018 Perov Maxim <coder@frtk.ru>
+#                    Alexander Gerasimov <samik.mechanic@gmail.com>
 #
 
 sudo apt-get update
@@ -10,3 +11,30 @@ sudo apt install python3-pip
 sudo pip3 install jsonschema
 sudo pip3 uninstall sha3
 sudo pip3 install pysha3
+
+if [ ! -d "/opt/systemc" ]; then
+	sudo mkdir -p /opt/systemc
+    echo Getting SystemC...
+    wget -O /tmp/systemc.tar.gz http://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.1a.tar.gz
+    cd /tmp
+    mkdir systemc
+    tar -xzf systemc.tar.gz -C systemc --strip-components=1
+    cd systemc
+    echo Building SystemC...
+    mkdir build
+    cd build
+    export CXX=g++
+    ../configure --prefix=/opt/systemc --with-unix-layout -q
+    make &> /dev/null
+    echo Installing SystemC...
+    sudo make install &> /dev/null
+    echo Cleaning up...
+    cd ../../
+    rm systemc.tar.gz
+    rm -rf systemc/
+    echo SystemC has been installed!
+else
+    echo SystemC is already installed!
+fi
+
+sudo ln -s -f /opt/systemc/lib/libsystemc-2.3.1.so /usr/lib/libsystemc-2.3.1.so
