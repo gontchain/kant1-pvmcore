@@ -1,18 +1,23 @@
 #define DATA_32BITS
 
 #include "ppdl.h"
+#include "evm_sim.h"
 
 #define BLOCK_SIZE 1024*512 // 512 килобайт памяти
 #define IMEM_WS 1
 
 
-typedef tSimpleMemBlock<uint32,uint32,uint8> TSimpleMem;
+EVM *new_evm;
 
-TSimpleMem *mb1, *mb2, *mb3, *mb4;
+typedef tSimpleMemBlock<uint32, uint32, uint8> TProgMem;
+typedef tSimpleMemBlock<uint32, uint256, uint256> TDataMem;
 
-TMemBus<uint32,uint32> *p_bus,*d_bus;
+TProgMem* prog_mem;
+TDataMem* data_mem;
+TDataMem* storage_mem;
+TDataMem* log_mem;
 
-RiscV *my_risc;
+
 
 void* Init(void* mParams)
 {
@@ -21,38 +26,27 @@ void* Init(void* mParams)
   unsigned int peripherals;  
   int is_log_mem;
 
-  if (mParams == NULL)
-  {
-	  is_log_mem = 0;
-  }
-  else
-  {
-	  ChipMem * pm_ChipMem = (ChipMem*)mParams;// support specific memory config
-	  is_log_mem = (pm_ChipMem->m_Flags >> 28) & 1;
-  }
+  prog_mem = new TProgMem(BLOCK_SIZE,IMEM_WS);
+  data_mem = new TDataMem(BLOCK_SIZE,IMEM_WS);
+  storage_mem = new TDataMem(BLOCK_SIZE,IMEM_WS);
+  log_mem = new TDataMem(BLOCK_SIZE,IMEM_WS);
 
-  // создаем банк памяти размером 128к
-  mb1 = new TSimpleMem(BLOCK_SIZE,IMEM_WS);
-  mb2 = new TSimpleMem(BLOCK_SIZE,IMEM_WS);
-  mb3 = new TSimpleMem(BLOCK_SIZE,IMEM_WS);
-  mb4 = new TSimpleMem(BLOCK_SIZE,IMEM_WS);
-  // создаем шины памяти
-  p_bus = new TMemBus<uint32,uint32>(1,is_log_mem);  
-  // подключаем память к шинам по адресу 0
-  p_bus->Link(mb1, 0,BLOCK_SIZE);
-  //p_bus->Link(mb2, 0x80000000 - BLOCK_SIZE, BLOCK_SIZE);
-  p_bus->Link(mb3, 0x80000000, BLOCK_SIZE);
- // p_bus->Link(mb4, 0xFFFFFFFF - BLOCK_SIZE, BLOCK_SIZE);
-  p_bus->ClearMem();
-  return NULL//(void*)my_risc;
+  new_evm = new EVM("evm1");
+
+  new_evm->prog_bus = prog_mem;
+  new_evm->data_bus = data_mem;
+  new_evm->storage_bus = storage_mem;
+  new_evm->log_bus = log_mem;
+
+  return (void*)new_evm;
 }
 
 void Destroy()
 {
-	delete mb1;
-	delete mb2;
-	delete mb3;
-	delete mb4;
+	delete prog_mem;
+	delete data_mem;
+	delete storage_mem;
+	delete log_mem;
 }
 
 LIB_EXPORT void CheckPostProgram()
