@@ -1,0 +1,156 @@
+struct JITSchedule
+{
+	// TODO: Move to constexpr once all our target compilers support it.
+	typedef std::integral_constant<uint64_t, 1024> stackLimit;
+	typedef std::integral_constant<uint64_t, 0> stepGas0;
+	typedef std::integral_constant<uint64_t, 2> stepGas1;
+	typedef std::integral_constant<uint64_t, 3> stepGas2;
+	typedef std::integral_constant<uint64_t, 5> stepGas3;
+	typedef std::integral_constant<uint64_t, 8> stepGas4;
+	typedef std::integral_constant<uint64_t, 10> stepGas5;
+	typedef std::integral_constant<uint64_t, 20> stepGas6;
+	typedef std::integral_constant<uint64_t, 0> stepGas7;
+	typedef std::integral_constant<uint64_t, 10> expByteGas;
+	typedef std::integral_constant<uint64_t, 30> sha3Gas;
+	typedef std::integral_constant<uint64_t, 6> sha3WordGas;
+	typedef std::integral_constant<uint64_t, 50> sloadGas;
+	typedef std::integral_constant<uint64_t, 20000> sstoreSetGas;
+	typedef std::integral_constant<uint64_t, 5000> sstoreResetGas;
+	typedef std::integral_constant<uint64_t, 5000> sstoreClearGas;
+	typedef std::integral_constant<uint64_t, 1> jumpdestGas;
+	typedef std::integral_constant<uint64_t, 375> logGas;
+	typedef std::integral_constant<uint64_t, 8> logDataGas;
+	typedef std::integral_constant<uint64_t, 375> logTopicGas;
+	typedef std::integral_constant<uint64_t, 32000> createGas;
+	typedef std::integral_constant<uint64_t, 40> callGas;
+	typedef std::integral_constant<uint64_t, 3> memoryGas;
+	typedef std::integral_constant<uint64_t, 3> copyGas;
+	typedef std::integral_constant<uint64_t, 9000> valueTransferGas;
+	typedef std::integral_constant<uint64_t, 2300> callStipend;
+	typedef std::integral_constant<uint64_t, 25000> callNewAccount;
+};
+
+int64_t GasMeter::getStepCost(Instruction inst) const
+{
+	switch (inst)
+	{
+	// Tier 0
+	case Instruction::STOP:
+	case Instruction::RETURN:
+	case Instruction::REVERT:
+	case Instruction::SSTORE: // Handle cost of SSTORE separately in GasMeter::countSStore()
+		return JITSchedule::stepGas0::value;
+
+	// Tier 1
+	case Instruction::ADDRESS:
+	case Instruction::ORIGIN:
+	case Instruction::CALLER:
+	case Instruction::CALLVALUE:
+	case Instruction::CALLDATASIZE:
+	case Instruction::RETURNDATASIZE:
+	case Instruction::CODESIZE:
+	case Instruction::GASPRICE:
+	case Instruction::COINBASE:
+	case Instruction::TIMESTAMP:
+	case Instruction::NUMBER:
+	case Instruction::DIFFICULTY:
+	case Instruction::GASLIMIT:
+	case Instruction::POP:
+	case Instruction::PC:
+	case Instruction::MSIZE:
+	case Instruction::GAS:
+		return JITSchedule::stepGas1::value;
+
+	// Tier 2
+	case Instruction::ADD:
+	case Instruction::SUB:
+	case Instruction::LT:
+	case Instruction::GT:
+	case Instruction::SLT:
+	case Instruction::SGT:
+	case Instruction::EQ:
+	case Instruction::ISZERO:
+	case Instruction::AND:
+	case Instruction::OR:
+	case Instruction::XOR:
+	case Instruction::NOT:
+	case Instruction::BYTE:
+	case Instruction::CALLDATALOAD:
+	case Instruction::CALLDATACOPY:
+	case Instruction::RETURNDATACOPY:
+	case Instruction::CODECOPY:
+	case Instruction::MLOAD:
+	case Instruction::MSTORE:
+	case Instruction::MSTORE8:
+	case Instruction::ANY_PUSH:
+	case Instruction::ANY_DUP:
+	case Instruction::ANY_SWAP:
+		return JITSchedule::stepGas2::value;
+
+	// Tier 3
+	case Instruction::MUL:
+	case Instruction::DIV:
+	case Instruction::SDIV:
+	case Instruction::MOD:
+	case Instruction::SMOD:
+	case Instruction::SIGNEXTEND:
+		return JITSchedule::stepGas3::value;
+
+	// Tier 4
+	case Instruction::ADDMOD:
+	case Instruction::MULMOD:
+	case Instruction::JUMP:
+		return JITSchedule::stepGas4::value;
+
+	// Tier 5
+	case Instruction::EXP:
+	case Instruction::JUMPI:
+		return JITSchedule::stepGas5::value;
+
+	// Tier 6
+	case Instruction::BALANCE:
+		return m_rev >= EVMC_TANGERINE_WHISTLE ? 400 : JITSchedule::stepGas6::value;
+
+	case Instruction::EXTCODESIZE:
+	case Instruction::EXTCODECOPY:
+		return m_rev >= EVMC_TANGERINE_WHISTLE ? 700 : JITSchedule::stepGas6::value;
+
+	case Instruction::BLOCKHASH:
+		return m_rev >= EVMC_CONSTANTINOPLE ? 800 : JITSchedule::stepGas6::value;
+
+	case Instruction::SHA3:
+		return JITSchedule::sha3Gas::value;
+
+	case Instruction::SLOAD:
+		return m_rev >= EVMC_TANGERINE_WHISTLE ? 200 : JITSchedule::sloadGas::value;
+
+	case Instruction::JUMPDEST:
+		return JITSchedule::jumpdestGas::value;
+
+	case Instruction::LOG0:
+	case Instruction::LOG1:
+	case Instruction::LOG2:
+	case Instruction::LOG3:
+	case Instruction::LOG4:
+	{
+		auto numTopics = static_cast<int64_t>(inst) - static_cast<int64_t>(Instruction::LOG0);
+		return JITSchedule::logGas::value + numTopics * JITSchedule::logTopicGas::value;
+	}
+
+	case Instruction::CALL:
+	case Instruction::CALLCODE:
+	case Instruction::DELEGATECALL:
+	case Instruction::STATICCALL:
+		return m_rev >= EVMC_TANGERINE_WHISTLE ? 700 : JITSchedule::callGas::value;
+
+	case Instruction::CREATE:
+		return JITSchedule::createGas::value;
+
+	case Instruction::SUICIDE:
+		return m_rev >= EVMC_TANGERINE_WHISTLE ? 5000 : JITSchedule::stepGas0::value;
+
+	default:
+		// For invalid instruction just return 0.
+		return 0;
+	}
+}
