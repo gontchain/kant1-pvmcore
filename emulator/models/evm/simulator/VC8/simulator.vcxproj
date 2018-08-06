@@ -16,10 +16,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\architecture.cpp" />
-    <ClCompile Include="..\risc_sim.cpp" />
+    <ClCompile Include="..\evm_sim.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\risc_sim.h" />
+    <ClInclude Include="..\evm_sim.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{66F2B4D0-306C-412E-8852-6CF29CEA13F9}</ProjectGuid>
