@@ -60,8 +60,11 @@ Device EVM
   // pop result from stack
   MAIN_TYPE Pop()
   {
+    MAIN_TYPE ret;
+    int32 sp_tmp = sp;
     sp = sp + 1;
-    return data_bus[sp];
+    ret = data_bus[sp_tmp];
+    return ret;
   }
  // push result to stack
   void Push(MAIN_TYPE val)
@@ -80,8 +83,8 @@ Device EVM
   // extract byte from word
   MAIN_TYPE ByteFromWord(MAIN_TYPE a, MAIN_TYPE b)
   {
-     int8 start_bit =  (int8)(a*8);
-     int8 end_bit = start_bit + 7;
+     int32 start_bit =  0;// uncomment!((int32)a*8);
+     int32 end_bit = start_bit + 7;
      if( a > 0)
        return b[end_bit:start_bit]; 
     else
@@ -112,12 +115,19 @@ Device EVM
     }// if(mod == 0) .. else
   }
   
-  MAIN_TYPE Stop()
+  MAIN_TYPE StopExec()
   {
     dbg_msg "@";
     return (MAIN_TYPE)0;
   }
 
+  MAIN_TYPE DivOp(MAIN_TYPE a,MAIN_TYPE b)
+  {
+    if (b == 0)
+      return 0;
+    else 
+      return a / b ;
+  }
   
     
   ArgList MAIN_TYPE ArithmOps(MAIN_TYPE a, MAIN_TYPE b, MAIN_TYPE c),
@@ -131,9 +141,9 @@ Device EVM
   },
   {
     // 0
-    Stop(), a + b, a * b, a - b,
+    StopExec(), a + b, a * b, a - b,
     // 4
-    (b == 0) ? 0: a / b,  GetModule(a , b),  GetModuleS(a , b),  GetModule((a + b) , c),
+    DivOp(a , b),  GetModule(a , b),  GetModuleS(a , b),  GetModule((a + b) , c),
     // 8
     GetModule((a  * b) , c), GetExp(a,b), SignExtend(a,b)
   };
@@ -153,7 +163,7 @@ Device EVM
   };   
     
     
-  ArgList MAIN_TYPE MemOps,
+  ArgList int32 MemOps,
   {
     "POP", "MLOAD", "MSTORE", "MSTORE8",
     "SLOAD","SSTORE", "JUMP","JUMPI", 
@@ -189,6 +199,13 @@ Device EVM
     return (MAIN_TYPE)0;
   }  
    
+   MAIN_TYPE GetInputData()
+   {
+     // must be addr_val = Pop()
+     int32 addr_val = 0; Pop();
+     MAIN_TYPE inp_data = input_data[addr_val];
+     return inp_data;
+   }
    // accounts dataa
   ArgList MAIN_TYPE AccountsData(),
   {
@@ -199,13 +216,10 @@ Device EVM
   },
   {
     cur_addr,GetBalance(Pop()),origin_addr,caller_addr,
-    CallValue(),input_data[Pop()], inp_data_size,CallDataCopy(Pop(),Pop(),Pop()),
+    CallValue(),GetInputData(), inp_data_size,CallDataCopy(Pop(),Pop(),Pop()),
     code_size, CodeCopy(Pop(),Pop(),Pop()),gas_price,ext_code_size, 
     ExtCodeCopy(Pop(),Pop(),Pop(),Pop())
   };
-  
-  
-  
    
   //  instruction set;
   ISET Main
@@ -218,17 +232,17 @@ Device EVM
         Push(res);      
     }
     
-    
-    
-    
+        
     INST "PUSH$count", (8,int3 0b011,int5 count)
     {
       int32 i;
       MAIN_TYPE a = 0;
+      MAIN_TYPE tmp;
       is_pc_within_inst = 1;
       for(i = 0; i < count; i=i+1)
       {
-        a = a | (((MAIN_TYPE)prog_bus[pc + i + 1]) << (8*i));
+        tmp = prog_bus[pc + i + 1] & 0xFF;
+        a = a | (tmp << (8*i));
       }
       Push(a);
       pc = pc + 1 + count;
@@ -268,64 +282,66 @@ Device EVM
     
     INST "$opcode", (8,int4 opcode = MemOps,int4 0xb0101)
     {
-      MAIN_TYPE addr_val;
+      int32 addr_val;
       MAIN_TYPE data_val;
       MAIN_TYPE pc_val;
       
-      switch(opcode)
+      if(opcode < 8) {
+        addr_val = 0; /*(int32)*/Pop();
+      }
+      switch((int32)opcode)
       {
         case 0: 
           Pop(); 
           break;
         
         case 1: // MLOAD 
-          addr_val = Pop();
-          Push(data_bus[(int32)addr_val]);
+          data_val = data_bus[addr_val];
+          Push(data_val);
           break;
           
         case 2: // MSTORE
-          addr_val = Pop();
           data_val = Pop();
           data_bus[addr_val] = data_val;
           break;
         
-        case 3: // MSTORE8
-          addr_val = Pop();
-          data_val = Pop() & 0xFF | (data_bus[addr_val] & 0xFFFFFF00);
+        case 3: // MSTORE8 
+          data_val = data_bus[addr_val];
+          data_val = Pop() & 0xFF | (data_val & 0xFFFFFF00);
           data_bus[addr_val] = data_val;
           break;
           
         case 4: // SLOAD
-          addr_val = Pop();
-          Push(storage_bus[addr_val]);
+          data_val = storage_bus[addr_val]; 
+          Push(data_val);
           break;
           
         case 5: // sstore
-          addr_val = Pop();
           data_val = Pop();
           storage_bus[addr_val] = data_val;
           break;
 
         case 6: // JUMP 
-          pc = (int32)Pop();
+          pc = addr_val;
           is_pc_within_inst = 1;
           break;
           
         case 7: // JUMPI
-          pc_val = (int32)Pop();
-          if(Pop()!=0)
+          if(Pop()!=0) // get condition
           {
-            pc = pc_val; // set new pc
+            pc = (int32)addr_val; // set new pc
             is_pc_within_inst = 1;
           }
           break;
           
          case 8: // PC
-           Push(pc); 
+           data_val = (MAIN_TYPE)pc; 
+           Push(data_val); 
            break;
            
          case 9: // MSIZE 
-           Push((MAIN_TYPE)mem_size);
+           data_val  = (MAIN_TYPE)mem_size;
+           Push(data_val);
            break;
            
          case 10: // GAS
@@ -386,10 +402,11 @@ Device EVM
  
   Operate
   {   
+    int8 code = prog_bus[pc];
     // reset flags
     is_pc_within_inst = 0; 
     // decode and execute 
-    Main.decode(prog_bus[pc]);
+    Main.decode(code);
     // increment pc flag if need
     if(is_pc_within_inst == 0 )
       pc = pc + 1;      
