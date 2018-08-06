@@ -274,7 +274,7 @@ public:
 
 typedef pd_signal<IrqType> IrqSignal;
 typedef pd_port<IrqType> IrqPort;
-
+/*
 inline uint64 pd_lsh(uint64 aVal,int aOffs)
 {
   if(aOffs >= 64  ) 
@@ -282,6 +282,17 @@ inline uint64 pd_lsh(uint64 aVal,int aOffs)
   else
     return aVal << aOffs;
 }
+*/
+
+
+template<class type_op> inline type_op pd_lsh(type_op aVal, int aOffs)
+{
+  if (aOffs >= 64)
+    return 0;
+  else
+    return aVal << aOffs;
+}
+
 
 inline uint64 pd_rsh(uint64 aVal,int aOffs)
 {
