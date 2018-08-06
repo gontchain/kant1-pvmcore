@@ -83,7 +83,7 @@ Device EVM
   // extract byte from word
   MAIN_TYPE ByteFromWord(MAIN_TYPE a, MAIN_TYPE b)
   {
-     int32 start_bit =  0;// uncomment!((int32)a*8);
+     int32 start_bit = ((int32)a*8);
      int32 end_bit = start_bit + 7;
      if( a > 0)
        return b[end_bit:start_bit]; 
@@ -201,8 +201,7 @@ Device EVM
    
    MAIN_TYPE GetInputData()
    {
-     // must be addr_val = Pop()
-     int32 addr_val = 0; Pop();
+     int32 addr_val = (int32)Pop();
      MAIN_TYPE inp_data = input_data[addr_val];
      return inp_data;
    }
@@ -286,9 +285,8 @@ Device EVM
       MAIN_TYPE data_val;
       MAIN_TYPE pc_val;
       
-      if(opcode < 8) {
-        addr_val = 0; /*(int32)*/Pop();
-      }
+      if(opcode < 8) 
+        addr_val = (int32)Pop();
       switch((int32)opcode)
       {
         case 0: 
