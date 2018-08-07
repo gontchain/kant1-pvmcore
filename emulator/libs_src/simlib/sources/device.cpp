@@ -232,23 +232,12 @@ int TDevice::DisAssembly(char *aStr,int aBusNum,int aAddr,int aSize)
     try
     {
       int offs_size;   // instruction offset
-      uint64 opcode;   // instruction opcode
+      uint32 opcode;   // instruction opcode
       // disassembly an instruction, read a bytes size into a variable offset size
       char *istr = (char*)this->disasm(iptr,offs_size);
       // read opcode and increment counter
-      if(offs_size==4)
-      {
-        // offset instruction in bytes
-        opcode = *((uint32*)iptr);
-        sptr+=sprintf(sptr,"%08X",aAddr);
-        for(int ii=0;ii<10;ii++) *sptr++ = ' ';
-        sptr+=sprintf(sptr,"%08X\n%s\n",LO_WRD(opcode),istr);
-      }
-      else
-      {
-        opcode = *((uint64*)iptr);
-        sptr+=sprintf(sptr,"%08X %08X %08X\n%s\n",aAddr,HI_WRD(opcode),LO_WRD(opcode),istr);
-      }
+      opcode = (uint32)*((uint8*)iptr);
+      sptr+=sprintf(sptr,"%08X %02X\n%s\n",aAddr,LO_WRD(opcode),istr);
       // output disassembly string
       // increment address of the variable
       aAddr+= offs_size / cell_size;
