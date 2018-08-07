@@ -36,11 +36,12 @@ void* Init(void* mParams)
   new_evm = new EVM("evm1");
 
   new_evm->prog_bus = prog_mem;
-  new_evm->data_bus = data_mem;
+/*  new_evm->data_bus = data_mem;
   new_evm->storage_bus = storage_mem;
   new_evm->log_bus = log_mem;
   new_evm->input_data = input_mem;
-  return (void*)new_evm;
+  */
+return (void*)new_evm;
 }
 
 void Destroy()

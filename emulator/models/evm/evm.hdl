@@ -4,6 +4,10 @@
 #define EVM_ADDR_TYPE int160
 #define EVM_BALANCE_TYPE int32
 
+#define DATA_SIZE 1024
+#define STORAGE_SIZE 256
+#define LOG_AREA_SIZE 1024
+#define INPUT_DATA_SIZE 1024
 
 Device EVM
 {
@@ -23,7 +27,7 @@ Device EVM
   
   Reg MAIN_TYPE  code_size,"code_size";
   Reg MAIN_TYPE  ext_code_size,"ext_code_size";
-  Reg MAIN_TYPE inp_data_size,"inp_data_size"; 
+  Reg MAIN_TYPE  inp_data_size,"inp_data_size"; 
   // size of active memory 
   Reg int32 mem_size; // active memory size (filled outside of simulation)
   // current block
@@ -32,10 +36,15 @@ Device EVM
   
   MemSpace prog_bus, 32, 32;
   // memory access  (256 size data bus)
-  MemSpace data_bus, 32, MAIN_TYPE_SIZE;
+  /*MemSpace data_bus, 32, MAIN_TYPE_SIZE;
   MemSpace storage_bus, 32, MAIN_TYPE_SIZE;
   MemSpace log_bus, 32, MAIN_TYPE_SIZE;
   MemSpace input_data, 32,MAIN_TYPE_SIZE;
+  */
+  Reg MAIN_TYPE data_bus[DATA_SIZE];
+  Reg MAIN_TYPE storage_bus[STORAGE_SIZE];
+  Reg MAIN_TYPE input_data[INPUT_DATA_SIZE];
+  Reg MAIN_TYPE log_bus[LOG_AREA_SIZE];
   
   // log pointer
   Reg int32 log_ptr, "log_ptr";
@@ -232,7 +241,7 @@ Device EVM
     }
     
         
-    INST "PUSH$count", (8,int3 0b011,int5 count)
+    INST "PUSH$count", (8,int5 count,int3 0b011)
     {
       int32 i;
       MAIN_TYPE a = 0;
@@ -247,7 +256,7 @@ Device EVM
       pc = pc + 1 + count;
     }
     
-    INST "DUP$count", (8,int4 0x8,int4 count)
+    INST "DUP$count", (8,int4 count,int4 0x8)
     {
       MAIN_TYPE a;
       a = data_bus[sp  + (count + 1)];
@@ -255,14 +264,14 @@ Device EVM
     }
     
     
-    INST "SWAP$count", (8,int4 0x9,int4 count)
+    INST "SWAP$count", (8,int4 count,int4 0x9)
     {
       MAIN_TYPE first_el = data_bus[sp + 1];
       data_bus[sp + 1] = data_bus[sp + count + 2];
       data_bus[sp + count + 2] = first_el;
     }
     
-    INST "LOG$count", (8,int4 0xa, int1 0, int3 count)
+    INST "LOG$count", (8, int3 count,int4 0xa, int1 0)
     {
       int32 i;
       MAIN_TYPE l1_data = Pop();
@@ -395,7 +404,7 @@ Device EVM
    RESET
    {
      pc = 0;
-     sp = 0x10000;
+     sp = DATA_SIZE;
    }
  
   Operate
