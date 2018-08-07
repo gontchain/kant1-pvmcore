@@ -774,7 +774,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 			}while(cur_pc==tmp_pc);
 		
 			PRINT_LOG("check regs\n")
-	
+        printf("\n");
 		//	if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
 			upregs[0] = 0; 
 
