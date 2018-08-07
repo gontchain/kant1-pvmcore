@@ -402,179 +402,40 @@ tDisAsmArea* TDevice::LoadDibFile(const char* aDibFileName)
 // load ELF file
 tDisAsmArea* TDevice::LoadElf(char* aElfFileName)
 {
-//  ELF_FILE *elf_file;
-  ELF* tmp_elf_var = NULL;
-  ELF* aElfFile;
- 
-  // clear memory before the start
-
-  
-#define MIN_ADDRESSED_SEL 4 // this value is processor-dependent
-
+  FILE *fin;
   try
   {
-    this->Reset();
-    
-    int file_name_size = strlen(aElfFileName);
-    if(!strcmp(aElfFileName +(file_name_size - 4),".dvi"))
-      return LoadDibFile(aElfFileName);
-
-    try
-    {
-      if(ELFLOG) printf("start load elf file %s\n",aElfFileName);
-      aElfFile = new ELF(aElfFileName,ELF_C_READ);
-      if(aElfFile==NULL)
-      {
-        printf("file %s open error\n",aElfFileName);
-        return NULL;
-      }
-    }
-    catch(...)
-    {
-      printf("error while opening file %s,wrong abs file\n",aElfFileName);
-      return 0;
-    }
-    tmp_elf_var = aElfFile;
-
-    uint32 start_addr = 0;                 // start from the address
-    uint32 init_pos = 0;
-    uint32 cell_size = 1;
-    ELF_SCN  *csect;
-
-    if(ELFLOG) printf("try to get elf section %s\n",aElfFileName);
-    try
-    {
-		csect = aElfFile->GetScn((Elf32_Word)0); // get first section
-    }
-    catch(ELF_ERROR& elf_error)
-    {
-
-      printf("error while getting  section 0\n");
-      std::cout << elf_error <<"\n";
-      return 0;
-    }
-   
-    
-    // symbol table
-    Elf32_Sym *symb_table = NULL;
-    uint32  symb_table_size = 0;
-    uint32  named_symbols = 0;
-    // reset processor
-    if(ELFLOG) printf("reset device %s\n",aElfFileName);
-    this->ResetDevice();
-    // clear memory before the start
-
-    // clear all previouse breakpoints
-    if(ELFLOG) printf("reset device %s\n",aElfFileName);
-    while(this->fbp!=NULL)
-    {
-      tBPoint* bp = this->fbp;
-      this->fbp = bp->	next;
-      delete bp;
-    }
-
-    this->mArea.mStartAddr = (uint32)(-1);
-    this->mArea.mSize      = 0;
-
-    while(csect!=NULL)// walt throw the sections and load data if need
-    {
-      // process current section
-        Elf32_Shdr *shdr = csect->GetShdr();
-        char* sect_name  = csect->GetName();
- 	if(ELFLOG) printf("start load section %s\n",sect_name);
-
-  	try
-        {
-          // load section into the memory (if need
-          ELF_DATA   *data;
-          int         size;
-          //
-          if((shdr->sh_flags&(SHF_WRITE|SHF_ALLOC|SHF_EXECINSTR))&&(shdr->sh_type!=SHT_NOBITS))
-          {
-            if(!this->LoadSection(csect, shdr->sh_addr))
-            {
-  	          printf("error section %s,can't load section\n",sect_name);
-	        	  return 0;
-	          }
-            if(this->mArea.mStartAddr > shdr->sh_addr)
-              this->mArea.mStartAddr = shdr->sh_addr;
-            this->mArea.mSize += shdr->sh_size / this->GetCellSize(0,shdr->sh_addr);
-          }
-          else
-          {
-            char *name = csect->GetName();
-            if((name!=NULL)&&(!strcmp(csect->GetName(),".stack")))
-            {
-              StackStartArea =  shdr->sh_addr;
-              StackEndArea  = shdr->sh_addr + (shdr->sh_size/ MIN_ADDRESSED_SEL);
-            }
-          }
-          csect = aElfFile->NextScn(csect);
-        }
-        catch(...)
-        {
-          printf("error section %s,can't load section\n",sect_name);
-          return 0;
-        }
-    }// end while
-
-    // set start program counter
-    Elf32_Ehdr*  ehdr;
-    try
-    {
-      if(ELFLOG) printf("start set pc \n");
-
-      ehdr = aElfFile->GetEhdr();
-#if 0
-//      this->SetPc(0x00010000);
-      this->SetPc(0x80000000);
-#else
-      this->SetPc(ehdr->e_entry);
-#endif
- //     this->SetBreakPoint(ehdr->e_entry + PC_START_OFFSET);
-      if(ELFLOG) printf("pc set \n");
-    }
-    catch(...)
-    {
-      printf("error getting the ABS header, header is wrong\n");         
-      return 0;
-    }
-
-    if(ELFLOG) printf("try to get cell size \n");
-    cell_size = this->GetCellSize(0,this->mArea.mStartAddr);
-    init_pos = ehdr->e_entry * cell_size;
-
-
-    if((signed)init_pos - (signed)(DECODE_DELTA*cell_size) >=0)
-    {
-      this->mArea.mStartAddr = ehdr->e_entry - DECODE_DELTA;
-      for(;mArea.mStartAddr < ehdr->e_entry;mArea.mStartAddr+=1)
-      {
-        if(this->GetCellSize(0,mArea.mStartAddr)!=0)
-          break;
-      }
-      this->mArea.mSize = DECODE_DELTA*cell_size*2;
-    }
-    else
-    {
-      this->mArea.mStartAddr = 0;
-      this->mArea.mSize = init_pos + DECODE_DELTA*cell_size*2;
-    }
-    // correct size
-    // this->mArea.mSize = this->mArea.mSize * this->GetCellSize(0,this->mArea.mStartAddr);
-    if(ELFLOG) printf("delete elf file class \n");
-	
-    delete aElfFile;
+	  // reset 
+	  this->Reset();
+	  int size = 0;
+	  char ibuf[3]; ibuf[2] = 0;
+	  // try to open
+	  fin = fopen(aElfFileName, "rt");
+	  if (fin == NULL)
+	  {
+		  printf("error: can't open contract %S\n", aElfFileName);
+		  this->mArea.mSize = 0;
+		  return &(this->mArea);
+	  }
+	  // read file
+	  while (!feof(fin)) // file read loop
+	  { 
+		  char value;
+		  fread(ibuf, 1, 2, fin);
+		  value = GetHex<char>(ibuf);
+		  this->SetMem(&value,1, size, 1);
+		  size++;
+	  }
+	  this->mArea.mStartAddr = 0;
+	  this->mArea.mEndPoint = size;
+	  this->mArea.mSize = size;
+  }
+  catch(...)
+  {
+    printf("error while reading file %s,wrong executable\n",aElfFileName);
     this->mCycles = 0;
     this->IsLocked = 0;
     return (&this->mArea);
-  }
-  catch(.../*exception &exc*/)
-  {  
-    printf("error elf read\n");		  
-    if(tmp_elf_var!=NULL)
-      delete tmp_elf_var;
-    return 0;
   }
   return (&this->mArea);
 }
@@ -623,7 +484,7 @@ int TDevice::GetSectAddr(char* aElfFileName,uint32& aStart,uint32& aEnd,char* aS
           if((name!=NULL)&&(!strcmp(csect->GetName(),aSectName)))
           {
             aStart =  shdr->sh_addr;
-            aEnd = shdr->sh_addr + (shdr->sh_size/ MIN_ADDRESSED_SEL);           
+            aEnd = shdr->sh_addr + (shdr->sh_size/ 1);           
             delete aElfFile;
             return 1;
           }

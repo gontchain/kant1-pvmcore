@@ -69,7 +69,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;NM6403;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader />
       <ProgramDataBaseFileName>$(IntDir)libdwarf_vc70.pdb</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>

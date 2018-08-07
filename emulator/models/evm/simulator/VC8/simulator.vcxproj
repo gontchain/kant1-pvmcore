@@ -98,9 +98,9 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
     <Link>
-      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/FORCE:MULTIPLE /NODEFAULTLIB:MSCVRT /NODEFAULTLIB:LIBCMT %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>..\..\..\..\libs\simlib.lib;..\..\..\..\libs\libelf.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>..\bins\risc_core.dll</OutputFile>
+      <OutputFile>..\bins\evm.dll</OutputFile>
       <ModuleDefinitionFile>..\..\..\..\headers\sysdefs.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

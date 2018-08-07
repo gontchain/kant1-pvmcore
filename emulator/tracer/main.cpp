@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <iostream>
-#include "exe_loader.h"
 
 
 #define PRINT_LOG(msg) //printf(msg);
@@ -687,27 +686,21 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	unsigned long st, end;
 	int ElfFileNumber = -1;
 	char upregs[2048];//здесь имена регистров изменивших значение 
-	tDisAsmDbgArea* elf_res;
+	tDisAsmArea* elf_res;
 	uint32 cur_pc;
   
-  TLoadStruct lstr;
 
 	printf("\nstart simulation\n"); 
 	// reset device
 	Device->Reset();
 	// load an executable file
-  if(!LoadExecutable(aSimName,Device,&lstr))
-	// init registers
-
-	if(elf_res==NULL)
+	elf_res = Device->LoadElf(aSimName);
+	if((elf_res==NULL) || (elf_res->mSize==0))
 	{
-		printf("%s\n",lstr.ErroMsg);
+		printf("file load error\n");
 		return ERR_CANT_OPEN_EXE;
 	}
 
-  // check Stack area
-  if(lstr.IsElf)
-    SetStackControl(aSimName);
 	// file is loaded
 	uint32 pc_count = Device->GetPc(0);
 #ifdef USE_DWARF
@@ -722,26 +715,6 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	/// initialization registers
   InitRegs();
 
-#if 0 // debug function
-  {
-    //char* buf = (char*)malloc(sizeof(char)* (8));
-    char buf[8];
-    int test_count = 3000;
-
-    for (int i = 0; i<test_count; i++) {
-      buf[0] = i % 16;
-  //    printf("%6d set reg %d (%s)[%d] 0x%016x ... ", i, a, dbOb->GetCfg()->regs[a].name, b, (unsigned long)*buf); fflush(stdout);
-      Device->SetReg(0, 0, buf);
-      printf("done!\n");
-
-   //   printf("%6d get reg %d (%s)[%d] ... ", i, a, dbOb->GetCfg()->regs[a].name, b); fflush(stdout);
-      Device->GetReg(0, 0, buf);
-      printf("done! 0x%016x\n", (unsigned long)*buf);
-    }
-
-  //  free(buf);
-  }
-#endif
 
 
 	{
@@ -753,9 +726,9 @@ int RunSimulation(char* aSimName,uint32 aWait)
 
 #ifdef USE_BREAK_POINTS
   if(IsDviFile(aSimName))
-    Device->SetBreakPoint(elf_res->mEndPoint);
+    Device->SetBreakPoint(elf_res->mSize);
   else
-	 Device->SetBreakPoint(lstr.StopPc);
+	 Device->SetBreakPoint(elf_res->mSize);
 #endif
 	printf("ticks address       opcode                    assembler\n");
 	cur_pc = pc_count;    
@@ -898,8 +871,7 @@ int RunSimulationNoOut(char* aSimName,uint32 aWait)
 	tDisAsmDbgArea* elf_res;
 	int is_hi_addr = 0;
 	unsigned long counter;
-  TLoadStruct lstr;
-
+	
 	num_warns = 0;
 	uint32 cur_pc;
 	uint32 mytest_start; 
@@ -910,9 +882,9 @@ int RunSimulationNoOut(char* aSimName,uint32 aWait)
 	PRINT_LOG("load elf\n");
 
 	// load an executable file
-  if(!LoadExecutable(aSimName,Device,&lstr))
+	if(Device->LoadElf(aSimName))
 	{
-		printf("%s\n",lstr.ErroMsg);
+		printf("file load error\n");
 		return ERR_CANT_OPEN_EXE;
 	}
 
@@ -940,25 +912,23 @@ int RunSimulationNoOut(char* aSimName,uint32 aWait)
 	int num_cycles = aWait*MUL_FACTOR;
 	int reg_res;
 
-	//printf("max num cycles %d\n",num_cycles);
-	// simulation cycle
-	unsigned long end_pc = lstr.StopPc;
+	unsigned long end_pc = 0x7FFFFFFF;
 	cur_pc = Device->GetPc(0);
-  Device->SetBreakPoint(lstr.StopPc);
+	//Device->SetBreakPoint(lstr.StopPc);
 	// start 
 	do
   {
-		PRINT_LOG("THREAD:start execution\n");
-		Device->Start();
+	PRINT_LOG("THREAD:start execution\n");
+	Device->Start();
 #ifdef WIN32
-		while(Device->IsRun())
+	while(Device->IsRun())
     { 
       Sleep(500); // пол секунды
 
       if(Device->GetNumCycles() > num_cycles)
       {
         Device->Stop();
-  			printf("timeout error, cycles %d\n",Device->GetNumCycles());
+		printf("timeout error, cycles %d\n",Device->GetNumCycles());
 	  		return -1;
       } // if
     }// while 

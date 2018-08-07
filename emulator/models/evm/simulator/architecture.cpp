@@ -51,5 +51,6 @@ void Destroy()
 
 LIB_EXPORT void CheckPostProgram()
 {
-    Logger.CloseLog();
+	// save storage mem and data mem 
+	Logger.CloseLog();
 }

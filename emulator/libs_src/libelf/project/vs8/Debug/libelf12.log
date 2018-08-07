@@ -1,31 +1,31 @@
-﻿Сборка начата 05.07.2018 12:40:23.
-     1>Проект "C:\git\risc_v\libs_src\libelf\project\vs8\libelf12.vcxproj" в узле 4 (целевые объекты Rebuild).
+﻿Сборка начата 07.08.2018 11:34:07.
+     1>Проект "D:\git\kant1-pvmcore\emulator\libs_src\libelf\project\vs8\libelf12.vcxproj" в узле 2 (целевые объекты Rebuild).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D NM6403 /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\libelf_vc70.pdb" /Gd /TP /wd4290 /analyze- /errorReport:prompt ..\..\src\libelf.cpp ..\..\src\liblib.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D NM6403 /D _VC80_UPGRADE=0x0710 /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"Debug\\" /Fd"Debug\libelf_vc70.pdb" /Gd /TP /wd4290 /analyze- /errorReport:prompt ..\..\src\libelf.cpp ..\..\src\liblib.cpp
          liblib.cpp
-     1>c:\git\risc_v\libs_src\libelf\src\liblib.cpp(653): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\git\kant1-pvmcore\emulator\libs_src\libelf\src\liblib.cpp(653): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(112): см. объявление "strcpy"
-     1>c:\git\risc_v\libs_src\libelf\src\liblib.cpp(684): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\git\kant1-pvmcore\emulator\libs_src\libelf\src\liblib.cpp(684): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(112): см. объявление "strcpy"
-     1>c:\git\risc_v\libs_src\libelf\src\liblib.cpp(1106): warning C4244: =: преобразование "time_t" в "Elf32_Word", возможна потеря данных
+     1>d:\git\kant1-pvmcore\emulator\libs_src\libelf\src\liblib.cpp(1106): warning C4244: =: преобразование "time_t" в "Elf32_Word", возможна потеря данных
          libelf.cpp
-     1>c:\git\risc_v\libs_src\libelf\src\libelf.cpp(1000): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\git\kant1-pvmcore\emulator\libs_src\libelf\src\libelf.cpp(1000): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(195): см. объявление "strncpy"
-     1>c:\git\risc_v\libs_src\libelf\src\libelf.cpp(1775): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\git\kant1-pvmcore\emulator\libs_src\libelf\src\libelf.cpp(1775): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(112): см. объявление "strcpy"
-     1>c:\git\risc_v\libs_src\libelf\src\libelf.cpp(1784): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\git\kant1-pvmcore\emulator\libs_src\libelf\src\libelf.cpp(1784): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(112): см. объявление "strcpy"
-     1>c:\git\risc_v\libs_src\libelf\src\libelf.cpp(1794): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+     1>d:\git\kant1-pvmcore\emulator\libs_src\libelf\src\libelf.cpp(1794): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
                  c:\program files (x86)\microsoft visual studio 12.0\vc\include\string.h(112): см. объявление "strcpy"
          Создание кода...
-     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1354,5): warning MSB8012: TargetPath(C:\git\risc_v\libs_src\libelf\project\vs8\Debug\libelf12.lib) does not match the Library's OutputFile property value (C:\git\risc_v\libs\libelf.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1354,5): warning MSB8012: TargetPath(D:\git\kant1-pvmcore\emulator\libs_src\libelf\project\vs8\Debug\libelf12.lib) does not match the Library's OutputFile property value (D:\git\kant1-pvmcore\emulator\libs\libelf.lib). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1356,5): warning MSB8012: TargetName(libelf12) does not match the Library's OutputFile property value (libelf). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Lib.OutputFile).
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"..\..\..\..\libs\libelf.lib" /NOLOGO /NODEFAULTLIB Debug\libelf.obj
          Debug\liblib.obj
-         libelf12.vcxproj -> C:\git\risc_v\libs_src\libelf\project\vs8\Debug\libelf12.lib
-     1>Сборка проекта "C:\git\risc_v\libs_src\libelf\project\vs8\libelf12.vcxproj" завершена (целевые объекты Rebuild).
+         libelf12.vcxproj -> D:\git\kant1-pvmcore\emulator\libs_src\libelf\project\vs8\Debug\libelf12.lib
+     1>Сборка проекта "D:\git\kant1-pvmcore\emulator\libs_src\libelf\project\vs8\libelf12.vcxproj" завершена (целевые объекты Rebuild).
 
 Сборка успешно завершена.
 
-Затраченное время: 00:00:04.56
+Затраченное время: 00:00:02.48
