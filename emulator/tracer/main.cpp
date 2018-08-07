@@ -713,14 +713,14 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	int reg_res;
 	uint32 prev_tics = 0;
 	/// initialization registers
-  InitRegs();
+//  InitRegs();
 
 
 
 	{
 	// print init state of register
 		printf("Initial registers state:\n");
-		InitPrintRegs();
+	//	InitPrintRegs();
 		printf("\n");
 	}
 
@@ -775,7 +775,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		
 			PRINT_LOG("check regs\n")
 	
-			if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
+		//	if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
 			upregs[0] = 0; 
 
 			PRINT_LOG("check fifos\n")
@@ -786,7 +786,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		{
 			////check registers for update
       ErrorHeader* aHr = (ErrorHeader*)aHrv;
-      if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
+      //if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
 			upregs[0] = 0; CheckFifos((char*)upregs);printf("%s",upregs);
 			
       if (aHr->m_MsgType == MSGTYPE_EXIT)

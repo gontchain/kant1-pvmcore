@@ -16,6 +16,7 @@ TProgMem* prog_mem;
 TDataMem* data_mem;
 TDataMem* storage_mem;
 TDataMem* log_mem;
+TDataMem* input_mem;
 
 
 
@@ -30,6 +31,7 @@ void* Init(void* mParams)
   data_mem = new TDataMem(BLOCK_SIZE,IMEM_WS);
   storage_mem = new TDataMem(BLOCK_SIZE,IMEM_WS);
   log_mem = new TDataMem(BLOCK_SIZE,IMEM_WS);
+  input_mem = new TDataMem(BLOCK_SIZE, IMEM_WS);
 
   new_evm = new EVM("evm1");
 
@@ -37,7 +39,7 @@ void* Init(void* mParams)
   new_evm->data_bus = data_mem;
   new_evm->storage_bus = storage_mem;
   new_evm->log_bus = log_mem;
-
+  new_evm->input_data = input_mem;
   return (void*)new_evm;
 }
 

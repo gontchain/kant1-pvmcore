@@ -423,12 +423,13 @@ tDisAsmArea* TDevice::LoadElf(char* aElfFileName)
 		  char value;
 		  fread(ibuf, 1, 2, fin);
 		  value = GetHex<char>(ibuf);
-		  this->SetMem(&value,1, size, 1);
+		  this->SetMem(&value,0, size, 1);
 		  size++;
 	  }
 	  this->mArea.mStartAddr = 0;
 	  this->mArea.mEndPoint = size;
 	  this->mArea.mSize = size;
+    this->IsLocked = 0;
   }
   catch(...)
   {
