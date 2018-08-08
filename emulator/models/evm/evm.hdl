@@ -405,6 +405,7 @@ Device EVM
    {
      pc = 0;
      sp = DATA_SIZE;
+	 log_ptr = 0;
    }
  
   Operate
