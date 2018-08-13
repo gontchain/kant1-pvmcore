@@ -1473,15 +1473,16 @@ inline int EVM::Main_decode(uint32 ocode){
   uint32 i ;
   uint256 a  = 0;
   uint256 tmp ;
+  uint32 cnt  = (SARG(count) + 1);
   ;
   is_pc_within_inst = 1;
- for( i  = 0; i  < SARG(count); i  = ( i  + 1)){
+ for( i  = 0; i  <  cnt ; i  = ( i  + 1)){
   ;
    tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
    a  = ( a  | pd_lsh( tmp ,(8 *  i )));
   }
   Push( a );
-  pc = ((pc + 1) + SARG(count));
+  pc = ((pc +  cnt ) + 1);
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
