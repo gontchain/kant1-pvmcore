@@ -5,6 +5,8 @@
 #include "Endian.h"
 #include "Rotation.h"
 
+//#include <systemc.h>
+
 // Constants of the Keccak algorithm.
 
 const uint64_t RC[] = {
@@ -498,9 +500,10 @@ void keccakf(keccakState *state)
 
 int main(int argc, char* argv[])
 {
-	parseCommandLine(argc, argv);
-
+	if (argc == 3) // only 2 numbers are given
+		parseCommandLineOnlyNums(argc, argv);
+	else
+		parseCommandLine(argc, argv);
 
 	return 0;
 }
-

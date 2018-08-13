@@ -3,9 +3,10 @@
 #include "Keccak.h"
 #include "ParserCommon.h"
 #include <cstdlib>
+//#include <systemc.h>
 
-unsigned int hashType = 0;
-unsigned int hashWidth = 512;
+unsigned int hashType = 1;
+unsigned int hashWidth = 256;
 unsigned int shakeDigestLength = 512;
 unsigned int sha3widths[] = {224, 256, 384, 512, 0};
 unsigned int keccakwidths[] = {224, 256, 384, 512, 0};
@@ -129,6 +130,31 @@ int doFile(const char *fileName)
 	return 0;
 }
 
+int doNumbers(unsigned int num1, unsigned int num2)
+{
+	buf = new char[bufferSize];
+	sprintf(buf, "%d%d", num1, num2);
+
+	if (hashType == 1)
+	{
+		// Keccak
+		unsigned int hashSize = hashWidth;
+		keccakState *st = keccakCreate(hashSize);
+		unsigned int bytesRead = strlen(buf);
+		keccakUpdate((uint8_t*)buf, 0, bytesRead, st);
+
+		unsigned char *op = keccakDigest(st);
+
+		printf("Keccak-%u (%d, %d): ", hashSize, num1, num2);
+		for (unsigned int i = 0; i != (hashSize / 8); i++)
+		{
+			printf("%.2x", *(op++));
+		}
+		printf("\n");
+		return 1;
+	}
+	return 0;
+}
 
 void usage()
 {
@@ -370,4 +396,22 @@ void parseCommandLine(const int argc, char* argv[])
 			parseParameter(argv[i]);
 		}	
 	}
+}
+
+void parseCommandLine(const int argc, char* argv[], unsigned int num1, unsigned int num2)
+{
+	if (argc > 1)
+	{
+		for (unsigned int i = 1; i != argc-2; i++)
+		{
+			parseParameter(argv[i]);
+		}
+	}
+	doNumbers(num1, num2);
+}
+
+void parseCommandLineOnlyNums(const int argc, char* argv[])
+{
+	unsigned int num1 = atoi(argv[1]), num2 = atoi(argv[2]);
+	doNumbers(num1, num2);
 }
