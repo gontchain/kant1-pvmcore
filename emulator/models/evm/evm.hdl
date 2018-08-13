@@ -372,13 +372,14 @@ Device EVM
       MAIN_TYPE a = 0;
       MAIN_TYPE tmp;
       is_pc_within_inst = 1;
-      for(i = 0; i < count; i=i+1)
+      int32 cnt = count + 1;
+      for(i = 0; i < cnt; i=i+1)
       {
         tmp = prog_bus[pc + i + 1] & 0xFF;
         a = a | (tmp << (8*i));
       }
       Push(a);
-      pc = pc + 1 + count;
+      pc = pc + cnt + 1;
     }
     
     INST "DUP$count", (8,int4 count,int4 0x8)
