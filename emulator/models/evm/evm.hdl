@@ -92,12 +92,9 @@ Device EVM
   // extract byte from word
   MAIN_TYPE ByteFromWord(MAIN_TYPE a, MAIN_TYPE b)
   {
-     int32 start_bit = 0;//((int32)a*8);
+     int32 start_bit = (int32)(a*8);
      int32 end_bit = start_bit + 7;
-     if( a > 0)
-       return b[end_bit:start_bit]; 
-    else
-       return 0;
+     return b[end_bit:start_bit]; 
   }
   
   MAIN_TYPE GetModule(MAIN_TYPE a, MAIN_TYPE mod)
@@ -192,9 +189,10 @@ Device EVM
   
   MAIN_TYPE CodeCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c)
   {
-    /
+    
     return (MAIN_TYPE)0;
   }
+   
    
   MAIN_TYPE ExtCodeCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c,MAIN_TYPE d)
   {
@@ -210,11 +208,12 @@ Device EVM
    
    MAIN_TYPE GetInputData()
    {
-     int32 addr_val = 0;/* (int32)*/Pop();
+     int32 addr_val = (int32)Pop();
      MAIN_TYPE inp_data = input_data[addr_val];
      return inp_data;
    }
-   // accounts dataa
+   
+   // accounts data
   ArgList MAIN_TYPE AccountsData(),
   {
     "ADDRESS", "BALANCE","ORIGIN","CALLER",
@@ -229,14 +228,140 @@ Device EVM
     ExtCodeCopy(Pop(),Pop(),Pop(),Pop())
   };
    
+  // blockchain related data
+  Var MAIN_TYPE CoinBase,"CoinBase";
+  Var MAIN_TYPE TimeStamp, "TimeStamp";
+  Var MAIN_TYPE Number, "Number";
+  Var MAIN_TYPE Difficulty, "Difficulty";
+  Var MAIN_TYPE GasLimit, "GasLimit";
+  
+  MAIN_TYPE BlockChainHash(MAIN_TYPE a)
+  {
+    CoinBase = 0x10; // ot baldi
+    TimeStamp = 0x1000;
+    Number = 0x1234543234;
+    Difficulty = 0x420323;
+    GasLimit = 0x1000;
+    return (MAIN_TYPE)0;
+  }
+  
+  ArgList MAIN_TYPE BlockChain(),
+  {
+    "BLOCKHASH", "COINBASE", "TIMESTAMP", "NUMBER", "DIFFICULTY", "GASLIMIT"
+  },
+  {
+    BlockChainHash(Pop()),CoinBase,TimeStamp,Number,Difficulty,GasLimit
+  };
+   
+   
+   // system operations
+   MAIN_TYPE CreateAccount()
+   {
+     MAIN_TYPE a;
+     MAIN_TYPE b;
+     MAIN_TYPE c;
+     MAIN_TYPE account;     
+     a = Pop(); b = Pop(); c = Pop();
+    
+     account = 0x123456;
+
+     return account;  
+   }
+   
+   MAIN_TYPE MakeCall()
+   {
+     MAIN_TYPE callGas = Pop();
+     MAIN_TYPE address = Pop();
+     MAIN_TYPE inOff = Pop();
+     MAIN_TYPE inSize = Pop();
+     MAIN_TYPE outOff = Pop();
+     MAIN_TYPE outSize = Pop();
+     MAIN_TYPE g = Pop();
+     MAIN_TYPE call_res = 0;
+     return call_res;
+   }
+   
+   MAIN_TYPE MakeCallCode()
+   {
+     MAIN_TYPE a = Pop();
+     MAIN_TYPE b = Pop();
+     MAIN_TYPE c = Pop();
+     MAIN_TYPE d = Pop();
+     MAIN_TYPE e = Pop();
+     MAIN_TYPE f = Pop();
+     MAIN_TYPE g = Pop();
+     MAIN_TYPE call_res = 0;
+     return call_res;
+   }
+   
+   MAIN_TYPE Return()
+   {
+     MAIN_TYPE a = Pop();
+     MAIN_TYPE b = Pop();
+     StopExec();
+     return (MAIN_TYPE)0;
+   }
+   
+   MAIN_TYPE DelegateCall()
+   {
+     MAIN_TYPE a = Pop();
+     MAIN_TYPE b = Pop();
+     MAIN_TYPE c = Pop();
+     MAIN_TYPE d = Pop();
+     MAIN_TYPE e = Pop();
+     MAIN_TYPE f = Pop();
+     MAIN_TYPE call_res = 0;
+     return call_res;
+   }
+ 
+   ArgList MAIN_TYPE SystemOps,
+   {
+     "CREATE","CALL","CALLCODE","RETURN","DELEGATECALL"
+   },
+   {
+     CreateAccount(),MakeCall(),MakeCallCode(),Return(),DelegateCall()
+   };
+   
+   
+   
+   
   //  instruction set;
   ISET Main
   {
+    INST "$syscall",(8,int4 syscall = SystemOps,int4 0xf)
+    {
+      MAIN_TYPE res = syscall();
+      if(idx(syscall) != 0x3) // except return
+        Push(res);
+    }
     
-    INST "$opcode",(8,int4 0x3,int4 opcode = AccountsData)
+    INST "STATICCALL",(8,int8 0xfa)
+    {
+      
+    }
+
+    INST "REVERT", (8,int8 0xfd)
+    {
+       MAIN_TYPE a = Pop();
+       MAIN_TYPE b = Pop();    
+       StopExec();
+    }
+    INST "SUICIDE",(8,int8 0xff)
+    {
+      MAIN_TYPE a = Pop();
+      StopExec();      
+    }
+    
+    INST "$gas_opcode",(8,int4 gas_opcode = BlockChain,int4 0x4)
+    {
+      MAIN_TYPE res = gas_opcode;
+      Push(res);
+    }
+    
+    INST "$opcode",(8,int4 opcode = AccountsData,int4 0x3)
     {
       MAIN_TYPE res = opcode;
-      if( (idx(opcode)=0x7)  && (idx(opcode)!=9) && (idx(opcode)!=0xc))
+      if( (idx(opcode)!=0x7)  && (idx(opcode)!=9) && (idx(opcode)!=0xc))
         Push(res);      
     }
     
@@ -247,13 +372,14 @@ Device EVM
       MAIN_TYPE a = 0;
       MAIN_TYPE tmp;
       is_pc_within_inst = 1;
-      for(i = 0; i < count; i=i+1)
+      int32 cnt = count + 1;
+      for(i = 0; i < cnt; i=i+1)
       {
         tmp = prog_bus[pc + i + 1] & 0xFF;
         a = a | (tmp << (8*i));
       }
       Push(a);
-      pc = pc + 1 + count;
+      pc = pc + cnt + 1;
     }
     
     INST "DUP$count", (8,int4 count,int4 0x8)
@@ -288,14 +414,14 @@ Device EVM
     }
     
     
-    INST "$opcode", (8,int4 opcode = MemOps,int4 0xb0101)
+    INST "$opcode", (8,int4 opcode = MemOps,int4 0x5)
     {
       int32 addr_val;
       MAIN_TYPE data_val;
       MAIN_TYPE pc_val;
       
       if(opcode < 8) 
-        addr_val = 0;/*(int32)*/Pop();
+        addr_val = (int32)Pop();
       switch((int32)opcode)
       {
         case 0: 
@@ -377,25 +503,33 @@ Device EVM
       Push(res);   
     }
      
-     INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
-     {
-        MAIN_TYPE a;
-        MAIN_TYPE b;
-        MAIN_TYPE c;
-        MAIN_TYPE res;
-        // get args;
-        a = Pop();
-        b = ((idx(opcode) == 5) || (idx(opcode) == 9)) ? 0: Pop();
-        // compute
-        res = opcode(a,b);
-        // push to stack
-        Push(res);
-     }
+    INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
+    {
+      MAIN_TYPE a;
+      MAIN_TYPE b;
+      MAIN_TYPE c;
+      MAIN_TYPE res;
+      // get args;
+      a = Pop();
+      b = ((idx(opcode) == 5) || (idx(opcode) == 9)) ? 0: Pop();
+      // compute
+      res = opcode(a,b);
+      // push to stack
+      Push(res);
+    }
  
-     INST "SHA3", (8,int8 0x20)
-     {
+    INST "SHA3", (8,int8 0x20)
+    {
        // compute Keccak-256 hash
-     }
+      MAIN_TYPE a;
+      MAIN_TYPE b;
+      a = Pop();
+      b = Pop();
+      Push((MAIN_TYPE)0x1234543234);
+    }
+      
+      
+      
       
       
               
@@ -405,6 +539,7 @@ Device EVM
    {
      pc = 0;
      sp = DATA_SIZE;
+	 log_ptr = 0;
    }
  
   Operate
