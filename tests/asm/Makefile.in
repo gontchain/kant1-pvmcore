@@ -11,8 +11,8 @@ ${TARGET}: ${SOLOUT} Makefile
 %.out: %.asm Makefile
 	${COMPILER} --assemble $< > $@
 
-run:
-	evm --code `cat ${TARGET}.bin` run
+run: ${TARGET}
+	../../../ethereum/build/bin/evm --code `cat ${TARGET}.bin` run
 
 clean:
 	rm -f ${TARGET}.bin ${SOLOUT}
