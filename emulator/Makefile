@@ -28,6 +28,5 @@ clean:
 	$(MYMAKE) -C ./libs_src/libelf/  clean
 	$(MYMAKE) -C ./libs_src/libdwarf/  clean
 	$(MYMAKE) -C ./libs_src/simlib/ clean
-	$(MYMAKE) -C $(MODEL_DIR)/risc_v/simulator/ clean
 	$(MYMAKE) -C ./tracer clean
 	
