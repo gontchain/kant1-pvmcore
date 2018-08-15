@@ -272,24 +272,24 @@ Device EVM
    {
      MAIN_TYPE callGas = Pop();
      MAIN_TYPE address = Pop();
+     MAIN_TYPE value = Pop();
      MAIN_TYPE inOff = Pop();
      MAIN_TYPE inSize = Pop();
      MAIN_TYPE outOff = Pop();
      MAIN_TYPE outSize = Pop();
-     MAIN_TYPE g = Pop();
      MAIN_TYPE call_res = 0;
      return call_res;
    }
    
    MAIN_TYPE MakeCallCode()
    {
-     MAIN_TYPE a = Pop();
-     MAIN_TYPE b = Pop();
-     MAIN_TYPE c = Pop();
-     MAIN_TYPE d = Pop();
-     MAIN_TYPE e = Pop();
-     MAIN_TYPE f = Pop();
-     MAIN_TYPE g = Pop();
+     MAIN_TYPE callGas = Pop();
+     MAIN_TYPE address = Pop();
+     MAIN_TYPE value = Pop();
+     MAIN_TYPE inOff = Pop();
+     MAIN_TYPE inSize = Pop();
+     MAIN_TYPE outOff = Pop();
+     MAIN_TYPE outSize = Pop();
      MAIN_TYPE call_res = 0;
      return call_res;
    }
@@ -304,12 +304,12 @@ Device EVM
    
    MAIN_TYPE DelegateCall()
    {
-     MAIN_TYPE a = Pop();
-     MAIN_TYPE b = Pop();
-     MAIN_TYPE c = Pop();
-     MAIN_TYPE d = Pop();
-     MAIN_TYPE e = Pop();
-     MAIN_TYPE f = Pop();
+     MAIN_TYPE callGas = Pop();
+     MAIN_TYPE address = Pop();
+     MAIN_TYPE inOff = Pop();
+     MAIN_TYPE inSize = Pop();
+     MAIN_TYPE outOff = Pop();
+     MAIN_TYPE outSize = Pop();
      MAIN_TYPE call_res = 0;
      return call_res;
    }
@@ -337,7 +337,15 @@ Device EVM
     
     INST "STATICCALL",(8,int8 0xfa)
     {
-      
+      MAIN_TYPE callGas = Pop();
+      MAIN_TYPE address = Pop();
+      MAIN_TYPE value = 0;
+      MAIN_TYPE inOff = Pop();
+      MAIN_TYPE inSize = Pop();
+      MAIN_TYPE outOff = Pop();
+      MAIN_TYPE outSize = Pop();
+      MAIN_TYPE call_res = 0;
+      return call_res;
     }
 
     INST "REVERT", (8,int8 0xfd)
