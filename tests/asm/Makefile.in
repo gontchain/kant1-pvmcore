@@ -1,0 +1,18 @@
+COMPILER = solc
+
+ASMSRC = ${wildcard *.asm}
+SOLOUT = ${ASMSRC:.asm=.out}
+
+all: ${TARGET}
+
+${TARGET}: ${SOLOUT} Makefile
+	cat ${SOLOUT} | grep -A1 "Binary \representation:" | awk 'NR==2' > $@.bin
+
+%.out: %.asm Makefile
+	${COMPILER} --assemble $< > $@
+
+run:
+	evm --code `cat ${TARGET}.bin` run
+
+clean:
+	rm -f ${TARGET}.bin ${SOLOUT}
