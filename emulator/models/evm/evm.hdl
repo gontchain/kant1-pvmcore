@@ -344,8 +344,6 @@ Device EVM
       MAIN_TYPE inSize = Pop();
       MAIN_TYPE outOff = Pop();
       MAIN_TYPE outSize = Pop();
-      MAIN_TYPE call_res = 0;
-      return call_res;
     }
 
     INST "REVERT", (8,int8 0xfd)
