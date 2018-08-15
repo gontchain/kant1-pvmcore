@@ -1,7 +1,7 @@
 # makefile <Dir: lib-dll>
 include ../../headers/make.inc
 
-DIR_OBJECTS  = ./obj
+DIR_OBJECTS  = .
 PROGNAME = ../../libs/linux/libdwarf.a
 
 OBJ_FILES= $(DIR_OBJECTS)/dw_abbrv.o\
@@ -27,7 +27,7 @@ OBJ_FILES= $(DIR_OBJECTS)/dw_abbrv.o\
 CC  = gcc
 INCLUDE = -Iinclude \
 	  -I../../headers \
-	  -I../../dbg_interface 
+	  -I../../dbg_interface
 
 $(PROGNAME): $(OBJ_FILES)
 	$(ARHIEVER) $(ARHIEVER_OPTS) $@ $(OBJ_FILES)
