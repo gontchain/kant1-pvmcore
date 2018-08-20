@@ -24,10 +24,10 @@ $(LIB_DIR)/libdwarf.a:
 		
 $(DIR_OBJECTS)/architecture.o:
 	mkdir -p $(DIR_OBJECTS)
-	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -c ./sources/architecture.cpp -o $@
+	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -c ./architecture.cpp -o $@
 	
 $(DIR_OBJECTS)/evm_sim.o:
-	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -c ./sources/evm_sim.cpp -o $@
+	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -c ./evm_sim.cpp -o $@
 
 	
 	
