@@ -9,6 +9,8 @@
 #define LOG_AREA_SIZE 1024
 #define INPUT_DATA_SIZE 1024
 
+#include "gascost.h"
+
 Device EVM
 {
   //stack pointer
@@ -31,9 +33,7 @@ Device EVM
   // size of active memory 
   Reg int32 mem_size; // active memory size (filled outside of simulation)
   // current block
-   
-   
-  
+
   MemSpace prog_bus, 32, 32;
   // memory access  (256 size data bus)
   /*MemSpace data_bus, 32, MAIN_TYPE_SIZE;
@@ -50,10 +50,16 @@ Device EVM
   Reg int32 log_ptr, "log_ptr";
   
   PCOUNT pc;
-  
-  
+
+  MAIN_TYPE StopExec()
+  {
+    dbg_msg "@";
+    return (MAIN_TYPE)0;
+  }
+
   MAIN_TYPE GetExp(MAIN_TYPE a,MAIN_TYPE b)
   {
+    USEGAS(STEPGAS5);
     int8 i;
     MAIN_TYPE res = 1;
     MAIN_TYPE mul_fact = a;
@@ -78,27 +84,30 @@ Device EVM
  // push result to stack
   void Push(MAIN_TYPE val)
   {
-    data_bus[sp] = val; 
+    data_bus[sp] = val;
     sp = sp - 1;
   }
-  
+
   // extend sign 
   MAIN_TYPE SignExtend(MAIN_TYPE a, MAIN_TYPE b)
   {
+    USEGAS(STEPGAS3);
     // TODO
     return 0;
   }
-  
+
   // extract byte from word
   MAIN_TYPE ByteFromWord(MAIN_TYPE a, MAIN_TYPE b)
   {
+     USEGAS(STEPGAS2);
      int32 start_bit = (int32)(a*8);
      int32 end_bit = start_bit + 7;
      return b[end_bit:start_bit]; 
   }
-  
+
   MAIN_TYPE GetModule(MAIN_TYPE a, MAIN_TYPE mod)
   {
+    USEGAS(STEPGAS3);
     MAIN_TYPE div;
     if (mod == 0)
       return 0;
@@ -108,9 +117,23 @@ Device EVM
       return a - (div * mod);
     }
   }
-  
+
+  MAIN_TYPE GetModuleAM(MAIN_TYPE a, MAIN_TYPE mod)
+  {
+    USEGAS(STEPGAS4);
+    MAIN_TYPE div;
+    if (mod == 0)
+      return 0;
+    else
+    {
+      div = a / mod;
+      return a - (div * mod);
+    }
+  }
+
   MAIN_TYPE GetModuleS(MAIN_TYPE a, MAIN_TYPE mod)
   {
+    USEGAS(STEPGAS3);
     MAIN_TYPE div;
     if (mod == 0)
       return 0;
@@ -120,22 +143,101 @@ Device EVM
       return (signed)a - (signed)(div * mod);
     }// if(mod == 0) .. else
   }
-  
-  MAIN_TYPE StopExec()
+
+  MAIN_TYPE StopOp()
   {
+    USEGAS(STEPGAS0);
     dbg_msg "@";
     return (MAIN_TYPE)0;
   }
 
-  MAIN_TYPE DivOp(MAIN_TYPE a,MAIN_TYPE b)
+  MAIN_TYPE AddOp(MAIN_TYPE a, MAIN_TYPE b)
   {
+    USEGAS(STEPGAS2);
+    return a + b ;
+  }
+
+  MAIN_TYPE SubOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return a - b ;
+  }
+
+  MAIN_TYPE MulOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS3);
+    return a * b ;
+  }
+
+  MAIN_TYPE DivOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS3);
     if (b == 0)
       return 0;
     else 
       return a / b ;
   }
-  
-    
+
+  MAIN_TYPE LtOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return a < b;
+  }
+
+  MAIN_TYPE LtOpS(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return (signed)a < (signed)b;
+  }
+
+  MAIN_TYPE GtOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return a > b;
+  }
+
+  MAIN_TYPE GtOpS(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return (signed)a > (signed)b;
+  }
+
+  MAIN_TYPE EqOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return a == b;
+  }
+
+  MAIN_TYPE IsZeroOp(MAIN_TYPE a)
+  {
+    USEGAS(STEPGAS2);
+    return a == 0;
+  }
+
+  MAIN_TYPE AndOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return a & b;
+  }
+
+  MAIN_TYPE OrOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return a | b;
+  }
+
+  MAIN_TYPE XorOp(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS2);
+    return a ^ b;
+  }
+
+  MAIN_TYPE NotOp(MAIN_TYPE a)
+  {
+    USEGAS(STEPGAS2);
+    return ~a;
+  }
+
   ArgList MAIN_TYPE ArithmOps(MAIN_TYPE a, MAIN_TYPE b, MAIN_TYPE c),
   { 
     // 0
@@ -147,11 +249,11 @@ Device EVM
   },
   {
     // 0
-    StopExec(), a + b, a * b, a - b,
+    StopOp(), AddOp(a , b), MulOp(a , b), SubOp(a , b),
     // 4
-    DivOp(a , b),  GetModule(a , b),  GetModuleS(a , b),  GetModule((a + b) , c),
+    DivOp(a , b), GetModule(a , b), GetModuleS(a , b), GetModuleAM((a + b) , c),
     // 8
-    GetModule((a  * b) , c), GetExp(a,b), SignExtend(a,b)
+    GetModuleAM((a  * b) , c), GetExp(a , b), SignExtend(a , b)
   };
     
     
@@ -159,72 +261,118 @@ Device EVM
   {
     // 
     "LT","GT","SLT","SGT",
-    "EQ","IZSERO","AND","OR",
+    "EQ","ISZERO","AND","OR",
     "XOR","NOT","BYTE"
   },
   {
-    a < b, a > b, (signed)a < (signed)b, (signed)a > (signed)b, 
-    a == b, a == 0, a & b, a | b, 
-    a ^ b , ~a, ByteFromWord(a,b)
+    LtOp(a , b), GtOp(a , b), LtOpS(a , b), GtOpS(a , b), 
+    EqOp(a , b), IsZeroOp(a), AndOp(a , b), OrOp(a , b), 
+    XorOp(a , b), NotOp(a), ByteFromWord(a , b)
   };   
     
     
   ArgList int32 MemOps,
   {
     "POP", "MLOAD", "MSTORE", "MSTORE8",
-    "SLOAD","SSTORE", "JUMP","JUMPI", 
-    "PC", "MSIZE","GAS", "JUMPDEST"
+    "SLOAD", "SSTORE", "JUMP", "JUMPI",
+    "PC", "MSIZE", "GAS", "JUMPDEST"
   };
    
    
   MAIN_TYPE CallValue()
   {
+    USEGAS(STEPGAS1);
     return (MAIN_TYPE)0;
   }
   
-  MAIN_TYPE CallDataCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c)
+  MAIN_TYPE CallDataCopy(MAIN_TYPE a, MAIN_TYPE b, MAIN_TYPE c)
   {
+    USEGAS(STEPGAS2);
     return (MAIN_TYPE)0;
   }
-  
-  MAIN_TYPE CodeCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c)
+
+  MAIN_TYPE CallDataSize()
   {
-    
+    USEGAS(STEPGAS1);
+    return inp_data_size;
+  }
+
+  MAIN_TYPE CodeCopy(MAIN_TYPE a, MAIN_TYPE b, MAIN_TYPE c)
+  {
+    USEGAS(STEPGAS2);
     return (MAIN_TYPE)0;
   }
-   
-   
-  MAIN_TYPE ExtCodeCopy(MAIN_TYPE a,MAIN_TYPE b,MAIN_TYPE c,MAIN_TYPE d)
+
+  MAIN_TYPE ExtCodeSize()
   {
+    USEGAS(STEPGAS6);
+    return ext_code_size;
+  }
+
+  MAIN_TYPE ExtCodeCopy(MAIN_TYPE a, MAIN_TYPE b, MAIN_TYPE c, MAIN_TYPE d)
+  {
+    USEGAS(STEPGAS6);
     // copy from prog bus to memory
     return (MAIN_TYPE)0;
   }
-   
+
+   MAIN_TYPE GetAddress()
+   {
+     USEGAS(STEPGAS1);
+     return cur_addr;
+   }
+
    // get balance of gived account
   MAIN_TYPE GetBalance(MAIN_TYPE a)
   {
+    USEGAS(STEPGAS6);
     return (MAIN_TYPE)0;
   }  
-   
+
+   MAIN_TYPE GetOrigin()
+   {
+     USEGAS(STEPGAS1);
+     return origin_addr;
+   }
+
+   MAIN_TYPE GetCaller()
+   {
+     USEGAS(STEPGAS1);
+     return caller_addr;
+   }
+
    MAIN_TYPE GetInputData()
    {
+     USEGAS(STEPGAS2);
      int32 addr_val = (int32)Pop();
      MAIN_TYPE inp_data = input_data[addr_val];
      return inp_data;
    }
-   
+
+   MAIN_TYPE GetCodeSize()
+   {
+     USEGAS(STEPGAS1);
+     return code_size;
+   }
+
+   MAIN_TYPE GetGasPrice()
+   {
+     USEGAS(STEPGAS1);
+     return gas_price;
+   }
+
    // accounts data
   ArgList MAIN_TYPE AccountsData(),
   {
-    "ADDRESS", "BALANCE","ORIGIN","CALLER",
-    "CALLVALUE","CALLDATALOAD","CALLDATASIZE","CALLDATACOPY",
-    "CODESIZE","CODECOPY","GASPRICE", "EXTCODESIZE",
-    "EXTCODECOPY"    
+    "ADDRESS", "BALANCE", "ORIGIN", "CALLER",
+    "CALLVALUE", "CALLDATALOAD", "CALLDATASIZE", "CALLDATACOPY",
+    "CODESIZE", "CODECOPY", "GASPRICE", "EXTCODESIZE",
+    "EXTCODECOPY"
   },
   {
-    cur_addr,GetBalance(Pop()),origin_addr,caller_addr,
-    CallValue(),GetInputData(), inp_data_size,CallDataCopy(Pop(),Pop(),Pop()),
-    code_size, CodeCopy(Pop(),Pop(),Pop()),gas_price,ext_code_size, 
+    GetAddress(), GetBalance(Pop()), GetOrigin(), GetCaller(),
+    CallValue(), GetInputData(), CallDataSize(), CallDataCopy(Pop(),Pop(),Pop()),
+    GetCodeSize(), CodeCopy(Pop(),Pop(),Pop()), GetGasPrice(), ExtCodeSize(),
     ExtCodeCopy(Pop(),Pop(),Pop(),Pop())
   };
    
@@ -237,6 +385,7 @@ Device EVM
   
   MAIN_TYPE BlockChainHash(MAIN_TYPE a)
   {
+    USEGAS(STEPGAS6);
     CoinBase = 0x10; // ot baldi
     TimeStamp = 0x1000;
     Number = 0x1234543234;
@@ -244,25 +393,55 @@ Device EVM
     GasLimit = 0x1000;
     return (MAIN_TYPE)0;
   }
-  
+
+  MAIN_TYPE GetCoinBase()
+  {
+    USEGAS(STEPGAS1);
+    return CoinBase;
+  }
+
+  MAIN_TYPE GetTimeStamp()
+  {
+    USEGAS(STEPGAS1);
+    return TimeStamp;
+  }
+
+  MAIN_TYPE GetNumber()
+  {
+    USEGAS(STEPGAS1);
+    return Number;
+  }
+
+  MAIN_TYPE GetDifficulty()
+  {
+    USEGAS(STEPGAS1);
+    return Difficulty;
+  }
+
+  MAIN_TYPE GetGasLimit()
+  {
+    USEGAS(STEPGAS1);
+    return GasLimit;
+  }
+
   ArgList MAIN_TYPE BlockChain(),
   {
     "BLOCKHASH", "COINBASE", "TIMESTAMP", "NUMBER", "DIFFICULTY", "GASLIMIT"
   },
   {
-    BlockChainHash(Pop()),CoinBase,TimeStamp,Number,Difficulty,GasLimit
+    BlockChainHash(Pop()), GetCoinBase(), GetTimeStamp(), GetNumber(), GetDifficulty(), GetGasLimit()
   };
    
    
    // system operations
    MAIN_TYPE CreateAccount()
    {
+     USEGAS(CREATEGAS);
      MAIN_TYPE a;
      MAIN_TYPE b;
      MAIN_TYPE c;
-     MAIN_TYPE account;     
+     MAIN_TYPE account;
      a = Pop(); b = Pop(); c = Pop();
-    
      account = 0x123456;
 
      return account;  
@@ -270,6 +449,7 @@ Device EVM
    
    MAIN_TYPE MakeCall()
    {
+     USEGAS(CALLGAS);
      MAIN_TYPE callGas = Pop();
      MAIN_TYPE address = Pop();
      MAIN_TYPE value = Pop();
@@ -283,6 +463,7 @@ Device EVM
    
    MAIN_TYPE MakeCallCode()
    {
+     USEGAS(CALLGAS);
      MAIN_TYPE callGas = Pop();
      MAIN_TYPE address = Pop();
      MAIN_TYPE value = Pop();
@@ -296,6 +477,7 @@ Device EVM
    
    MAIN_TYPE Return()
    {
+     USEGAS(STEPGAS0);
      MAIN_TYPE a = Pop();
      MAIN_TYPE b = Pop();
      StopExec();
@@ -304,6 +486,7 @@ Device EVM
    
    MAIN_TYPE DelegateCall()
    {
+     USEGAS(CALLGAS);
      MAIN_TYPE callGas = Pop();
      MAIN_TYPE address = Pop();
      MAIN_TYPE inOff = Pop();
@@ -337,6 +520,7 @@ Device EVM
     
     INST "STATICCALL",(8,int8 0xfa)
     {
+      USEGAS(CALLGAS);
       MAIN_TYPE callGas = Pop();
       MAIN_TYPE address = Pop();
       MAIN_TYPE value = 0;
@@ -348,12 +532,14 @@ Device EVM
 
     INST "REVERT", (8,int8 0xfd)
     {
+       USEGAS(STEPGAS0);
        MAIN_TYPE a = Pop();
-       MAIN_TYPE b = Pop();    
+       MAIN_TYPE b = Pop();
        StopExec();
     }
     INST "SUICIDE",(8,int8 0xff)
     {
+      USEGAS(STEPGAS0);
       MAIN_TYPE a = Pop();
       StopExec();      
     }
@@ -368,12 +554,13 @@ Device EVM
     {
       MAIN_TYPE res = opcode;
       if( (idx(opcode)!=0x7)  && (idx(opcode)!=9) && (idx(opcode)!=0xc))
-        Push(res);      
+        Push(res);
     }
     
         
     INST "PUSH$count", (8,int5 count,int3 0b011)
     {
+      USEGAS(STEPGAS2);
       int32 i;
       MAIN_TYPE a = 0;
       MAIN_TYPE tmp;
@@ -390,6 +577,7 @@ Device EVM
     
     INST "DUP$count", (8,int4 count,int4 0x8)
     {
+      USEGAS(STEPGAS2);
       MAIN_TYPE a;
       a = data_bus[sp  + (count + 1)];
       Push(a);
@@ -398,6 +586,7 @@ Device EVM
     
     INST "SWAP$count", (8,int4 count,int4 0x9)
     {
+      USEGAS(STEPGAS2);
       MAIN_TYPE first_el = data_bus[sp + 1];
       data_bus[sp + 1] = data_bus[sp + count + 2];
       data_bus[sp + count + 2] = first_el;
@@ -405,6 +594,7 @@ Device EVM
     
     INST "LOG$count", (8, int3 count,int4 0xa, int1 0)
     {
+      USEGAS(LOGGAS + count * LOGTOPICGAS);
       int32 i;
       MAIN_TYPE l1_data = Pop();
       MAIN_TYPE l2_data = Pop();
@@ -430,69 +620,81 @@ Device EVM
         addr_val = (int32)Pop();
       switch((int32)opcode)
       {
-        case 0: 
+        case 0: // POP
+          USEGAS(STEPGAS1);
           Pop(); 
           break;
-        
-        case 1: // MLOAD 
+
+        case 1: // MLOAD
+          USEGAS(STEPGAS2);
           data_val = data_bus[addr_val];
           Push(data_val);
           break;
-          
+
         case 2: // MSTORE
+          USEGAS(STEPGAS2);
           data_val = Pop();
           data_bus[addr_val] = data_val;
           break;
-        
-        case 3: // MSTORE8 
+
+        case 3: // MSTORE8
+          USEGAS(STEPGAS2);
           data_val = data_bus[addr_val];
           data_val = Pop() & 0xFF | (data_val & 0xFFFFFF00);
           data_bus[addr_val] = data_val;
           break;
-          
+
         case 4: // SLOAD
+          USEGAS(SLOADGAS);
           data_val = storage_bus[addr_val]; 
           Push(data_val);
           break;
-          
-        case 5: // sstore
+
+        case 5: // SSTORE
+          USEGAS(STEPGAS0);
           data_val = Pop();
           storage_bus[addr_val] = data_val;
           break;
 
         case 6: // JUMP 
+          USEGAS(STEPGAS4);
           pc = addr_val;
           is_pc_within_inst = 1;
           break;
-          
+
         case 7: // JUMPI
+          USEGAS(STEPGAS5);
           if(Pop()!=0) // get condition
           {
             pc = (int32)addr_val; // set new pc
             is_pc_within_inst = 1;
           }
           break;
-          
-         case 8: // PC
-           data_val = (MAIN_TYPE)pc; 
-           Push(data_val); 
-           break;
-           
-         case 9: // MSIZE 
-           data_val  = (MAIN_TYPE)mem_size;
-           Push(data_val);
-           break;
-           
-         case 10: // GAS
-           Push((MAIN_TYPE)gas_available);
-           break;
-           
-         case 11: // JUMPDEST
-           break; // do nothing
+
+        case 8: // PC
+         USEGAS(STEPGAS1);
+         data_val = (MAIN_TYPE)pc;
+         Push(data_val);
+         break;
+
+        case 9: // MSIZE
+         USEGAS(STEPGAS1);
+         data_val  = (MAIN_TYPE)mem_size;
+         Push(data_val);
+         break;
+
+        case 10: // GAS
+         USEGAS(STEPGAS1);
+         Push((MAIN_TYPE)gas_available);
+         break;
+
+        case 11: // JUMPDEST
+         USEGAS(JUMPDESTGAS);
+         break; // do nothing
       }// end of switch
-      
+
     } // end of instruction
-    
+
     INST "$opcode",(8,int4 opcode = ArithmOps,int4 0x0)
     {
       MAIN_TYPE a;
@@ -506,7 +708,7 @@ Device EVM
       // compute
       res = opcode(a,b,c);
       // push to stack
-      Push(res);   
+      Push(res);
     }
      
     INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
@@ -523,9 +725,10 @@ Device EVM
       // push to stack
       Push(res);
     }
- 
+
     INST "SHA3", (8,int8 0x20)
     {
+      USEGAS(SHA3GAS);
        // compute Keccak-256 hash
       MAIN_TYPE a;
       MAIN_TYPE b;
@@ -533,30 +736,24 @@ Device EVM
       b = Pop();
       Push((MAIN_TYPE)0x1234543234);
     }
-      
-      
-      
-      
-      
-              
+
   }// end of ISET
-   
+
    RESET
    {
      pc = 0;
      sp = DATA_SIZE;
-	 log_ptr = 0;
+     log_ptr = 0;
    }
- 
+
   Operate
-  {   
+  {
     int8 code = prog_bus[pc];
     // reset flags
-    is_pc_within_inst = 0; 
-    // decode and execute 
+    is_pc_within_inst = 0;
+    // decode and execute
     Main.decode(code);
     // increment pc flag if need
-    if(is_pc_within_inst == 0 )
-      pc = pc + 1;      
+    if(is_pc_within_inst == 0)
+      pc = pc + 1;
   }
-  
