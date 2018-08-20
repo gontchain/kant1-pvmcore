@@ -4,7 +4,7 @@ include ./headers/make.inc
 MODEL_DIR = ./models
 LIB_DIR= ./libs/linux
 
-LIBRARIES = $(LIB_DIR)/simlib.a $(LIB_DIR)/libelf.a $(LIB_DIR)/libdwarf.a $(MODEL_DIR)/nm6405ca/simulator/nm6405ca.so
+LIBRARIES = $(LIB_DIR)/simlib.a $(LIB_DIR)/libelf.a $(LIB_DIR)/libdwarf.a $(MODEL_DIR)/evm/simulator/evm.so
 
 all: $(LIBRARIES) ./tracer/tracer
 
@@ -18,8 +18,8 @@ $(LIB_DIR)/libdwarf.a:
 $(LIB_DIR)/simlib.a:
 	$(MYMAKE) -C ./libs_src/simlib/
 
-$(MODEL_DIR)/risc_v/simulator/nm6405ca.so:
-	$(MYMAKE) -C $(MODEL_DIR)/risc_v/simulator/
+$(MODEL_DIR)/evm/simulator/evm.so:
+	$(MYMAKE) -C $(MODEL_DIR)/evm/simulator/
 
   ./tracer/tracer:
 	$(MYMAKE) -C ./tracer

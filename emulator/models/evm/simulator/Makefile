@@ -1,8 +1,8 @@
 # makefile <Dir: lib-dll>
 include ../../../headers/make.inc
 
-PROGNAME = ./nm6407.so
-OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/riscv_sim.o 
+PROGNAME = ./evm.so
+OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/evm_sim.o 
 INCLUDE = -I./include -I./../../../headers -I./../../../dbg_interface -I./../../../peripheral
 LIB_DIR = ../../../libs/linux
   
