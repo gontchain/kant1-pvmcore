@@ -1,0 +1,10 @@
+{
+    0x02
+    0x01234567
+    byte
+    0x00
+    mstore
+    0x01
+    0x1f
+    return
+}

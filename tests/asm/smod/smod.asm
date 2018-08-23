@@ -1,0 +1,10 @@
+{
+    0xFFFFFFFFFFFFFFEC
+    0xFFFFFFFFFFFFFFF0
+    smod
+    0x00
+    mstore
+    0x01
+    0x1f
+    return
+}

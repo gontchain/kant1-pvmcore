@@ -1,0 +1,10 @@
+{
+    0x03
+    0x0f
+    mod
+    0x00
+    mstore
+    0x01
+    0x1f
+    return
+}
