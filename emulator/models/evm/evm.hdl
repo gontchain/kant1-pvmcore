@@ -91,9 +91,23 @@ Device EVM
   // extend sign 
   MAIN_TYPE SignExtend(MAIN_TYPE a, MAIN_TYPE b)
   {
+    int32 testBit;
+    int32 end_bit;
+    MAIN_TYPE number;
+    MAIN_TYPE mask;
     USEGAS(STEPGAS3);
-    // TODO
-    return 0;
+
+    if(a < 31) {
+      testBit = (int32)(a*8) + 7;
+      end_bit = testBit + 1;
+      mask = ((MAIN_TYPE)1 << testBit) - 1;
+      if (b[end_bit:testBit] == 1) // check if a bit 'b[testBit]' is set
+        number = b | ~mask;
+      else
+        number = b & mask;
+      return number;
+    }
+    return (MAIN_TYPE)0;
   }
 
   // extract byte from word
@@ -434,17 +448,14 @@ Device EVM
    
    
    // system operations
-   MAIN_TYPE CreateAccount()
+   MAIN_TYPE CreateAccount(MAIN_TYPE endowment, MAIN_TYPE initOff, MAIN_TYPE initSize)
    {
      USEGAS(CREATEGAS);
-     MAIN_TYPE a;
-     MAIN_TYPE b;
-     MAIN_TYPE c;
      MAIN_TYPE account;
-     a = Pop(); b = Pop(); c = Pop();
      account = 0x123456;
+     // TODO
+     return account;
 
-     return account;  
    }
    
    MAIN_TYPE MakeCall()
@@ -502,7 +513,7 @@ Device EVM
      "CREATE","CALL","CALLCODE","RETURN","DELEGATECALL"
    },
    {
-     CreateAccount(),MakeCall(),MakeCallCode(),Return(),DelegateCall()
+     CreateAccount(Pop(),Pop(),Pop()),MakeCall(),MakeCallCode(),Return(),DelegateCall()
    };
    
    
