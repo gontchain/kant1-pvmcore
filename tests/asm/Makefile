@@ -1,3 +1,6 @@
+GASLIMIT=0x0
+export GASLIMIT
+
 all:
 	$(MAKE) -C lt
 	$(MAKE) -C gt
@@ -20,6 +23,16 @@ all:
 	$(MAKE) -C mulmod
 	$(MAKE) -C exp
 	$(MAKE) -C signextend
+	$(MAKE) -C gaslimit
+	$(MAKE) -C gas
+	$(MAKE) -C gasprice
+	$(MAKE) -C address
+	$(MAKE) -C balance
+	$(MAKE) -C origin
+	$(MAKE) -C caller
+	$(MAKE) -C callvalue
+	$(MAKE) -C codesize
+	$(MAKE) -C extcodesize
 
 run:
 	$(MAKE) -C lt run
@@ -43,6 +56,16 @@ run:
 	$(MAKE) -C mulmod run
 	$(MAKE) -C exp run
 	$(MAKE) -C signextend run
+	$(MAKE) -C gaslimit run GASLIMIT=0xfff
+	$(MAKE) -C gas run GASLIMIT=0xfff
+	$(MAKE) -C gasprice run
+	$(MAKE) -C address run
+	$(MAKE) -C balance run
+	$(MAKE) -C origin run
+	$(MAKE) -C caller run
+	$(MAKE) -C callvalue run
+	$(MAKE) -C codesize run
+	$(MAKE) -C extcodesize run
 
 clean:
 	$(MAKE) -C lt clean
@@ -66,3 +89,13 @@ clean:
 	$(MAKE) -C mulmod clean
 	$(MAKE) -C exp clean
 	$(MAKE) -C signextend clean
+	$(MAKE) -C gaslimit clean
+	$(MAKE) -C gas clean
+	$(MAKE) -C gasprice clean
+	$(MAKE) -C address clean
+	$(MAKE) -C balance clean
+	$(MAKE) -C origin clean
+	$(MAKE) -C caller clean
+	$(MAKE) -C callvalue clean
+	$(MAKE) -C codesize clean
+	$(MAKE) -C extcodesize clean
