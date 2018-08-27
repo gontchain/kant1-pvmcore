@@ -333,7 +333,7 @@ Device EVM
    MAIN_TYPE GetAddress()
    {
      USEGAS(STEPGAS1);
-     return cur_addr;
+     return (MAIN_TYPE)cur_addr;
    }
 
    // get balance of gived account
@@ -346,13 +346,13 @@ Device EVM
    MAIN_TYPE GetOrigin()
    {
      USEGAS(STEPGAS1);
-     return origin_addr;
+     return (MAIN_TYPE)origin_addr;
    }
 
    MAIN_TYPE GetCaller()
    {
      USEGAS(STEPGAS1);
-     return caller_addr;
+     return (MAIN_TYPE)caller_addr;
    }
 
    MAIN_TYPE GetInputData()
@@ -372,7 +372,7 @@ Device EVM
    MAIN_TYPE GetGasPrice()
    {
      USEGAS(STEPGAS1);
-     return gas_price;
+     return (MAIN_TYPE)gas_price;
    }
 
    // accounts data
