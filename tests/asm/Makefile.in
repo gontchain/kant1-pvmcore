@@ -12,7 +12,7 @@ ${TARGET}: ${SOLOUT} Makefile
 	${COMPILER} --assemble $< > $@
 
 run: ${TARGET}
-	../../../ethereum/build/bin/evm --code `cat ${TARGET}.bin` run
+	../../../ethereum/build/bin/evm --gas $(GASLIMIT) --code `cat ${TARGET}.bin` run
 
 clean:
 	rm -f ${TARGET}.bin ${SOLOUT}
