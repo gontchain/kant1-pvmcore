@@ -72,10 +72,10 @@ public:
     public:
       TMemType* mMb;
       eMemWriteMask mMask;
-      inline vDataType operator = (vDataType aVal)
-      {
-        return mMb->WriteData(aVal);
-      };     
+     // inline vDataType operator = (vDataType aVal)
+     // {
+     //   return mMb->WriteData(aVal);
+     // };     
 #ifndef DATA_32BITS
       inline uint32 operator = (uint32 aVal){ mMb->WriteData32(aVal); return aVal; }    
 #endif      
@@ -93,20 +93,20 @@ public:
     TMemType* mMb;
     int       MemAccessTypeSign;
     // 
-    inline vDataType operator =(vDataType aVal)
-    { 
-      MemAccessTypeSign = MEM_WRITE;
-      mMb->WriteMem(mCurAddr,aVal); 
-      return aVal;
-    }
+    //inline vDataType operator =(vDataType aVal)
+    //{ 
+    //  MemAccessTypeSign = MEM_WRITE;
+    //  mMb->WriteMem(mCurAddr,aVal); 
+    //  return aVal;
+    //}
     // write to mem   
 #ifndef DATA_32BITS
-    inline uint32 operator =(uint32 aVal)
-    { 
-      MemAccessTypeSign = MEM_WRITE;
-      mMb->WriteMem32(mCurAddr,aVal); 
-      return aVal; 
-    }    
+    //inline uint32 operator =(uint32 aVal)
+    //{ 
+    //  MemAccessTypeSign = MEM_WRITE;
+    //  mMb->WriteMem32(mCurAddr,aVal); 
+    //  return aVal; 
+    //`}    
 #endif
     // read mem
     inline operator vDataType() const 
