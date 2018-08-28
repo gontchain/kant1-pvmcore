@@ -14,8 +14,8 @@ OBJ_FILES = $(DIR_OBJECTS)/device.o \
 
 INCLUDE = -I$(DIR_OBJECTS)/headers \
 	  -I$(DIR_OBJECTS)/../../headers \
-	  -I$(DIR_OBJECTS)/../../dbg_interface 
-
+	  -I$(DIR_OBJECTS)/../../dbg_interface\
+	  -I../../../$(SYSTEMC_INC)
 
 $(PROGNAME): $(OBJ_FILES)
 #	$(CC) $(FLAG_O) $(LIBRARIES) -o $(PROGNAME) $(OBJ_FILES)

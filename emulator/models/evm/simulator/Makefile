@@ -3,7 +3,7 @@ include ../../../headers/make.inc
 
 PROGNAME = ./evm.so
 OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/evm_sim.o 
-INCLUDE = -I./include -I./../../../headers -I./../../../dbg_interface -I./../../../peripheral
+INCLUDE = -I./include -I./../../../headers -I./../../../dbg_interface -I./../../../peripheral -I../../../../$(SYSTEMC_INC)
 LIB_DIR = ../../../libs/linux
   
 LIBRARIES = $(LIB_DIR)/simlib.a $(LIB_DIR)/libelf.a $(LIB_DIR)/libdwarf.a
