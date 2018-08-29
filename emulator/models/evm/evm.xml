@@ -11,11 +11,11 @@
         <ext_code_size SIZE="256" ASM="ext_code_size" ARRSIZE="0" />
         <inp_data_size SIZE="256" ASM="inp_data_size" ARRSIZE="0" />
         <mem_size SIZE="32" ARRSIZE="0" />
-        <stack_arr SIZE="256" ARRSIZE="65538" />
-        <data_arr SIZE="8" ARRSIZE="65538" />
-        <storage_bus SIZE="256" ARRSIZE="1024" />
-        <log_bus SIZE="256" ARRSIZE="1024" />
+        <data_bus SIZE="8" ARRSIZE="1024" />
+        <storage_bus SIZE="256" ARRSIZE="256" />
         <input_data SIZE="256" ARRSIZE="1024" />
+        <log_bus SIZE="256" ARRSIZE="1024" />
+        <stack_arr SIZE="256" ARRSIZE="2048" />
         <log_ptr SIZE="32" ASM="log_ptr" ARRSIZE="0" />
     </REGS>
     <MEMS>
@@ -32,12 +32,13 @@
     </VARS>
     <FLAGS />
     <FUNCTIONS>
-        <MakeSha3 RETSIZE="256">
+        <KeccakAlg RETSIZE="256">
             <ARGUMENTS>
-                <inp_data1 SIZE="256" />
+                <offs SIZE="32" />
+                <size SIZE="32" />
             </ARGUMENTS>
             <CODE />
-        </MakeSha3>
+        </KeccakAlg>
         <StopExec RETSIZE="256">
             <CODE>
                 <PRINT_ERROR message="1" />
@@ -1391,6 +1392,13 @@
             </CODE>
         </ExtCodeCopy>
         <GetAddress RETSIZE="256">
+            <LOCALVARS>
+                <ca SIZE="160">
+                    <INITAL_EXP>
+                        <REG name="cur_addr" />
+                    </INITAL_EXP>
+                </ca>
+            </LOCALVARS>
             <CODE>
                 <IF>
                     <COND>
@@ -1417,7 +1425,9 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <REG name="cur_addr" />
+                    <TYPE name="uint256">
+                        <LVAR name="ca" />
+                    </TYPE>
                 </RETURN>
             </CODE>
         </GetAddress>
@@ -1458,6 +1468,13 @@
             </CODE>
         </GetBalance>
         <GetOrigin RETSIZE="256">
+            <LOCALVARS>
+                <oa SIZE="160">
+                    <INITAL_EXP>
+                        <REG name="origin_addr" />
+                    </INITAL_EXP>
+                </oa>
+            </LOCALVARS>
             <CODE>
                 <IF>
                     <COND>
@@ -1484,11 +1501,20 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <REG name="origin_addr" />
+                    <TYPE name="uint256">
+                        <LVAR name="oa" />
+                    </TYPE>
                 </RETURN>
             </CODE>
         </GetOrigin>
         <GetCaller RETSIZE="256">
+            <LOCALVARS>
+                <ca SIZE="160">
+                    <INITAL_EXP>
+                        <REG name="caller_addr" />
+                    </INITAL_EXP>
+                </ca>
+            </LOCALVARS>
             <CODE>
                 <IF>
                     <COND>
@@ -1515,7 +1541,9 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <REG name="caller_addr" />
+                    <TYPE name="uint256">
+                        <LVAR name="ca" />
+                    </TYPE>
                 </RETURN>
             </CODE>
         </GetCaller>
@@ -1598,6 +1626,13 @@
             </CODE>
         </GetCodeSize>
         <GetGasPrice RETSIZE="256">
+            <LOCALVARS>
+                <gp SIZE="32">
+                    <INITAL_EXP>
+                        <REG name="gas_price" />
+                    </INITAL_EXP>
+                </gp>
+            </LOCALVARS>
             <CODE>
                 <IF>
                     <COND>
@@ -1624,7 +1659,9 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <REG name="gas_price" />
+                    <TYPE name="uint256">
+                        <LVAR name="gp" />
+                    </TYPE>
                 </RETURN>
             </CODE>
         </GetGasPrice>
@@ -3148,8 +3185,8 @@
             <INSTRUCTION ASM="LOG$count" SIZE="8">
                 <OPCODE>
                     <ARG SIZE="3" name="count" />
-                    <ARG SIZE="4" VAL="10" />
                     <ARG SIZE="1" VAL="0" />
+                    <ARG SIZE="4" VAL="10" />
                 </OPCODE>
                 <LOCALVARS>
                     <i SIZE="32" />
@@ -3163,6 +3200,20 @@
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </l2_data>
+                    <m_ptr SIZE="32">
+                        <INITAL_EXP>
+                            <TYPE name="uint32">
+                                <LVAR name="l1_data" />
+                            </TYPE>
+                        </INITAL_EXP>
+                    </m_ptr>
+                    <m_size SIZE="32">
+                        <INITAL_EXP>
+                            <TYPE name="uint32">
+                                <LVAR name="l2_data" />
+                            </TYPE>
+                        </INITAL_EXP>
+                    </m_size>
                 </LOCALVARS>
                 <CODE>
                     <IF>
@@ -3201,21 +3252,6 @@
                             </INNER>
                         </ELSE>
                     </IF>
-                    <OPERATOR name=" = ">
-                        <REG name="log_bus">
-                            <REG name="log_ptr" />
-                        </REG>
-                        <LVAR name="l1_data" />
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <REG name="log_bus">
-                            <OPERATOR name="+">
-                                <REG name="log_ptr" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                        <LVAR name="l2_data" />
-                    </OPERATOR>
                     <FOR>
                         <FOR_START>
                             <OPERATOR name=" = ">
@@ -3269,9 +3305,11 @@
                 </OPCODE>
                 <LOCALVARS>
                     <i SIZE="32" />
+                    <dec_cnt SIZE="32" />
                     <addr_val SIZE="32" />
                     <data_val SIZE="256" />
                     <pc_val SIZE="256" />
+                    <data_tmp SIZE="256" />
                 </LOCALVARS>
                 <CODE>
                     <IF>
@@ -3389,10 +3427,17 @@
                                                 <IMM32 value="8" />
                                             </OPERATOR>
                                             <TYPE name="uint256">
-                                                <REG name="data_arr">
+                                                <REG name="data_bus">
                                                     <LVAR name="addr_val" />
                                                 </REG>
                                             </TYPE>
+                                        </OPERATOR>
+                                    </OPERATOR>
+                                    <OPERATOR name=" = ">
+                                        <LVAR name="addr_val" />
+                                        <OPERATOR name="+">
+                                            <LVAR name="addr_val" />
+                                            <IMM32 value="1" />
                                         </OPERATOR>
                                     </OPERATOR>
                                 </CODE>
@@ -3440,7 +3485,7 @@
                                     </OPERATOR>
                                 </FOR_START>
                                 <FOR_STOP_COND>
-                                    <OPERATOR name=" &gt;= ">
+                                    <OPERATOR name=" &gt; ">
                                         <LVAR name="i" />
                                         <IMM32 value="0" />
                                     </OPERATOR>
@@ -3456,31 +3501,32 @@
                                 </FOR_ITERATION>
                                 <CODE>
                                     <OPERATOR name=" = ">
-                                        <REG name="data_arr">
-                                            <OPERATOR name="+">
-                                                <LVAR name="addr_val" />
+                                        <LVAR name="data_tmp" />
+                                        <OPERATOR name="&gt;&gt;">
+                                            <LVAR name="data_val" />
+                                            <OPERATOR name="*">
+                                                <IMM32 value="8" />
                                                 <LVAR name="i" />
                                             </OPERATOR>
+                                        </OPERATOR>
+                                    </OPERATOR>
+                                    <OPERATOR name=" = ">
+                                        <REG name="data_bus">
+                                            <LVAR name="addr_val" />
                                         </REG>
-                                        <TYPE name="uint32">
-                                            <LVAR name="data_val" />
+                                        <TYPE name="uint8">
+                                            <LVAR name="data_tmp" />
                                         </TYPE>
                                     </OPERATOR>
                                     <OPERATOR name=" = ">
-                                        <LVAR name="data_val" />
-                                        <OPERATOR name="&gt;&gt;">
-                                            <LVAR name="data_val" />
-                                            <IMM32 value="8" />
+                                        <LVAR name="addr_val" />
+                                        <OPERATOR name="+">
+                                            <LVAR name="addr_val" />
+                                            <IMM32 value="1" />
                                         </OPERATOR>
                                     </OPERATOR>
                                 </CODE>
                             </FOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <LVAR name="addr_val" />
-                                </REG>
-                                <LVAR name="data_val" />
-                            </OPERATOR>
                         </CASE>
                         <CASE index="3">
                             <IF>
@@ -3509,28 +3555,15 @@
                             </IF>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
-                                <REG name="stack_arr">
-                                    <LVAR name="addr_val" />
-                                </REG>
+                                <CALL name="Pop" />
                             </OPERATOR>
                             <OPERATOR name=" = ">
-                                <LVAR name="data_val" />
-                                <OPERATOR name="|">
-                                    <OPERATOR name="&amp;">
-                                        <CALL name="Pop" />
-                                        <IMM32 value="FF" />
-                                    </OPERATOR>
-                                    <OPERATOR name="&amp;">
-                                        <LVAR name="data_val" />
-                                        <IMM32 value="FFFFFF00" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
+                                <REG name="data_bus">
                                     <LVAR name="addr_val" />
                                 </REG>
-                                <LVAR name="data_val" />
+                                <TYPE name="uint8">
+                                    <LVAR name="data_val" />
+                                </TYPE>
                             </OPERATOR>
                         </CASE>
                         <CASE index="4">
@@ -3930,6 +3963,7 @@
                 <LOCALVARS>
                     <a SIZE="256" />
                     <b SIZE="256" />
+                    <res SIZE="256" />
                 </LOCALVARS>
                 <CODE>
                     <IF>
@@ -3964,11 +3998,22 @@
                         <LVAR name="b" />
                         <CALL name="Pop" />
                     </OPERATOR>
+                    <OPERATOR name=" = ">
+                        <LVAR name="res" />
+                        <CALL name="KeccakAlg">
+                            <ARGS>
+                                <TYPE name="uint32">
+                                    <LVAR name="a" />
+                                </TYPE>
+                                <TYPE name="uint32">
+                                    <LVAR name="b" />
+                                </TYPE>
+                            </ARGS>
+                        </CALL>
+                    </OPERATOR>
                     <CALL name="Push">
                         <ARGS>
-                            <TYPE name="uint256">
-                                <IMM64 value="1234543234" />
-                            </TYPE>
+                            <LVAR name="res" />
                         </ARGS>
                     </CALL>
                 </CODE>
@@ -3982,11 +4027,10 @@
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="sp" />
-            <IMM32 value="400" />
-        </OPERATOR>
-        <OPERATOR name=" = ">
-            <REG name="gas_available" />
-            <IMM32 value="989680" />
+            <OPERATOR name="-">
+                <IMM32 value="800" />
+                <IMM32 value="1" />
+            </OPERATOR>
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="log_ptr" />
@@ -4000,11 +4044,10 @@
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="sp" />
-            <IMM32 value="400" />
-        </OPERATOR>
-        <OPERATOR name=" = ">
-            <REG name="gas_available" />
-            <IMM32 value="989680" />
+            <OPERATOR name="-">
+                <IMM32 value="800" />
+                <IMM32 value="1" />
+            </OPERATOR>
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="log_ptr" />
