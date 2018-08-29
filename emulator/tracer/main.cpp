@@ -23,7 +23,7 @@
 #include <dbg_interface.h>
 #include "stream_txt_funcs.h"
 
-#include "profiler.h"
+//#include "profiler.h"
 
 //#define USE_DWARF
 
@@ -967,8 +967,8 @@ int RunSimulationNoOut(char* aSimName,uint32 aWait)
 	// post-process profiling if need
 	if(BuildProfile)
 	{
-		Profiler p(LOG_FILE_NAME,Device,aSimName);
-		p.Run(ProfileFileName);
+		//Profiler p(LOG_FILE_NAME,Device,aSimName);
+		//p.Run(ProfileFileName);
 	}
 
 
