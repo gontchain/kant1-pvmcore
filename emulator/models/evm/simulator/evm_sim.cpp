@@ -1380,19 +1380,6 @@ inline uint256 EVM::MulOp(uint256 a,uint256 b)
 #undef SARG
 #define SARG(aidx) aidx
 inline uint256 EVM::DivOp(uint256 a,uint256 b)
-<<<<<<< HEAD
-{
-  ;
-  if(gas_available < 5)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
-  if(SARG(b) == 0)
-=======
 {
   ;
   if(gas_available < 5)
@@ -1760,370 +1747,6 @@ inline uint256 EVM::GetCodeSize()
 {
   ;
   if(gas_available < 2)
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return code_size;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-<<<<<<< HEAD
-inline uint256 EVM::LtOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) < SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::LtOpS(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  ((int256)((SARG(a) <  ((int256)(SARG(b))))));
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GtOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) > SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GtOpS(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  ((int256)((SARG(a) >  ((int256)(SARG(b))))));
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::EqOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) == SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::IsZeroOp(uint256 a)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) == 0;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::AndOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) & SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::OrOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) | SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::XorOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) ^ SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::NotOp(uint256 a)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return (~SARG(a));
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CallValue()
-=======
-inline uint256 EVM::GetGasPrice()
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
-{
-  uint32 gp  = gas_price;
-  ;
-  if(gas_available < 2)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-<<<<<<< HEAD
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CallDataCopy(uint256 a,uint256 b,uint256 c)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CallDataSize()
-{
-  ;
-  if(gas_available < 2)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return inp_data_size;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CodeCopy(uint256 a,uint256 b,uint256 c)
-{
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::ExtCodeSize()
-{
-  ;
-  if(gas_available < 20)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
-    return ext_code_size;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::ExtCodeCopy(uint256 a,uint256 b,uint256 c,uint256 d)
-{
-  ;
-  if(gas_available < 20)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetAddress()
-{
-  uint160 ca  = cur_addr;
-  ;
-  if(gas_available < 2)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return ( ca ).range(255,0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetBalance(uint256 a)
-{
-  ;
-  if(gas_available < 20)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetOrigin()
-{
-  uint160 oa  = origin_addr;
-  ;
-  if(gas_available < 2)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return ( oa ).range(255,0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetCaller()
-{
-  uint160 ca  = caller_addr;
-  ;
-  if(gas_available < 2)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return ( ca ).range(255,0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetInputData()
-{
-  uint32 addr_val  =  (uint32)((Pop()).to_uint64());
-  uint256 inp_data  = input_data[ addr_val ];
-  ;
-  if(gas_available < 3)
-  {
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  inp_data ;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetCodeSize()
-{
-  ;
-  if(gas_available < 2)
   {
   StopExec();
   }
@@ -2148,8 +1771,6 @@ inline uint256 EVM::GetGasPrice()
   {
   gas_available = (gas_available - 2);
   }
-=======
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
     return  (uint256)( gp );
   return 0;
 };
@@ -2532,11 +2153,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-<<<<<<< HEAD
    a  = stack_arr[(sp + (SARG(count) + 1))];
-=======
-   a  = data_bus[(sp + (SARG(count) + 1))];
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
   Push( a );
       }
   #undef SARG
@@ -2559,13 +2176,8 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-<<<<<<< HEAD
   stack_arr[(sp + 1)] = stack_arr[((sp + SARG(count)) + 2)];
   stack_arr[((sp + SARG(count)) + 2)] =  first_el ;
-=======
-  data_bus[(sp + 1)] = data_bus[((sp + SARG(count)) + 2)];
-  data_bus[((sp + SARG(count)) + 2)] =  first_el ;
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2583,25 +2195,14 @@ inline int EVM::Main_decode(uint32 ocode){
   uint32 m_ptr  =  (uint32)(( l1_data ).to_uint64());
   uint32 m_size  =  (uint32)(( l2_data ).to_uint64());
   ;
-<<<<<<< HEAD
   if(gas_available < (375 + (SARG(count) * 375)))
-=======
-  if((gas_available < 375) + (SARG(count) * 375))
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
   {
   StopExec();
   }
   else
   {
-<<<<<<< HEAD
   gas_available = (gas_available - (375 + (SARG(count) * 375)));
   }
-=======
-  gas_available = ((gas_available - 375) + (SARG(count) * 375));
-  }
-  log_bus[log_ptr] =  l1_data ;
-  log_bus[(log_ptr + 1)] =  l2_data ;
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
  for( i  = 0; i  < SARG(count); i  = ( i  + 1)){
   ;
   log_bus[((log_ptr + 2) + SARG(count))] = Pop();
@@ -2653,16 +2254,12 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-<<<<<<< HEAD
    data_val  = 0;
  for( i  = 0; i  < 32; i  = ( i  + 1)){
   ;
    data_val  = (pd_lsh( data_val ,8) |  (uint256)(data_bus[ addr_val ]));
    addr_val  = ( addr_val  + 1);
   }
-=======
-   data_val  = data_bus[ addr_val ];
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
   Push( data_val );
     break;
     case 2:
@@ -2693,14 +2290,8 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-<<<<<<< HEAD
    data_val  = Pop();
   data_bus[ addr_val ] =  (uint8)(( data_val ).to_uint64());
-=======
-   data_val  = data_bus[ addr_val ];
-   data_val  = ((Pop() & 255) | ( data_val  & -256));
-  data_bus[ addr_val ] =  data_val ;
->>>>>>> d50f750b156166ee5b48e96cf5a7871c2b8f528a
     break;
     case 4:
   ;
