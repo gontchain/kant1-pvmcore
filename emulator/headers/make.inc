@@ -18,5 +18,5 @@ LIBRARIES= -lc -lstdc++ -ldl -lpthread
 
 CLEAN_DIR= rm -f
 
-DIR_OBJECTS  = ./obj
+DIR_OBJECTS  = .
 

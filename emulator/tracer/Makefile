@@ -11,7 +11,7 @@ INCLUDE = -I../dbg_interface \
 	  -I../../$(SYSTEMC_INC)
 
 # Define the target directories.
-OBJDIR =./obj
+OBJDIR =.
 
 
 all: $(TARGETDIR)/cemu
