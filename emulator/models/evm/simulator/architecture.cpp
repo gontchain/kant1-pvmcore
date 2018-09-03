@@ -69,9 +69,14 @@ LIB_EXPORT void CheckPostProgram()
   // 
   if (new_evm != NULL)
   {
-    int256 res = new_evm->Pop();
-    int32 ret_val = (res != 0); 
-    printf("return value is %s\n", res.to_string().c_str());
-    exit(ret_val);
+    int32 size = (int32)new_evm->Pop().to_int();
+    int32 offs = (int32)new_evm->Pop().to_int();
+    printf("0x");
+    for (int i = 0; i < size; i++)
+    {
+      int val = new_evm->data_bus[i + offs];
+      printf("%X", val);
+    }
+    exit(0);
   }
 }
