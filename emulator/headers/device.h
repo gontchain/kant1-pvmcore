@@ -302,6 +302,11 @@ inline uint64 pd_rsh(uint64 aVal,int aOffs)
     return aVal >> aOffs;
 }
 
+inline uint256 pd_rsh(uint256 aVal, int aOffs)
+{
+  return aVal >> aOffs;
+}
+
 #ifdef SYSTEMC_USED
 
 #define DEV_PROCESS_POS(proc_name) SC_THREAD(proc_name);  sensitive_pos << clock;
