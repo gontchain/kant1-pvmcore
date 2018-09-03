@@ -1165,10 +1165,9 @@ inline uint256 EVM::GetExp(uint256 a,uint256 b)
 inline uint256 EVM::Pop()
 {
   uint256 ret ;
-  uint32 sp_tmp  = sp;
   ;
+   ret  = stack_arr[sp];
   sp = (sp + 1);
-   ret  = stack_arr[ sp_tmp ];
     return  ret ;
   return 0;
 };
@@ -1177,8 +1176,8 @@ inline uint256 EVM::Pop()
 inline void EVM::Push(uint256 val)
 {
   ;
-  stack_arr[sp] = SARG(val);
   sp = (sp - 1);
+  stack_arr[sp] = SARG(val);
 };
 #undef SARG
 #define SARG(aidx) aidx
@@ -1945,8 +1944,6 @@ inline uint256 EVM::MakeCallCode()
 #define SARG(aidx) aidx
 inline uint256 EVM::Return()
 {
-  uint256 a  = Pop();
-  uint256 b  = Pop();
   ;
   if(gas_available < 0)
   {
@@ -1996,6 +1993,7 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint256 res ;
   ;
+   res  = Get_SystemOps(SARG(syscall));
   if(SARG(syscall) != 3)
   {
   Push( res );
@@ -2513,7 +2511,7 @@ void EVM::Operate(){
 void EVM::ResetDevice(){
   ;
   pc = 0;
-  sp = (2048 - 1);
+  sp = 2048;
   log_ptr = 0;
   MainPipe.Reset();
   pc.ResetMutable();

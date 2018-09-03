@@ -18,6 +18,15 @@ TDataMem* storage_mem;
 TDataMem* log_mem;
 TDataMem* input_mem;
 
+// KECCAK algorithm
+uint256 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
+{
+  EVM* my_evm = (EVM*)dev;
+  char f = my_evm->data_bus[offs]; // evm->data_bus + offs - pointer into start
+  char e = my_evm->data_bus[offs + size - 1];
+  printf("keccak success, first symb is %c last is %c\n",f,e);
+  return uint256(0);
+}
 
 
 void* Init(void* mParams)
@@ -54,6 +63,15 @@ void Destroy()
 
 LIB_EXPORT void CheckPostProgram()
 {
-	// save storage mem and data mem 
-	Logger.CloseLog();
+  // save storage mem and data mem 
+  Logger.CloseLog();
+
+  // 
+  if (new_evm != NULL)
+  {
+    int256 res = new_evm->Pop();
+    int32 ret_val = (res != 0); 
+    printf("return value is %s\n", res.to_string().c_str());
+    exit(ret_val);
+  }
 }

@@ -714,10 +714,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	uint32 prev_tics = 0;
 	/// initialization registers
 //  InitRegs();
-
-
-
-	{
+  {
 	// print init state of register
 		printf("Initial registers state:\n");
 	//	InitPrintRegs();
@@ -805,7 +802,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
     } 
 		catch(...)
 		{
-			printf("\n\n     unknown error\n");
+			printf("\n");
       break;
     }   
 

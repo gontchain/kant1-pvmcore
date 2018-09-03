@@ -377,7 +377,7 @@ LIB_EXPORT void CheckError(char* aMsg,int aIsImmideatly)
   if ((aMsg[0] == '@') && (aMsg[1] == 0))
   {
     GlobalErrorHeader[WarnFlag].m_MsgType = MSGTYPE_EXIT;
-    throw &GlobalErrorHeader[WarnFlag];
+    throw &GlobalErrorHeader[WarnFlag++];
   }
   //check if error
   int msg_idx = GetMsgIdx(aMsg,MsgTable.ErrorTable,MsgTable.NumErrors);

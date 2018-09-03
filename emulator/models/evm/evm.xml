@@ -152,25 +152,20 @@
         <Pop RETSIZE="256">
             <LOCALVARS>
                 <ret SIZE="256" />
-                <sp_tmp SIZE="32">
-                    <INITAL_EXP>
-                        <REG name="sp" />
-                    </INITAL_EXP>
-                </sp_tmp>
             </LOCALVARS>
             <CODE>
+                <OPERATOR name=" = ">
+                    <LVAR name="ret" />
+                    <REG name="stack_arr">
+                        <REG name="sp" />
+                    </REG>
+                </OPERATOR>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
                         <REG name="sp" />
                         <IMM32 value="1" />
                     </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <LVAR name="ret" />
-                    <REG name="stack_arr">
-                        <LVAR name="sp_tmp" />
-                    </REG>
                 </OPERATOR>
                 <RETURN>
                     <LVAR name="ret" />
@@ -183,17 +178,17 @@
             </ARGUMENTS>
             <CODE>
                 <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <ARG name="val" />
-                </OPERATOR>
-                <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
                         <REG name="sp" />
                         <IMM32 value="1" />
                     </OPERATOR>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <REG name="sp" />
+                    </REG>
+                    <ARG name="val" />
                 </OPERATOR>
             </CODE>
         </Push>
@@ -2066,18 +2061,6 @@
             </CODE>
         </MakeCallCode>
         <Return RETSIZE="256">
-            <LOCALVARS>
-                <a SIZE="256">
-                    <INITAL_EXP>
-                        <CALL name="Pop" />
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="256">
-                    <INITAL_EXP>
-                        <CALL name="Pop" />
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
             <CODE>
                 <IF>
                     <COND>
@@ -2698,6 +2681,12 @@
                     <res SIZE="256" />
                 </LOCALVARS>
                 <CODE>
+                    <OPERATOR name=" = ">
+                        <LVAR name="res" />
+                        <LST name="SystemOps">
+                            <ARG name="syscall" />
+                        </LST>
+                    </OPERATOR>
                     <IF>
                         <COND>
                             <OPERATOR name=" != ">
@@ -4027,10 +4016,7 @@
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="sp" />
-            <OPERATOR name="-">
-                <IMM32 value="800" />
-                <IMM32 value="1" />
-            </OPERATOR>
+            <IMM32 value="800" />
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="log_ptr" />
@@ -4044,10 +4030,7 @@
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="sp" />
-            <OPERATOR name="-">
-                <IMM32 value="800" />
-                <IMM32 value="1" />
-            </OPERATOR>
+            <IMM32 value="800" />
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="log_ptr" />

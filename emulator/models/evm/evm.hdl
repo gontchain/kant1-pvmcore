@@ -79,16 +79,15 @@ Device EVM
   MAIN_TYPE Pop()
   {
     MAIN_TYPE ret;
-    int32 sp_tmp = sp;
+    ret = stack_arr[sp];
     sp = sp + 1;
-    ret = stack_arr[sp_tmp];
     return ret;
   }
  // push result to stack
   void Push(MAIN_TYPE val)
   {
-    stack_arr[sp] = val;
     sp = sp - 1;
+    stack_arr[sp] = val;
   }
 
   // extend sign 
@@ -496,42 +495,42 @@ Device EVM
    MAIN_TYPE Return()
    {
      USEGAS(STEPGAS0);
-     MAIN_TYPE a = Pop();
-     MAIN_TYPE b = Pop();
+  //   MAIN_TYPE a = Pop();
+  //   MAIN_TYPE b = Pop();
      StopExec();
      return (MAIN_TYPE)0;
    }
    
-   MAIN_TYPE DelegateCall()
-   {
-     USEGAS(CALLGAS);
-     MAIN_TYPE callGas = Pop();
-     MAIN_TYPE address = Pop();
-     MAIN_TYPE inOff = Pop();
-     MAIN_TYPE inSize = Pop();
-     MAIN_TYPE outOff = Pop();
-     MAIN_TYPE outSize = Pop();
-     MAIN_TYPE call_res = 0;
-     return call_res;
-   }
+  MAIN_TYPE DelegateCall()
+  {
+    USEGAS(CALLGAS);
+    MAIN_TYPE callGas = Pop();
+    MAIN_TYPE address = Pop();
+    MAIN_TYPE inOff = Pop();
+    MAIN_TYPE inSize = Pop();
+    MAIN_TYPE outOff = Pop();
+    MAIN_TYPE outSize = Pop();
+    MAIN_TYPE call_res = 0;
+    return call_res;
+  }
  
-   ArgList MAIN_TYPE SystemOps,
-   {
+  ArgList MAIN_TYPE SystemOps,
+  {
      "CREATE","CALL","CALLCODE","RETURN","DELEGATECALL"
-   },
-   {
-     CreateAccount(Pop(),Pop(),Pop()),MakeCall(),MakeCallCode(),Return(),DelegateCall()
-   };
+  },
+  {
+    CreateAccount(Pop(),Pop(),Pop()), MakeCall(), MakeCallCode(), Return(), DelegateCall()
+  };
    
-   
-   
-   
+        
   //  instruction set;
   ISET Main
   {
     INST "$syscall",(8,int4 syscall = SystemOps,int4 0xf)
     {
-      MAIN_TYPE res = syscall();
+      MAIN_TYPE res; 
+      
+      res = syscall;
       if(idx(syscall) != 0x3) // except return
         Push(res);
     }
@@ -555,6 +554,7 @@ Device EVM
        MAIN_TYPE b = Pop();
        StopExec();
     }
+    
     INST "SUICIDE",(8,int8 0xff)
     {
       USEGAS(STEPGAS0);
@@ -773,7 +773,7 @@ Device EVM
    RESET
    {
      pc = 0;
-     sp = STACK_SIZE - 1;
+     sp = STACK_SIZE;
      log_ptr = 0;
    }
 
