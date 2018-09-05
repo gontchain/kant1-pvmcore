@@ -47,27 +47,27 @@ compare:
 	$(MAKE) -C or compare
 	$(MAKE) -C xor compare
 	$(MAKE) -C not compare
-	#$(MAKE) -C byte compare
+	# with segfault $(MAKE) -C byte compare
 	$(MAKE) -C add compare
 	$(MAKE) -C sub compare
 	$(MAKE) -C mul compare
 	$(MAKE) -C div compare
 	$(MAKE) -C mod compare
 	$(MAKE) -C smod compare
-	#$(MAKE) -C addmod compare
-	#$(MAKE) -C mulmod compare
+	# with segfault $(MAKE) -C addmod compare
+	# with segfault $(MAKE) -C mulmod compare
 	$(MAKE) -C exp compare
 	$(MAKE) -C signextend compare
 	$(MAKE) -C gaslimit compare GASLIMIT=0xfff
 	$(MAKE) -C gas compare GASLIMIT=0xfff
 	$(MAKE) -C gasprice compare
-	#$(MAKE) -C address compare
-	#$(MAKE) -C balance compare
-	#$(MAKE) -C origin compare
-	#$(MAKE) -C caller compare
+	# with segfault $(MAKE) -C address compare
+	# with segfault $(MAKE) -C balance compare
+	# with segfault $(MAKE) -C origin compare
+	# with segfault $(MAKE) -C caller compare
 	$(MAKE) -C callvalue compare
 	$(MAKE) -C codesize compare
-	#$(MAKE) -C extcodesize compare
+	# with segfault $(MAKE) -C extcodesize compare
 	echo "\n\nSUCCESSFUL TESTS are `cat passes | wc -l`\n\nFAIL TESTS are `cat failes | wc -l`\n\n"
 
 run-evm:
