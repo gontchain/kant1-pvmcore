@@ -33,6 +33,6 @@ $(DIR_OBJECTS)/evm_sim.o:
 	
 	
 clean:
-	rm -f $(DIR_OBJECTS)/*.*
+	rm -f $(DIR_OBJECTS)/*.o
 	rm -f $(PROGNAME)
 	rm -rf $(DIR_OBJECTS)
