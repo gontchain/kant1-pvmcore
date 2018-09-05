@@ -85,6 +85,7 @@ LIB_EXPORT void CheckPostProgram()
       int val = new_evm->data_bus[i + offs];
       printf("%02X", val);
     }
+    printf("\n");
     exit(0);
   }
 }
