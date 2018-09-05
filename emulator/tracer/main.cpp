@@ -865,7 +865,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 
 int RunSimulationNoOut(char* aSimName,uint32 aWait)
 {
-	tDisAsmDbgArea* elf_res;
+  tDisAsmArea* elf_res;
 	int is_hi_addr = 0;
 	unsigned long counter;
 	
@@ -879,8 +879,9 @@ int RunSimulationNoOut(char* aSimName,uint32 aWait)
 	PRINT_LOG("load elf\n");
 
 	// load an executable file
-	if(Device->LoadElf(aSimName))
-	{
+  elf_res = Device->LoadElf(aSimName);
+  if ((elf_res == NULL) || (elf_res->mSize == 0))
+  {
 		printf("file load error\n");
 		return ERR_CANT_OPEN_EXE;
 	}
@@ -915,35 +916,19 @@ int RunSimulationNoOut(char* aSimName,uint32 aWait)
 	// start 
 	do
   {
-	PRINT_LOG("THREAD:start execution\n");
-	Device->Start();
-#ifdef WIN32
-	while(Device->IsRun())
-    { 
-      Sleep(500); // пол секунды
-
-      if(Device->GetNumCycles() > num_cycles)
+	  PRINT_LOG("THREAD:start execution\n");
+    try
+    {
+      while (true)
       {
-        Device->Stop();
-		printf("timeout error, cycles %d\n",Device->GetNumCycles());
-	  		return -1;
-      } // if
-    }// while 
-#else
-    while(Device->IsRun())
-    { 
-      sleep(1);
-      if(Device->GetNumCycles() > num_cycles)
-      {
-        Device->Stop(); 			
-	printf("timeout error, cycles %d\n",Device->GetNumCycles());
-	return -1;
-      }// if
-
-    }// while
-#endif
-		PRINT_LOG("THREAD:stop execution\n");
-
+        Device->StepInto();
+      }
+    }
+    catch (...)
+    {
+    }
+    PRINT_LOG("THREAD:stop execution\n");
+    CheckPostProg();
     cur_pc = Device->GetPc(0);
     {
       int process_warn = ProcessWarns(cur_pc);
@@ -998,7 +983,7 @@ int RunSimulationNoOut(char* aSimName,uint32 aWait)
 
   if(IsDviFile(aSimName))
   {
-    Device->SetBreakPoint(elf_res->mEndPoint);
+//    Device->SetBreakPoint(elf_res->mEndPoint);
   }
   else
   {
