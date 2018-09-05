@@ -73,13 +73,13 @@ LIB_EXPORT void CheckPostProgram()
   {
     if ((signed)(new_evm->gas_available.mRead) == -1)
     {
-      printf("gas limit error\n");
+      printf("\ngas limit error\n");
       exit(-1);
     }
 
     int32 size = (int32)new_evm->Pop().to_int();
     int32 offs = (int32)new_evm->Pop().to_int();
-    printf("0x");
+    printf("\n0x");
     for (int i = 0; i < size; i++)
     {
       int val = new_evm->data_bus[i + offs];
