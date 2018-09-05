@@ -34,38 +34,104 @@ all:
 	$(MAKE) -C codesize
 	$(MAKE) -C extcodesize
 
-run:
-	$(MAKE) -C lt run
-	$(MAKE) -C gt run
-	$(MAKE) -C slt run
-	$(MAKE) -C sgt run
-	$(MAKE) -C eq run
-	$(MAKE) -C iszero run
-	$(MAKE) -C and run
-	$(MAKE) -C or run
-	$(MAKE) -C xor run
-	$(MAKE) -C not run
-	$(MAKE) -C byte run
-	$(MAKE) -C add run
-	$(MAKE) -C sub run
-	$(MAKE) -C mul run
-	$(MAKE) -C div run
-	$(MAKE) -C mod run
-	$(MAKE) -C smod run
-	$(MAKE) -C addmod run
-	$(MAKE) -C mulmod run
-	$(MAKE) -C exp run
-	$(MAKE) -C signextend run
-	$(MAKE) -C gaslimit run GASLIMIT=0xfff
-	$(MAKE) -C gas run GASLIMIT=0xfff
-	$(MAKE) -C gasprice run
-	$(MAKE) -C address run
-	$(MAKE) -C balance run
-	$(MAKE) -C origin run
-	$(MAKE) -C caller run
-	$(MAKE) -C callvalue run
-	$(MAKE) -C codesize run
-	$(MAKE) -C extcodesize run
+compare:
+	$(MAKE) -C lt compare
+	$(MAKE) -C gt compare
+	$(MAKE) -C slt compare
+	$(MAKE) -C sgt compare
+	$(MAKE) -C eq compare
+	$(MAKE) -C iszero compare
+	$(MAKE) -C and compare
+	$(MAKE) -C or compare
+	$(MAKE) -C xor compare
+	$(MAKE) -C not compare
+	#$(MAKE) -C byte compare
+	$(MAKE) -C add compare
+	$(MAKE) -C sub compare
+	$(MAKE) -C mul compare
+	$(MAKE) -C div compare
+	$(MAKE) -C mod compare
+	$(MAKE) -C smod compare
+	#$(MAKE) -C addmod compare
+	#$(MAKE) -C mulmod compare
+	$(MAKE) -C exp compare
+	$(MAKE) -C signextend compare
+	$(MAKE) -C gaslimit compare GASLIMIT=0xfff
+	$(MAKE) -C gas compare GASLIMIT=0xfff
+	$(MAKE) -C gasprice compare
+	#$(MAKE) -C address compare
+	#$(MAKE) -C balance compare
+	#$(MAKE) -C origin compare
+	#$(MAKE) -C caller compare
+	$(MAKE) -C callvalue compare
+	$(MAKE) -C codesize compare
+	#$(MAKE) -C extcodesize compare
+
+run-evm:
+	$(MAKE) -C lt run-evm
+	$(MAKE) -C gt run-evm
+	$(MAKE) -C slt run-evm
+	$(MAKE) -C sgt run-evm
+	$(MAKE) -C eq run-evm
+	$(MAKE) -C iszero run-evm
+	$(MAKE) -C and run-evm
+	$(MAKE) -C or run-evm
+	$(MAKE) -C xor run-evm
+	$(MAKE) -C not run-evm
+	$(MAKE) -C byte run-evm
+	$(MAKE) -C add run-evm
+	$(MAKE) -C sub run-evm
+	$(MAKE) -C mul run-evm
+	$(MAKE) -C div run-evm
+	$(MAKE) -C mod run-evm
+	$(MAKE) -C smod run-evm
+	$(MAKE) -C addmod run-evm
+	$(MAKE) -C mulmod run-evm
+	$(MAKE) -C exp run-evm
+	$(MAKE) -C signextend run-evm
+	$(MAKE) -C gaslimit run-evm GASLIMIT=0xfff
+	$(MAKE) -C gas run-evm GASLIMIT=0xfff
+	$(MAKE) -C gasprice run-evm
+	$(MAKE) -C address run-evm
+	$(MAKE) -C balance run-evm
+	$(MAKE) -C origin run-evm
+	$(MAKE) -C caller run-evm
+	$(MAKE) -C callvalue run-evm
+	$(MAKE) -C codesize run-evm
+	$(MAKE) -C extcodesize run-evm
+
+run-cemu:
+	$(MAKE) -C lt run-cemu
+	$(MAKE) -C gt run-cemu
+	$(MAKE) -C slt run-cemu
+	$(MAKE) -C sgt run-cemu
+	$(MAKE) -C eq run-cemu
+	$(MAKE) -C iszero run-cemu
+	$(MAKE) -C and run-cemu
+	$(MAKE) -C or run-cemu
+	$(MAKE) -C xor run-cemu
+	$(MAKE) -C not run-cemu
+	$(MAKE) -C byte run-cemu
+	$(MAKE) -C add run-cemu
+	$(MAKE) -C sub run-cemu
+	$(MAKE) -C mul run-cemu
+	$(MAKE) -C div run-cemu
+	$(MAKE) -C mod run-cemu
+	$(MAKE) -C smod run-cemu
+	$(MAKE) -C addmod run-cemu
+	$(MAKE) -C mulmod run-cemu
+	$(MAKE) -C exp run-cemu
+	$(MAKE) -C signextend run-cemu
+	$(MAKE) -C gaslimit run-cemu GASLIMIT=0xfff
+	$(MAKE) -C gas run-cemu GASLIMIT=0xfff
+	$(MAKE) -C gasprice run-cemu
+	$(MAKE) -C address run-cemu
+	$(MAKE) -C balance run-cemu
+	$(MAKE) -C origin run-cemu
+	$(MAKE) -C caller run-cemu
+	$(MAKE) -C callvalue run-cemu
+	$(MAKE) -C codesize run-cemu
+	$(MAKE) -C extcodesize run-cemu
 
 clean:
 	$(MAKE) -C lt clean
