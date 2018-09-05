@@ -11,13 +11,14 @@ const char *reg_7 = "ext_code_size";
 const char *reg_8 = "inp_data_size";
 const char *reg_9 = "log_ptr";
 const char *var_10 = "sp";
-const char *var_11 = "CoinBase";
-const char *var_12 = "TimeStamp";
-const char *var_13 = "Number";
-const char *var_14 = "Difficulty";
-const char *var_15 = "GasLimit";
+const char *var_11 = "data";
+const char *var_12 = "CoinBase";
+const char *var_13 = "TimeStamp";
+const char *var_14 = "Number";
+const char *var_15 = "Difficulty";
+const char *var_16 = "GasLimit";
 
-const tDRegister EVM_regs[16] = {
+const tDRegister EVM_regs[17] = {
   {reg_0,4,0,0},
   {reg_1,20,0,0},
   {reg_2,20,0,0},
@@ -29,11 +30,12 @@ const tDRegister EVM_regs[16] = {
   {reg_8,32,0,0},
   {reg_9,4,0,0},
   {var_10,11,0,0},
-  {var_11,12,0,0},
+  {var_11,1,1024,0},
   {var_12,13,0,0},
   {var_13,14,0,0},
   {var_14,15,0,0},
   {var_15,16,0,0},
+  {var_16,17,0,0},
 };
 
 
@@ -43,7 +45,7 @@ const tDMemBus EVM_membus[] = {
 
 
 const tDProcCfg EVM_ProcCfg = {
-  16,EVM_regs,
+  17,EVM_regs,
   1,EVM_membus,
   0,NULL,
   0,NULL,
@@ -1013,11 +1015,12 @@ int EVM::SetReg(int rnum,int anum,char* val){
   case 8: inp_data_size = *((uint256*)val); UpdateRegs(); break;
   case 9: log_ptr = *((uint32*)val); UpdateRegs(); break;
   case 10: sp = *((uint32*)val); break;
-  case 11: CoinBase = *((uint256*)val); break;
-  case 12: TimeStamp = *((uint256*)val); break;
-  case 13: Number = *((uint256*)val); break;
-  case 14: Difficulty = *((uint256*)val); break;
-  case 15: GasLimit = *((uint256*)val); break;
+  case 11: data_bus[anum] = *((uint8*)val); break;
+  case 12: CoinBase = *((uint256*)val); break;
+  case 13: TimeStamp = *((uint256*)val); break;
+  case 14: Number = *((uint256*)val); break;
+  case 15: Difficulty = *((uint256*)val); break;
+  case 16: GasLimit = *((uint256*)val); break;
     default: return 0;
     }
   return 1;
@@ -1059,18 +1062,21 @@ int EVM::GetReg(int rnum,int anum,char* val){
      *((uint32*)val) = sp;
     break;
     case 11:
-     *((uint256*)val) = CoinBase;
+     *((uint8*)val) = data_bus[anum];
     break;
     case 12:
-     *((uint256*)val) = TimeStamp;
+     *((uint256*)val) = CoinBase;
     break;
     case 13:
-     *((uint256*)val) = Number;
+     *((uint256*)val) = TimeStamp;
     break;
     case 14:
-     *((uint256*)val) = Difficulty;
+     *((uint256*)val) = Number;
     break;
     case 15:
+     *((uint256*)val) = Difficulty;
+    break;
+    case 16:
      *((uint256*)val) = GasLimit;
     break;
     default: return 0;
@@ -2271,7 +2277,7 @@ inline int EVM::Main_decode(uint32 ocode){
   gas_available = (gas_available - 3);
   }
    data_val  = Pop();
- for( i  = 31; i  > 0; i  = ( i  - 1)){
+ for( i  = 0; i  < 32; i  = ( i  + 1)){
   ;
    data_tmp  = pd_rsh( data_val ,(8 *  i ));
   data_bus[ addr_val ] =  (uint8)(( data_tmp ).to_uint64());

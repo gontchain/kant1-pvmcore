@@ -69,8 +69,8 @@ LIB_EXPORT void CheckPostProgram()
   // 
   if (new_evm != NULL)
   {
-    int32 offs = (int32)new_evm->Pop().to_int();
     int32 size = (int32)new_evm->Pop().to_int();
+    int32 offs = (int32)new_evm->Pop().to_int();
     printf("0x");
     for (int i = 0; i < size; i++)
     {

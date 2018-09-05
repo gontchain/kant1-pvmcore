@@ -80,7 +80,6 @@ public:
   PD_REG< uint256 >  ext_code_size;
   PD_REG< uint256 >  inp_data_size;
   PD_REG< uint32 >  mem_size;
-  PD_REG<uint8>  data_bus[1024];
   PD_REG<uint256>  storage_bus[256];
   PD_REG<uint256>  input_data[1024];
   PD_REG<uint256>  log_bus[1024];
@@ -88,6 +87,7 @@ public:
   PD_REG< uint32 >  log_ptr;
   uint32  sp;
   uint1  is_pc_within_inst;
+  uint8  data_bus[1024];
   uint256  CoinBase;
   uint256  TimeStamp;
   uint256  Number;

@@ -11,7 +11,6 @@
         <ext_code_size SIZE="256" ASM="ext_code_size" ARRSIZE="0" />
         <inp_data_size SIZE="256" ASM="inp_data_size" ARRSIZE="0" />
         <mem_size SIZE="32" ARRSIZE="0" />
-        <data_bus SIZE="8" ARRSIZE="1024" />
         <storage_bus SIZE="256" ARRSIZE="256" />
         <input_data SIZE="256" ARRSIZE="1024" />
         <log_bus SIZE="256" ARRSIZE="1024" />
@@ -24,6 +23,7 @@
     <VARS>
         <sp SIZE="32" ASM="sp" />
         <is_pc_within_inst SIZE="1" />
+        <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
         <CoinBase SIZE="256" ASM="CoinBase" />
         <TimeStamp SIZE="256" ASM="TimeStamp" />
         <Number SIZE="256" ASM="Number" />
@@ -3470,19 +3470,19 @@
                                 <FOR_START>
                                     <OPERATOR name=" = ">
                                         <LVAR name="i" />
-                                        <IMM32 value="1F" />
+                                        <IMM32 value="0" />
                                     </OPERATOR>
                                 </FOR_START>
                                 <FOR_STOP_COND>
-                                    <OPERATOR name=" &gt; ">
+                                    <OPERATOR name=" &lt; ">
                                         <LVAR name="i" />
-                                        <IMM32 value="0" />
+                                        <IMM32 value="20" />
                                     </OPERATOR>
                                 </FOR_STOP_COND>
                                 <FOR_ITERATION>
                                     <OPERATOR name=" = ">
                                         <LVAR name="i" />
-                                        <OPERATOR name="-">
+                                        <OPERATOR name="+">
                                             <LVAR name="i" />
                                             <IMM32 value="1" />
                                         </OPERATOR>

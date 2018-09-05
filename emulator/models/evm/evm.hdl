@@ -42,7 +42,7 @@ Device EVM
   MemSpace log_bus, 32, MAIN_TYPE_SIZE;
   MemSpace input_data, 32,MAIN_TYPE_SIZE;
   */
-  Reg int8 data_bus[DATA_SIZE];
+  Var int8 data_bus[DATA_SIZE],"data";
   Reg MAIN_TYPE storage_bus[STORAGE_SIZE];
   Reg MAIN_TYPE input_data[INPUT_DATA_SIZE];
   Reg MAIN_TYPE log_bus[LOG_AREA_SIZE];
@@ -659,7 +659,7 @@ Device EVM
         case 2: // MSTORE
           USEGAS(STEPGAS2);
           data_val = Pop();
-          for(i = 31; i > 0; i=i-1)
+          for(i = 0; i < 32; i=i+1)
           {
             data_tmp = data_val >> (8*i);
             data_bus[addr_val] = (int8)(data_tmp);
