@@ -79,7 +79,7 @@ LIB_EXPORT void CheckPostProgram()
 
     int32 offs = (int32)new_evm->Pop().to_int();
     int32 size = (int32)new_evm->Pop().to_int();
-    printf("\n0x");
+    // printf("\n0x");
     for (int i = 0; i < size; i++)
     {
       int val = new_evm->data_bus[i + offs];
