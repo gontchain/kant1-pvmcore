@@ -35,6 +35,8 @@ all:
 	$(MAKE) -C extcodesize
 
 compare:
+	rm -rf passes
+	rm -rf failes
 	$(MAKE) -C lt compare
 	$(MAKE) -C gt compare
 	$(MAKE) -C slt compare
@@ -66,6 +68,7 @@ compare:
 	$(MAKE) -C callvalue compare
 	$(MAKE) -C codesize compare
 	#$(MAKE) -C extcodesize compare
+	echo "\n\nSUCCESSFUL TESTS are `cat passes | wc -l`\n\nFAIL TESTS are `cat failes | wc -l`\n\n"
 
 run-evm:
 	$(MAKE) -C lt run-evm
