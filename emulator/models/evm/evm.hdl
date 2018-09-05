@@ -587,7 +587,7 @@ Device EVM
       for(i = 0; i < cnt; i=i+1)
       {
         tmp = prog_bus[pc + i + 1] & 0xFF;
-        a = a | (tmp << (8*i));
+        a = (a<< 8) | tmp;
       }
       Push(a);
       pc = pc + cnt + 1;
@@ -632,6 +632,7 @@ Device EVM
       int32 i;
       int32 dec_cnt;
       int32 addr_val;
+      int32 init_shift;
       MAIN_TYPE data_val;
       MAIN_TYPE pc_val;
       MAIN_TYPE data_tmp;
@@ -648,10 +649,12 @@ Device EVM
         case 1: // MLOAD
           USEGAS(STEPGAS2);
           data_val = 0;
+          init_shift = 0; // most significant byte is first
           for(i = 0; i < 32; i=i+1)
           {
-            data_val = (data_val << 8) | (MAIN_TYPE)data_bus[addr_val];
+            data_val = (data_val << init_shift) | ((MAIN_TYPE)data_bus[addr_val]);
             addr_val = addr_val + 1;
+            init_shift = init_shift + 8;
           }
           Push(data_val);
           break;
@@ -659,11 +662,13 @@ Device EVM
         case 2: // MSTORE
           USEGAS(STEPGAS2);
           data_val = Pop();
+          init_shift = 31 * 8; // most significant byte is first
           for(i = 0; i < 32; i=i+1)
           {
-            data_tmp = data_val >> (8*i);
+            data_tmp = (data_val >> init_shift);
             data_bus[addr_val] = (int8)(data_tmp);
             addr_val = addr_val + 1;
+            init_shift = init_shift - 8;
           }
           break;
 

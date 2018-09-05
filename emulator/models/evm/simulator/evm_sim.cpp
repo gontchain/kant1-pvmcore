@@ -1149,6 +1149,8 @@ inline uint256 EVM::GetExp(uint256 a,uint256 b)
   ;
   if(gas_available < 10)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1196,6 +1198,8 @@ inline uint256 EVM::SignExtend(uint256 a,uint256 b)
   ;
   if(gas_available < 5)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1230,6 +1234,8 @@ inline uint256 EVM::ByteFromWord(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1247,6 +1253,8 @@ inline uint256 EVM::GetModule(uint256 a,uint256 mod)
   ;
   if(gas_available < 5)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1273,6 +1281,8 @@ inline uint256 EVM::GetModuleAM(uint256 a,uint256 mod)
   ;
   if(gas_available < 8)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1299,6 +1309,8 @@ inline uint256 EVM::GetModuleS(uint256 a,uint256 mod)
   ;
   if(gas_available < 5)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1324,6 +1336,8 @@ inline uint256 EVM::StopOp()
   ;
   if(gas_available < 0)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1341,6 +1355,8 @@ inline uint256 EVM::AddOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1357,6 +1373,8 @@ inline uint256 EVM::SubOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1373,6 +1391,8 @@ inline uint256 EVM::MulOp(uint256 a,uint256 b)
   ;
   if(gas_available < 5)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1389,6 +1409,8 @@ inline uint256 EVM::DivOp(uint256 a,uint256 b)
   ;
   if(gas_available < 5)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1412,6 +1434,8 @@ inline uint256 EVM::LtOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1428,6 +1452,8 @@ inline uint256 EVM::LtOpS(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1444,6 +1470,8 @@ inline uint256 EVM::GtOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1460,6 +1488,8 @@ inline uint256 EVM::GtOpS(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1476,6 +1506,8 @@ inline uint256 EVM::EqOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1492,6 +1524,8 @@ inline uint256 EVM::IsZeroOp(uint256 a)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1508,6 +1542,8 @@ inline uint256 EVM::AndOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1524,6 +1560,8 @@ inline uint256 EVM::OrOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1540,6 +1578,8 @@ inline uint256 EVM::XorOp(uint256 a,uint256 b)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1556,6 +1596,8 @@ inline uint256 EVM::NotOp(uint256 a)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1572,6 +1614,8 @@ inline uint256 EVM::CallValue()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1588,6 +1632,8 @@ inline uint256 EVM::CallDataCopy(uint256 a,uint256 b,uint256 c)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1604,6 +1650,8 @@ inline uint256 EVM::CallDataSize()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1620,6 +1668,8 @@ inline uint256 EVM::CodeCopy(uint256 a,uint256 b,uint256 c)
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1636,6 +1686,8 @@ inline uint256 EVM::ExtCodeSize()
   ;
   if(gas_available < 20)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1652,6 +1704,8 @@ inline uint256 EVM::ExtCodeCopy(uint256 a,uint256 b,uint256 c,uint256 d)
   ;
   if(gas_available < 20)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1669,6 +1723,8 @@ inline uint256 EVM::GetAddress()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1685,6 +1741,8 @@ inline uint256 EVM::GetBalance(uint256 a)
   ;
   if(gas_available < 20)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1702,6 +1760,8 @@ inline uint256 EVM::GetOrigin()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1719,6 +1779,8 @@ inline uint256 EVM::GetCaller()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1737,6 +1799,8 @@ inline uint256 EVM::GetInputData()
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1753,6 +1817,8 @@ inline uint256 EVM::GetCodeSize()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1770,6 +1836,8 @@ inline uint256 EVM::GetGasPrice()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1786,6 +1854,8 @@ inline uint256 EVM::BlockChainHash(uint256 a)
   ;
   if(gas_available < 20)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1807,6 +1877,8 @@ inline uint256 EVM::GetCoinBase()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1823,6 +1895,8 @@ inline uint256 EVM::GetTimeStamp()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1839,6 +1913,8 @@ inline uint256 EVM::GetNumber()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1855,6 +1931,8 @@ inline uint256 EVM::GetDifficulty()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1871,6 +1949,8 @@ inline uint256 EVM::GetGasLimit()
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1888,6 +1968,8 @@ inline uint256 EVM::CreateAccount(uint256 endowment,uint256 initOff,uint256 init
   ;
   if(gas_available < 32000)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1913,6 +1995,8 @@ inline uint256 EVM::MakeCall()
   ;
   if(gas_available < 40)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1937,6 +2021,8 @@ inline uint256 EVM::MakeCallCode()
   ;
   if(gas_available < 40)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1953,6 +2039,8 @@ inline uint256 EVM::Return()
   ;
   if(gas_available < 0)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -1977,6 +2065,8 @@ inline uint256 EVM::DelegateCall()
   ;
   if(gas_available < 40)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2024,6 +2114,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 40)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2045,6 +2137,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 0)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2066,6 +2160,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 0)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2122,6 +2218,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2132,7 +2230,7 @@ inline int EVM::Main_decode(uint32 ocode){
  for( i  = 0; i  <  cnt ; i  = ( i  + 1)){
   ;
    tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
-   a  = ( a  | pd_lsh( tmp ,(8 *  i )));
+   a  = (pd_lsh( a ,8) |  tmp );
   }
   Push( a );
   pc = ((pc +  cnt ) + 1);
@@ -2151,6 +2249,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2174,6 +2274,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2201,6 +2303,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < (375 + (SARG(count) * 375)))
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2226,6 +2330,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint32 i ;
   uint32 dec_cnt ;
   uint32 addr_val ;
+  uint32 init_shift ;
   uint256 data_val ;
   uint256 pc_val ;
   uint256 data_tmp ;
@@ -2240,6 +2345,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2252,6 +2359,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2259,10 +2368,12 @@ inline int EVM::Main_decode(uint32 ocode){
   gas_available = (gas_available - 3);
   }
    data_val  = 0;
+   init_shift  = 0;
  for( i  = 0; i  < 32; i  = ( i  + 1)){
   ;
-   data_val  = (pd_lsh( data_val ,8) |  (uint256)(data_bus[ addr_val ]));
+   data_val  = (pd_lsh( data_val , init_shift ) |  (uint256)(data_bus[ addr_val ]));
    addr_val  = ( addr_val  + 1);
+   init_shift  = ( init_shift  + 8);
   }
   Push( data_val );
     break;
@@ -2270,6 +2381,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2277,17 +2390,21 @@ inline int EVM::Main_decode(uint32 ocode){
   gas_available = (gas_available - 3);
   }
    data_val  = Pop();
+   init_shift  = (31 * 8);
  for( i  = 0; i  < 32; i  = ( i  + 1)){
   ;
-   data_tmp  = pd_rsh( data_val ,(8 *  i ));
+   data_tmp  = pd_rsh( data_val , init_shift );
   data_bus[ addr_val ] =  (uint8)(( data_tmp ).to_uint64());
    addr_val  = ( addr_val  + 1);
+   init_shift  = ( init_shift  - 8);
   }
     break;
     case 3:
   ;
   if(gas_available < 3)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2301,6 +2418,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 50)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2314,6 +2433,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 0)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2327,6 +2448,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 8)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2340,6 +2463,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 10)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2357,6 +2482,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2370,6 +2497,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2383,6 +2512,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 2)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2395,6 +2526,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 1)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
@@ -2460,6 +2593,8 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
   if(gas_available < 30)
   {
+  ;
+  gas_available = -1;
   StopExec();
   }
   else
