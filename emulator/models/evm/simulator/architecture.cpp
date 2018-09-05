@@ -50,7 +50,9 @@ void* Init(void* mParams)
   new_evm->log_bus = log_mem;
   new_evm->input_data = input_mem;
   */
-return (void*)new_evm;
+  // init gas price
+  new_evm->gas_available.mWrite = new_evm->gas_available.mRead = 300000;
+  return (void*)new_evm;
 }
 
 void Destroy()
@@ -69,6 +71,12 @@ LIB_EXPORT void CheckPostProgram()
   // 
   if (new_evm != NULL)
   {
+    if ((signed)(new_evm->gas_available.mRead) == -1)
+    {
+      printf("gas limit error\n");
+      exit(-1);
+    }
+
     int32 size = (int32)new_evm->Pop().to_int();
     int32 offs = (int32)new_evm->Pop().to_int();
     printf("0x");
