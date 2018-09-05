@@ -1254,10 +1254,10 @@ int main(int argc,char* argv[])
 		exit(ERR_WRONG_SIM_NAME); // 
 	}
 #else
-	LibHandler = dlopen(argv[sim_args_start],RTLD_LAZY); 
+	LibHandler = dlopen(argv[sim_args_start], RTLD_GLOBAL | RTLD_LAZY);
 	if(LibHandler==NULL) // error during the dll loading - wrong file name
 	{
-		printf("error: can't read dll\n");
+		printf("error: can't read dll: %s\n", dlerror());
 		return (ERR_WRONG_SIM_NAME); // 
 	}
 #endif
