@@ -4,3 +4,5 @@
 *.a
 *.bin
 *.out
+out.cemu
+out.evm
