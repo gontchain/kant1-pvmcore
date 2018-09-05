@@ -29,4 +29,4 @@ clean:
 	$(MYMAKE) -C ./libs_src/libdwarf/  clean
 	$(MYMAKE) -C ./libs_src/simlib/ clean
 	$(MYMAKE) -C ./tracer clean
-	
+	$(MYMAKE) -C ./models/evm/simulator/ clean
