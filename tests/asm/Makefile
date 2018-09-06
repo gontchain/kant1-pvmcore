@@ -36,8 +36,8 @@ all:
 	$(MAKE) -C sha3
 
 compare:
-	rm -rf passes
-	rm -rf failes
+	@rm -rf passes
+	@rm -rf fails
 	$(MAKE) -C lt compare
 	$(MAKE) -C gt compare
 	$(MAKE) -C slt compare
@@ -71,7 +71,7 @@ compare:
 	$(MAKE) -C sha3 compare
 
 	# with segfault $(MAKE) -C extcodesize compare
-	echo "\n\nSUCCESSFUL TESTS are `cat passes | wc -l`\n\nFAIL TESTS are `cat failes | wc -l`\n\n"
+	@echo "\n\nTest Results:\n\tPASS: `cat passes | wc -l`\n\tFAIL: `cat fails | wc -l`\n"
 
 run-evm:
 	$(MAKE) -C lt run-evm
