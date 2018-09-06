@@ -34,6 +34,7 @@ all:
 	$(MAKE) -C codesize
 	$(MAKE) -C extcodesize
 	$(MAKE) -C sha3
+	$(MAKE) -C msize
 
 compare:
 	@rm -rf passes
@@ -69,6 +70,7 @@ compare:
 	$(MAKE) -C callvalue compare
 	$(MAKE) -C codesize compare
 	$(MAKE) -C sha3 compare
+	$(MAKE) -C msize compare
 
 	# with segfault $(MAKE) -C extcodesize compare
 	@echo "\n\nTest Results:\n\tPASS: `cat passes | wc -l`\n\tFAIL: `cat fails | wc -l`\n"
@@ -106,6 +108,7 @@ run-evm:
 	$(MAKE) -C codesize run-evm
 	$(MAKE) -C extcodesize run-evm
 	$(MAKE) -C sha3 run-evm
+	$(MAKE) -C msize run-evm
 
 run-cemu:
 	$(MAKE) -C lt run-cemu
@@ -140,6 +143,7 @@ run-cemu:
 	$(MAKE) -C codesize run-cemu
 	$(MAKE) -C extcodesize run-cemu
 	$(MAKE) -C sha3 run-cemu
+	$(MAKE) -C msize run-cemu
 
 clean:
 	$(MAKE) -C lt clean
@@ -174,3 +178,4 @@ clean:
 	$(MAKE) -C codesize clean
 	$(MAKE) -C extcodesize clean
 	$(MAKE) -C sha3 clean
+	$(MAKE) -C msize clean

@@ -1,0 +1,11 @@
+{
+    0xffffffffffffffffffff
+    0x00
+    mstore
+    msize
+    0x00
+    mstore
+    0x02
+    0x1f
+    return
+}
