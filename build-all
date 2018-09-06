@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#
+# Copyright (c) 2017 Perov Maxim <coder@frtk.ru>
+#                    Alexander Gerasimov <samik.mechanic@gmail.com>
+
+checkSuccess() {
+if [ $? -ne 0 ]; then
+    echo -e "\n[!] ERROR: $1 build failed!\n"
+    cd $CURDIR
+    exit $2
+else
+    echo -e "\n[i] Build Successful: $1\n"
+fi
+}
+
+CURDIR=`pwd`
+
+if [ ! -d "$CURDIR/ethereum" ] || [ ! -d "$CURDIR/systemc" ]; then
+    echo You must run 'first-start' script first!
+    exit 1
+fi
+
+# build go-ethereum evm
+echo -e "\n-----------------------\nBuilding Ethereum EVM\n-----------------------\n"
+cd $CURDIR/ethereum
+make clean && make all
+checkSuccess go-ethereum 2
+
+# build cemu evm
+echo -e "\n-----------------------\nBuilding CEMU EVM\n-----------------------\n"
+cd $CURDIR/emulator
+make clean && make
+checkSuccess cemu 3
+
+echo -e "\n-----------------------\nBuilding Test System....\n-----------------------\n"
+# build tests
+cd $CURDIR/tests/asm
+make clean && make
+checkSuccess tests 4
+
+cd $CURDIR
+echo -e "\n-----------------------\nBuild Done.\n"

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#
+# Copyright (c) 2017 Perov Maxim <coder@frtk.ru>
+#
+
+git submodule init
+git submodule update
+
+./install-essential
