@@ -139,7 +139,7 @@ Device EVM
     USEGAS(STEPGAS4);
     MAIN_TYPE div;
     if (mod == 0)
-      return 0;
+      return (MAIN_TYPE)0;
     else
     {
       div = a / mod;
@@ -276,9 +276,9 @@ Device EVM
     // 0
     StopOp(), AddOp(a , b), MulOp(a , b), SubOp(a , b),
     // 4
-    DivOp(a , b), DivOpS(a , b), GetModule(a , b), GetModuleS(a , b), GetModuleAM((a + b) , c),
+    DivOp(a , b), DivOpS(a , b), GetModule(a , b), GetModuleS(a , b),
     // 8
-    GetModuleAM((a  * b) , c), GetExp(a , b), SignExtend(a , b)
+    GetModuleAM((a + b) , c), GetModuleAM((a * b) , c), GetExp(a , b), SignExtend(a , b)
   };
     
     
@@ -747,7 +747,7 @@ Device EVM
       // get args;
       a = Pop();
       b = Pop();
-      c = ( (idx(opcode)== 7) && (idx(opcode) == 8) ) ? Pop() : 0;
+      c = ( (idx(opcode)== 8) || (idx(opcode) == 9) ) ? Pop() : 0;
       // compute
       res = opcode(a,b,c);
       // push to stack

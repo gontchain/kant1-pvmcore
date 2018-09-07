@@ -56,8 +56,8 @@ compare:
 	$(MAKE) -C div compare
 	$(MAKE) -C mod compare
 	$(MAKE) -C smod compare
-	# with segfault $(MAKE) -C addmod compare
-	# with segfault $(MAKE) -C mulmod compare
+	$(MAKE) -C addmod compare
+	$(MAKE) -C mulmod compare
 	$(MAKE) -C exp compare
 	$(MAKE) -C signextend compare
 	$(MAKE) -C gaslimit compare GASLIMIT=0xfff
