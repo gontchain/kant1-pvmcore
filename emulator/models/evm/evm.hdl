@@ -151,12 +151,15 @@ Device EVM
   {
     USEGAS(STEPGAS3);
     MAIN_TYPE div;
+    MAIN_TYPE sign = (((signed)a) < 0) ? (MAIN_TYPE)(0-1) : (MAIN_TYPE)1;
     if (mod == 0)
+    {
       return 0;
+    }
     else
     {
-      div = (signed)a / (signed)mod;
-      return (signed)a - (signed)(div * mod);
+      div = a / mod;
+      return (sign * (a - (div * mod)));
     }// if(mod == 0) .. else
   }
 
