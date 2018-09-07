@@ -62,21 +62,19 @@ Device EVM
     return (MAIN_TYPE)0;
   }
 
-  MAIN_TYPE GetExp(MAIN_TYPE a,MAIN_TYPE b)
+  MAIN_TYPE GetExp(MAIN_TYPE base,MAIN_TYPE pow)
   {
     USEGAS(STEPGAS5);
-    int8 i;
+    MAIN_TYPE i;
     MAIN_TYPE res = 1;
-    MAIN_TYPE mul_fact = a;
 
-    for(i = 0; i < MAIN_TYPE_SIZE; i = i+1)
+    for(i = 0; i < pow; i = i+1)
     {
-       if(b[i] == 1)
-         res = res * mul_fact;
-       mul_fact = mul_fact * mul_fact;
+      res = res * base;
     }
     return res;
   }
+
   // pop result from stack
   MAIN_TYPE Pop()
   {
@@ -192,8 +190,17 @@ Device EVM
     USEGAS(STEPGAS3);
     if (b == 0)
       return 0;
-    else 
-      return a / b ;
+    else
+      return a / b;
+  }
+
+  MAIN_TYPE DivOpS(MAIN_TYPE a, MAIN_TYPE b)
+  {
+    USEGAS(STEPGAS3);
+    if (b == 0)
+      return 0;
+    else
+      return (signed)a / (signed)b;
   }
 
   MAIN_TYPE LtOp(MAIN_TYPE a, MAIN_TYPE b)
@@ -261,15 +268,15 @@ Device EVM
     // 0
     "STOP","ADD","MUL","SUB",
     // 4
-    "DIV","MOD","SMOD","ADDMOD",
+    "DIV","SDIV","MOD","SMOD",
     // 8
-    "MULMOD","EXP","SIGNEXTEND"
+    "ADDMOD","MULMOD","EXP","SIGNEXTEND"
   },
   {
     // 0
     StopOp(), AddOp(a , b), MulOp(a , b), SubOp(a , b),
     // 4
-    DivOp(a , b), GetModule(a , b), GetModuleS(a , b), GetModuleAM((a + b) , c),
+    DivOp(a , b), DivOpS(a , b), GetModule(a , b), GetModuleS(a , b), GetModuleAM((a + b) , c),
     // 8
     GetModuleAM((a  * b) , c), GetExp(a , b), SignExtend(a , b)
   };
