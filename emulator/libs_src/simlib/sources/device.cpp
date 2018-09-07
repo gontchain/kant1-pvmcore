@@ -396,7 +396,7 @@ tDisAsmArea* TDevice::LoadElf(char* aElfFileName)
   {
 	  // reset 
 	  this->Reset();
-	  int size = 0;
+	  int size = -1;
 	  char ibuf[3]; ibuf[2] = 0;
 	  // try to open
 	  fin = fopen(aElfFileName, "rt");
@@ -412,12 +412,12 @@ tDisAsmArea* TDevice::LoadElf(char* aElfFileName)
 		  char value;
 		  fread(ibuf, 1, 2, fin);
 		  value = GetHex<char>(ibuf);
-		  this->SetMem(&value,0, size, 1);
-		  size++;
+		  this->SetMem(&value,0, ++size, 1);
 	  }
-	  this->mArea.mStartAddr = 0;
-	  this->mArea.mEndPoint = size;
-	  this->mArea.mSize = size;
+    this->mArea.mStartAddr = 0;
+    this->mArea.mEndPoint = size;
+    this->mArea.mSize = size;
+    this->elfSize = size;
     this->IsLocked = 0;
   }
   catch(...)

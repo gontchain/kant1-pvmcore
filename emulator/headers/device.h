@@ -93,6 +93,8 @@ extern TPPDLLogger    Logger;
 // class device
 class TDevice:public TDbgInterface,public TCyclic
 {
+public:
+  uint32  elfSize;
 protected:
   uint32  mSyncWaitCounter;
   char           mDevName[0x100];

@@ -42,6 +42,10 @@ uint256 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
 	return uint256(ret);
 }
 
+uint256 GetElfSize(TDevice* dev)
+{
+  return dev->elfSize;
+}
 
 void* Init(void* mParams)
 {

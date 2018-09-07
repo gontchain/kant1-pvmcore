@@ -28,7 +28,7 @@ Device EVM
   Reg EVM_BALANCE_TYPE  gas_price, "gas_price";  
   Reg EVM_BALANCE_TYPE  gas_available, "gas_available";
   
-  Reg MAIN_TYPE  code_size,"code_size";
+  // Reg MAIN_TYPE  code_size,"code_size"; // replaced by GetElfSize() call
   Reg MAIN_TYPE  ext_code_size,"ext_code_size";
   Reg MAIN_TYPE  inp_data_size,"inp_data_size"; 
   // size of active memory 
@@ -52,7 +52,9 @@ Device EVM
   Reg int32 log_ptr, "log_ptr";
   
   PCOUNT pc;
-  extern MAIN_TYPE KeccakAlg(int32 offs,int32 size);   
+
+  extern MAIN_TYPE KeccakAlg(int32 offs,int32 size);
+  extern MAIN_TYPE GetElfSize();
 
   MAIN_TYPE StopExec()
   {
@@ -371,7 +373,7 @@ Device EVM
    MAIN_TYPE GetCodeSize()
    {
      USEGAS(STEPGAS1);
-     return code_size;
+     return GetElfSize();
    }
 
    MAIN_TYPE GetGasPrice()
