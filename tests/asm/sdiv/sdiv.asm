@@ -1,0 +1,14 @@
+{
+    0x01
+    0x01
+    0x00
+    sub
+    0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    mul
+    sdiv
+    0x00
+    mstore
+    0x20
+    0x00
+    return
+}

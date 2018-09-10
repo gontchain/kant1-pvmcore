@@ -17,6 +17,7 @@ all:
 	$(MAKE) -C sub
 	$(MAKE) -C mul
 	$(MAKE) -C div
+	$(MAKE) -C sdiv
 	$(MAKE) -C mod
 	$(MAKE) -C smod
 	$(MAKE) -C addmod
@@ -93,6 +94,7 @@ run-evm:
 	$(MAKE) -C sub run-evm
 	$(MAKE) -C mul run-evm
 	$(MAKE) -C div run-evm
+	$(MAKE) -C sdiv run-evm
 	$(MAKE) -C mod run-evm
 	$(MAKE) -C smod run-evm
 	$(MAKE) -C addmod run-evm
@@ -168,6 +170,7 @@ clean:
 	$(MAKE) -C sub clean
 	$(MAKE) -C mul clean
 	$(MAKE) -C div clean
+	$(MAKE) -C sdiv clean
 	$(MAKE) -C mod clean
 	$(MAKE) -C smod clean
 	$(MAKE) -C addmod clean
