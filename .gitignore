@@ -13,3 +13,4 @@
 *.v12.suo
 out.cemu
 out.evm
+bins/cemu
