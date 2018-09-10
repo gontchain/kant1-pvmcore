@@ -5,12 +5,18 @@
 #                    Alexander Gerasimov <samik.mechanic@gmail.com>
 #
 
+sudo add-apt-repository ppa:ethereum/ethereum
 sudo apt-get update
 sudo apt-get install python3.6
+sudo apt-get install solc
 sudo apt install python3-pip
 sudo pip3 install jsonschema
 sudo pip3 uninstall sha3
 sudo pip3 install pysha3
+
+sudo apt-get install golang-1.10-go
+sudo ln -s /usr/lib/go-1.10/bin/go /usr/local/bin/go
+sudo ln -s /usr/lib/go-1.10/bin/gofmt /usr/local/bin/gofmt
 
 CURDIR=`pwd`
 

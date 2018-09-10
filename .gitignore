@@ -2,5 +2,16 @@
 *~
 *.o
 *.a
+*.so
 *.bin
 *.out
+*.obj
+*.log
+*.tlog
+*.lastbuildstate
+*.vcxproj.filters
+*.vcxproj.user
+*.v12.suo
+out.cemu
+out.evm
+bins/cemu

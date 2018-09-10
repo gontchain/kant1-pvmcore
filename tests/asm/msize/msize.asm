@@ -1,0 +1,16 @@
+{
+    0x1234567890abcdef
+    0x01
+    0x00
+    sub
+    0x20
+    mstore // store -1 in [0x20-0x40]
+    0x60
+    mstore // store 0x1234567890abcdef in [0x60-0x80]
+    msize
+    0x00
+    mstore
+    0x01
+    0x1f
+    return // 0x80 - biggest written byte address
+}

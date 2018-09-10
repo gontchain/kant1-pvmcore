@@ -2,6 +2,7 @@
 
 #include "ppdl.h"
 #include "evm_sim.h"
+#include "sha3/Keccak.h"
 
 #define BLOCK_SIZE 1024*512 // 512 килобайт памяти
 #define IMEM_WS 1
@@ -21,13 +22,30 @@ TDataMem* input_mem;
 // KECCAK algorithm
 uint256 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
 {
-  EVM* my_evm = (EVM*)dev;
-  char f = my_evm->data_bus[offs]; // evm->data_bus + offs - pointer into start
-  char e = my_evm->data_bus[offs + size - 1];
-  printf("keccak success, first symb is %c last is %c\n",f,e);
-  return uint256(0);
+	EVM* my_evm = (EVM*)dev;
+	char buf[255], ret[259] = "0x", tmp[3] = "";
+	uint8 *start = my_evm->data_bus + offs;
+	unsigned int hashSize = 256;
+
+	memcpy(buf, my_evm->data_bus + offs, size);
+
+	// Keccak
+	keccakState *st = keccakCreate(hashSize);
+	keccakUpdate((uint8_t*)buf, 0, size, st);
+	unsigned char *op = keccakDigest(st);
+
+	for (unsigned int i = 0; i != (hashSize / 8); i++)
+	{
+		sprintf(tmp, "%.2x", *(op++));
+		strcat(ret, tmp);
+	}
+	return uint256(ret);
 }
 
+uint256 GetElfSize(TDevice* dev)
+{
+  return dev->elfSize;
+}
 
 void* Init(void* mParams)
 {
@@ -51,7 +69,8 @@ void* Init(void* mParams)
   new_evm->input_data = input_mem;
   */
   // init gas price
-  new_evm->gas_available.mWrite = new_evm->gas_available.mRead = 300000;
+  new_evm->gas_available = ((ChipMem*)mParams)->GasLimit;
+  new_evm->GasLimit = ((ChipMem*)mParams)->GasLimit;
   return (void*)new_evm;
 }
 
@@ -71,7 +90,7 @@ LIB_EXPORT void CheckPostProgram()
   // 
   if (new_evm != NULL)
   {
-    if ((signed)(new_evm->gas_available.mRead) == -1)
+    if ((signed)(new_evm->gas_available) == -1)
     {
       printf("\ngas limit error\n");
       exit(-1);

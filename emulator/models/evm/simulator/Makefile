@@ -2,7 +2,7 @@
 include ../../../headers/make.inc
 
 PROGNAME = ./evm.so
-OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/evm_sim.o 
+OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/evm_sim.o $(DIR_OBJECTS)/sha3/Keccak.o
 INCLUDE = -I./include -I./../../../headers -I./../../../dbg_interface -I./../../../peripheral -I../../../../$(SYSTEMC_INC)
 LIB_DIR = ../../../libs/linux
 SC_DIR = $(PWD)/../systemc/lib
@@ -30,8 +30,11 @@ $(DIR_OBJECTS)/architecture.o:
 $(DIR_OBJECTS)/evm_sim.o:
 	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -c ./evm_sim.cpp -o $@
 
+$(DIR_OBJECTS)/sha3/Keccak.o:
+	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -I./sha3 -c ./sha3/Keccak.cpp -o $@
+
 	
 	
 clean:
-	rm -f $(DIR_OBJECTS)/*.o
+	rm -f $(DIR_OBJECTS)/*.o $(DIR_OBJECTS)/sha3/*.o
 	rm -f $(PROGNAME)

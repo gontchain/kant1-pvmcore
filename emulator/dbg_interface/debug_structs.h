@@ -128,11 +128,9 @@ struct SDRamConfig
   uint32         mLatency;
 };
 
-
-
-
 struct ChipMem {
-  int	           m_BankNum;	        // количество банков памяти
+  uint64 GasLimit;
+  int    m_BankNum;	        // количество банков памяти
   uint32 *p_startAddr;      // массив стартовых адресов банков памяти
   uint32 *p_Size;           // массив длин банков памяти
   uint32 *p_ReadWaitTime;   // массив значений времени задержки при чтения из памяти *

@@ -3,16 +3,31 @@ COMPILER = solc
 ASMSRC = ${wildcard *.asm}
 SOLOUT = ${ASMSRC:.asm=.out}
 
+GASLIMIT_ELSE = 0x0
+_GASLIMIT := $(if $(GASLIMIT),$(GASLIMIT),$(GASLIMIT_ELSE))
+
 all: ${TARGET}
 
 ${TARGET}: ${SOLOUT} Makefile
-	cat ${SOLOUT} | grep -A1 "Binary \representation:" | awk 'NR==2' > $@.bin
+	@cat ${SOLOUT} | grep -A1 "Binary \representation:" | awk 'NR==2' > $@.bin
 
 %.out: %.asm Makefile
 	${COMPILER} --assemble $< > $@
 
-run: ${TARGET}
-	../../../ethereum/build/bin/evm --gas $(GASLIMIT) --code `cat ${TARGET}.bin` run
+run: run-evm
+
+run-evm: ${TARGET}
+	../../../ethereum/build/bin/evm --gas $(_GASLIMIT) --code `cat ${TARGET}.bin` run
+
+run-cemu: ${TARGET}
+	../../../emulator/bins/cemu -nt -gas $(_GASLIMIT) ../../../emulator/models/evm/simulator/evm.so ${TARGET}.bin
+
+compare: ${TARGET}
+	../../../ethereum/build/bin/evm --gas $(_GASLIMIT) --code `cat ${TARGET}.bin` run > out.evm
+	@echo `cat out.evm | awk '{print toupper($$0)}'` > out.evm
+	../../../emulator/bins/cemu -nt -gas $(_GASLIMIT) ../../../emulator/models/evm/simulator/evm.so ${TARGET}.bin > out.cemu
+	@echo `cat out.cemu | awk '{print toupper($$0)}'` > out.cemu
+	@bash -c 'diff -q out.evm out.cemu 1>/dev/null; if [ $$? -eq 0 ]; then echo -e "$? is PASSED\n"; echo "PASS" >> ../passes; else echo -e "$? is FAILED\n"; echo "FAIL" >> ../fails;fi'
 
 clean:
-	rm -f ${TARGET}.bin ${SOLOUT}
+	rm -f ${TARGET}.bin ${SOLOUT} out.evm out.cemu

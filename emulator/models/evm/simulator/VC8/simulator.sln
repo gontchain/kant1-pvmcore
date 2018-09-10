@@ -21,8 +21,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cemu", "..\..\..\..\tracer\
 		{8BA2C3EE-156A-4334-B54F-A7DF654F78A7} = {8BA2C3EE-156A-4334-B54F-A7DF654F78A7}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Keccak", "..\..\..\SHA-3\VC8\Keccak.vcxproj", "{D03CBC50-5838-47EB-A1F9-8427EE54AF31}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Dbg_EMUDBG1|Win32 = Dbg_EMUDBG1|Win32
@@ -63,14 +61,6 @@ Global
 		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Debug|Win32.Build.0 = Debug|Win32
 		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Release|Win32.ActiveCfg = Release|Win32
 		{69E6EAA0-175E-4CC0-BC9A-06649E3B3AE2}.Release|Win32.Build.0 = Release|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Dbg_EMUDBG1|Win32.ActiveCfg = Debug|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Dbg_EMUDBG1|Win32.Build.0 = Debug|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Dbgss_EMUDBG1|Win32.ActiveCfg = Debug|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Dbgss_EMUDBG1|Win32.Build.0 = Debug|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Debug|Win32.Build.0 = Debug|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Release|Win32.ActiveCfg = Release|Win32
-		{D03CBC50-5838-47EB-A1F9-8427EE54AF31}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
