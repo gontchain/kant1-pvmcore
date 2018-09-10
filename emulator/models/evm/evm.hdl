@@ -151,7 +151,10 @@ Device EVM
   {
     USEGAS(STEPGAS3);
     MAIN_TYPE div;
-    MAIN_TYPE sign = (((signed)a) < 0) ? (MAIN_TYPE)(0-1) : (MAIN_TYPE)1;
+    MAIN_TYPE sign; 
+    int1 is_signed = (((signed)a) < 0); 
+    
+    sign = is_signed ? (MAIN_TYPE)(0-1) : (MAIN_TYPE)1;
     if (mod == 0)
     {
       return 0;
@@ -751,10 +754,12 @@ Device EVM
       MAIN_TYPE b;
       MAIN_TYPE c;
       MAIN_TYPE res;
+      int8 is_c_opcode;
       // get args;
       a = Pop();
       b = Pop();
-      c = ( (idx(opcode)== 8) || (idx(opcode) == 9) ) ? Pop() : 0;
+      is_c_opcode = ((idx(opcode)== 8) || (idx(opcode) == 9));
+      c = is_c_opcode ? Pop() : 0;
       // compute
       res = opcode(a,b,c);
       // push to stack
@@ -765,10 +770,14 @@ Device EVM
     {
       MAIN_TYPE a;
       MAIN_TYPE b;
+      MAIN_TYPE c;
       MAIN_TYPE res;
+      int8 is_b_opcode;
       // get args;
       a = Pop();
-      b = ((idx(opcode) == 5) || (idx(opcode) == 9)) ? (MAIN_TYPE)0: Pop();
+      
+      is_b_opcode = ((idx(opcode) == 5) || (idx(opcode) == 9));
+      b = is_b_opcode ? 0: Pop();
       // compute
       res = opcode(a,b);
       // push to stack

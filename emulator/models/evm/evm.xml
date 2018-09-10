@@ -521,27 +521,17 @@
             </ARGUMENTS>
             <LOCALVARS>
                 <div SIZE="256" />
-                <sign SIZE="256">
+                <sign SIZE="256" />
+                <is_signed SIZE="1">
                     <INITAL_EXP>
-                        <OPERATOR name="?">
-                            <OPERATOR name=" &lt; ">
-                                <SIGNED64>
-                                    <ARG name="a" />
-                                </SIGNED64>
-                                <IMM32 value="0" />
-                            </OPERATOR>
-                            <TYPE name="uint256">
-                                <OPERATOR name="-">
-                                    <IMM32 value="0" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </TYPE>
-                            <TYPE name="uint256">
-                                <IMM32 value="1" />
-                            </TYPE>
+                        <OPERATOR name=" &lt; ">
+                            <SIGNED64>
+                                <ARG name="a" />
+                            </SIGNED64>
+                            <IMM32 value="0" />
                         </OPERATOR>
                     </INITAL_EXP>
-                </sign>
+                </is_signed>
             </LOCALVARS>
             <CODE>
                 <IF>
@@ -572,6 +562,21 @@
                         </INNER>
                     </ELSE>
                 </IF>
+                <OPERATOR name=" = ">
+                    <LVAR name="sign" />
+                    <OPERATOR name="?">
+                        <LVAR name="is_signed" />
+                        <TYPE name="uint256">
+                            <OPERATOR name="-">
+                                <IMM32 value="0" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </TYPE>
+                        <TYPE name="uint256">
+                            <IMM32 value="1" />
+                        </TYPE>
+                    </OPERATOR>
+                </OPERATOR>
                 <IF>
                     <COND>
                         <OPERATOR name=" == ">
@@ -4229,6 +4234,7 @@
                     <b SIZE="256" />
                     <c SIZE="256" />
                     <res SIZE="256" />
+                    <is_c_opcode SIZE="8" />
                 </LOCALVARS>
                 <CODE>
                     <OPERATOR name=" = ">
@@ -4240,18 +4246,22 @@
                         <CALL name="Pop" />
                     </OPERATOR>
                     <OPERATOR name=" = ">
+                        <LVAR name="is_c_opcode" />
+                        <OPERATOR name="||">
+                            <OPERATOR name=" == ">
+                                <ARG name="opcode" />
+                                <IMM32 value="8" />
+                            </OPERATOR>
+                            <OPERATOR name=" == ">
+                                <ARG name="opcode" />
+                                <IMM32 value="9" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </OPERATOR>
+                    <OPERATOR name=" = ">
                         <LVAR name="c" />
                         <OPERATOR name="?">
-                            <OPERATOR name="||">
-                                <OPERATOR name=" == ">
-                                    <ARG name="opcode" />
-                                    <IMM32 value="8" />
-                                </OPERATOR>
-                                <OPERATOR name=" == ">
-                                    <ARG name="opcode" />
-                                    <IMM32 value="9" />
-                                </OPERATOR>
-                            </OPERATOR>
+                            <LVAR name="is_c_opcode" />
                             <CALL name="Pop" />
                             <IMM32 value="0" />
                         </OPERATOR>
@@ -4280,7 +4290,9 @@
                 <LOCALVARS>
                     <a SIZE="256" />
                     <b SIZE="256" />
+                    <c SIZE="256" />
                     <res SIZE="256" />
+                    <is_b_opcode SIZE="8" />
                 </LOCALVARS>
                 <CODE>
                     <OPERATOR name=" = ">
@@ -4288,21 +4300,23 @@
                         <CALL name="Pop" />
                     </OPERATOR>
                     <OPERATOR name=" = ">
+                        <LVAR name="is_b_opcode" />
+                        <OPERATOR name="||">
+                            <OPERATOR name=" == ">
+                                <ARG name="opcode" />
+                                <IMM32 value="5" />
+                            </OPERATOR>
+                            <OPERATOR name=" == ">
+                                <ARG name="opcode" />
+                                <IMM32 value="9" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </OPERATOR>
+                    <OPERATOR name=" = ">
                         <LVAR name="b" />
                         <OPERATOR name="?">
-                            <OPERATOR name="||">
-                                <OPERATOR name=" == ">
-                                    <ARG name="opcode" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                                <OPERATOR name=" == ">
-                                    <ARG name="opcode" />
-                                    <IMM32 value="9" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <TYPE name="uint256">
-                                <IMM32 value="0" />
-                            </TYPE>
+                            <LVAR name="is_b_opcode" />
+                            <IMM32 value="0" />
                             <CALL name="Pop" />
                         </OPERATOR>
                     </OPERATOR>

@@ -1307,7 +1307,8 @@ inline uint256 EVM::GetModuleAM(uint256 a,uint256 mod)
 inline uint256 EVM::GetModuleS(uint256 a,uint256 mod)
 {
   uint256 div ;
-  uint256 sign  =  ( ( ((int256)(SARG(a))) < 0) ? ( (uint256)((0 - 1))) : ( (uint256)(1)) );
+  uint256 sign ;
+  uint1 is_signed  = ( ((int256)(SARG(a))) < 0);
   ;
   if(gas_available < 5)
   {
@@ -1319,6 +1320,7 @@ inline uint256 EVM::GetModuleS(uint256 a,uint256 mod)
   {
   gas_available = (gas_available - 5);
   }
+   sign  =  (  is_signed  ? ( (uint256)((0 - 1))) : ( (uint256)(1)) );
   if(SARG(mod) == 0)
   {
   ;
@@ -2587,10 +2589,12 @@ inline int EVM::Main_decode(uint32 ocode){
   uint256 b ;
   uint256 c ;
   uint256 res ;
+  uint8 is_c_opcode ;
   ;
    a  = Pop();
    b  = Pop();
-   c  =  ( ((SARG(opcode) == 8) || (SARG(opcode) == 9)) ? (Pop()) : (0) );
+   is_c_opcode  = ((SARG(opcode) == 8) || (SARG(opcode) == 9));
+   c  =  (  is_c_opcode  ? (Pop()) : (0) );
    res  = Get_ArithmOps(SARG(opcode), a , b , c );
   Push( res );
       }
@@ -2606,10 +2610,13 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint256 a ;
   uint256 b ;
+  uint256 c ;
   uint256 res ;
+  uint8 is_b_opcode ;
   ;
    a  = Pop();
-   b  =  ( ((SARG(opcode) == 5) || (SARG(opcode) == 9)) ? ( (uint256)(0)) : (Pop()) );
+   is_b_opcode  = ((SARG(opcode) == 5) || (SARG(opcode) == 9));
+   b  =  (  is_b_opcode  ? (0) : (Pop()) );
    res  = Get_CompareLogOps(SARG(opcode), a , b );
   Push( res );
       }
