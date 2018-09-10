@@ -116,9 +116,9 @@ Device EVM
   MAIN_TYPE ByteFromWord(MAIN_TYPE a, MAIN_TYPE b)
   {
      USEGAS(STEPGAS2);
-     int32 start_bit = (int32)(a*8);
+     int32 start_bit = (int32)((31-a)*8);
      int32 end_bit = start_bit + 7;
-     return b[end_bit:start_bit]; 
+     return b[end_bit:start_bit];
   }
 
   MAIN_TYPE GetModule(MAIN_TYPE a, MAIN_TYPE mod)
@@ -765,11 +765,10 @@ Device EVM
     {
       MAIN_TYPE a;
       MAIN_TYPE b;
-      MAIN_TYPE c;
       MAIN_TYPE res;
       // get args;
       a = Pop();
-      b = ((idx(opcode) == 5) || (idx(opcode) == 9)) ? 0: Pop();
+      b = ((idx(opcode) == 5) || (idx(opcode) == 9)) ? (MAIN_TYPE)0: Pop();
       // compute
       res = opcode(a,b);
       // push to stack

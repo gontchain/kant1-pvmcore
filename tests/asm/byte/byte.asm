@@ -1,10 +1,10 @@
 {
-    0x02
-    0x01234567
+    0xF0F1F2F3F4F5F6F7F8F9
+    0x1c
     byte
     0x00
     mstore
     0x01
     0x1f
-    return
+    return // 0xF6 - 23th byte
 }

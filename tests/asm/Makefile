@@ -50,7 +50,7 @@ compare:
 	$(MAKE) -C or compare
 	$(MAKE) -C xor compare
 	$(MAKE) -C not compare
-	# with segfault $(MAKE) -C byte compare
+	$(MAKE) -C byte compare
 	$(MAKE) -C add compare
 	$(MAKE) -C sub compare
 	$(MAKE) -C mul compare
