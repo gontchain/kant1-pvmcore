@@ -69,7 +69,8 @@ void* Init(void* mParams)
   new_evm->input_data = input_mem;
   */
   // init gas price
-  new_evm->gas_available.mWrite = new_evm->gas_available.mRead = 300000;
+  new_evm->gas_available = ((ChipMem*)mParams)->GasLimit;
+  new_evm->GasLimit = ((ChipMem*)mParams)->GasLimit;
   return (void*)new_evm;
 }
 
@@ -89,7 +90,7 @@ LIB_EXPORT void CheckPostProgram()
   // 
   if (new_evm != NULL)
   {
-    if ((signed)(new_evm->gas_available.mRead) == -1)
+    if ((signed)(new_evm->gas_available) == -1)
     {
       printf("\ngas limit error\n");
       exit(-1);

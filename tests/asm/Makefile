@@ -60,8 +60,10 @@ compare:
 	$(MAKE) -C mulmod compare
 	$(MAKE) -C exp compare
 	$(MAKE) -C signextend compare
-	$(MAKE) -C gaslimit compare GASLIMIT=0xfff
-	$(MAKE) -C gas compare GASLIMIT=0xfff
+	$(MAKE) -C gaslimit compare
+	$(MAKE) -C gaslimit compare GASLIMIT=0xffff
+	$(MAKE) -C gas compare
+	$(MAKE) -C gas compare GASLIMIT=0xffff
 	$(MAKE) -C gasprice compare
 	# with segfault $(MAKE) -C address compare
 	# with segfault $(MAKE) -C balance compare
@@ -97,7 +99,9 @@ run-evm:
 	$(MAKE) -C mulmod run-evm
 	$(MAKE) -C exp run-evm
 	$(MAKE) -C signextend run-evm
+	$(MAKE) -C gaslimit run-evm
 	$(MAKE) -C gaslimit run-evm GASLIMIT=0xfff
+	$(MAKE) -C gas run-evm
 	$(MAKE) -C gas run-evm GASLIMIT=0xfff
 	$(MAKE) -C gasprice run-evm
 	$(MAKE) -C address run-evm
@@ -126,13 +130,16 @@ run-cemu:
 	$(MAKE) -C sub run-cemu
 	$(MAKE) -C mul run-cemu
 	$(MAKE) -C div run-cemu
+	$(MAKE) -C sdiv run-cemu
 	$(MAKE) -C mod run-cemu
 	$(MAKE) -C smod run-cemu
 	$(MAKE) -C addmod run-cemu
 	$(MAKE) -C mulmod run-cemu
 	$(MAKE) -C exp run-cemu
 	$(MAKE) -C signextend run-cemu
+	$(MAKE) -C gaslimit run-cemu
 	$(MAKE) -C gaslimit run-cemu GASLIMIT=0xfff
+	$(MAKE) -C gas run-cemu
 	$(MAKE) -C gas run-cemu GASLIMIT=0xfff
 	$(MAKE) -C gasprice run-cemu
 	$(MAKE) -C address run-cemu

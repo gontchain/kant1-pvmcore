@@ -20,12 +20,12 @@ run-evm: ${TARGET}
 	../../../ethereum/build/bin/evm --gas $(_GASLIMIT) --code `cat ${TARGET}.bin` run
 
 run-cemu: ${TARGET}
-	../../../emulator/bins/cemu -nt ../../../emulator/models/evm/simulator/evm.so ${TARGET}.bin
+	../../../emulator/bins/cemu -nt -gas $(_GASLIMIT) ../../../emulator/models/evm/simulator/evm.so ${TARGET}.bin
 
 compare: ${TARGET}
 	../../../ethereum/build/bin/evm --gas $(_GASLIMIT) --code `cat ${TARGET}.bin` run > out.evm
 	@echo `cat out.evm | awk '{print toupper($$0)}'` > out.evm
-	../../../emulator/bins/cemu -nt ../../../emulator/models/evm/simulator/evm.so ${TARGET}.bin > out.cemu
+	../../../emulator/bins/cemu -nt -gas $(_GASLIMIT) ../../../emulator/models/evm/simulator/evm.so ${TARGET}.bin > out.cemu
 	@echo `cat out.cemu | awk '{print toupper($$0)}'` > out.cemu
 	@bash -c 'diff -q out.evm out.cemu 1>/dev/null; if [ $$? -eq 0 ]; then echo -e "$? is PASSED\n"; echo "PASS" >> ../passes; else echo -e "$? is FAILED\n"; echo "FAIL" >> ../fails;fi'
 

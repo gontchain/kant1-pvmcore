@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <iostream>
 
-
 #define PRINT_LOG(msg) //printf(msg);
 
 #define MAX_NUM_WARNINGS 25
@@ -84,6 +83,8 @@ TFindStackInAbs   FindStackInAbs;
 TGetDevCore       GetDevCore;
 // config file name
 char*  ConfigFileName;
+// GAS limit
+uint64 GasLimitValue = 10000000000;
 char*  ProfileFileName;
 int    default_config_file;
 // second device file name
@@ -601,10 +602,11 @@ int Init()
 	}
 	else
 	{
-    ChipMem mem;
-    mem.m_BankNum = 0;
-    mem.m_Flags = IsWarnFlags | (IsRusLang << 31) | (BuildProfile << 29) | (IsLogMem << 28);
-		Device = InitSystem(&mem);
+	ChipMem mem;
+	mem.m_BankNum = 0;
+    mem.GasLimit = GasLimitValue;
+	mem.m_Flags = IsWarnFlags | (IsRusLang << 31) | (BuildProfile << 29) | (IsLogMem << 28);
+	Device = InitSystem(&mem);
     if (SecondDevFileName != NULL)
       SecondDev = GetDevCore(1);
   }
@@ -1066,10 +1068,11 @@ char usage_text[] = "usage: cemu [keys] [-bsp bsp_file_name]simulator_lib_name e
 	"  -cr - check test result value (gr0 must be equal to 0)\n"\
 	"  -p  - create profile (executed with -nt only), this options disables warning and trace output)\n"\
 	"  -ru - russian language (english by default)\n"\
-  "  -rv - return value, tracer returns the result of program execution;\n"\
-  "  -rp - print return value, but returns 0 if success, -1 or -2 if error;\n"\
-  "  -lmem - out log of memory operations;\n"\
-  "  -ra - print all 'gr', 'ar' values every tact;\n";
+	"  -rv - return value, tracer returns the result of program execution;\n"\
+	"  -rp - print return value, but returns 0 if success, -1 or -2 if error;\n"\
+	"  -lmem - out log of memory operations;\n"\
+	"  -ra - print all 'gr', 'ar' values every tact;\n"\
+	"  -gas GASLIMIT - gas limit for the evm (default: 10000000000);\n";
 
 
 void usage(int exit_code)
@@ -1164,6 +1167,41 @@ int main(int argc,char* argv[])
 				// set name of bsp
 				ConfigFileName = argv[i_args+1];
 				default_config_file = 0;
+				i_args++;
+			}
+			else if(!strcmp(argv[i_args],"-gas"))
+			{
+				if(argv[i_args+1]==NULL)
+				{
+					printf("no GAS limit was set\n");
+					exit(-1);
+				}
+				// set GAS limit
+				try {
+					char gasLimitString[255];
+					int isHexValue = 0;
+					if(argv[i_args+1][0]!='0' || argv[i_args+1][1]!='x')
+					{
+						GasLimitValue = strtol(argv[i_args+1], NULL, 10);
+						sprintf(gasLimitString, "%d", GasLimitValue);
+					} else {
+						GasLimitValue = strtol(argv[i_args+1], NULL, 16);
+						sprintf(gasLimitString, "%x", GasLimitValue);
+						isHexValue = 2; // strip '0x' prefix in hex value check
+					}
+					if (strlen(gasLimitString) != strlen(argv[i_args+1]) - isHexValue)
+					{
+						printf("invalid GAS limit value syntax\n");
+						exit(-1);
+					}
+				} catch (...) {
+					printf("invalid GAS limit value\n");
+					exit(-1);
+				}
+				// if Gas limit was set 0x0 - set infinite GAS
+				if (GasLimitValue == 0x0) {
+					GasLimitValue = 0xFFFFFFFFFFFFFFFF;
+				}
 				i_args++;
 			}
 			else if(!strncmp(argv[i_args],"-flags",strlen("-flags")))
