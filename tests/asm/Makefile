@@ -74,9 +74,21 @@ compare:
 	$(MAKE) -C codesize compare
 	$(MAKE) -C sha3 compare
 	$(MAKE) -C msize compare
-
 	# with segfault $(MAKE) -C extcodesize compare
-	@echo "\n\nTest Results:\n\tPASS: `cat passes | wc -l`\n\tFAIL: `cat fails | wc -l`\n"
+
+	echo "\nTest Result Summary:"
+	echo "\tPASS: \c"
+	if [ -f passes ]; then \
+		echo "`cat passes | wc -l`"; \
+	else \
+		echo "0"; \
+	fi
+	echo "\tFAILS: \c"
+	if [ -f fails ]; then \
+		echo "`cat fails | wc -l`\n"; \
+	else \
+		echo "0\n"; \
+	fi
 
 run-evm:
 	$(MAKE) -C lt run-evm
