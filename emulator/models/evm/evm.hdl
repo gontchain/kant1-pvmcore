@@ -32,7 +32,7 @@ Device EVM
   Reg MAIN_TYPE  ext_code_size,"ext_code_size";
   Reg MAIN_TYPE  inp_data_size,"inp_data_size"; 
   // size of active memory 
-  Reg int32 mem_size; // active memory size (filled outside of simulation)
+  Var int32 mem_size; // active RAM size
   // current block
 
   MemSpace prog_bus, 32, 32;
@@ -682,12 +682,16 @@ Device EVM
             addr_val = addr_val + 1;
             init_shift = init_shift - 8;
           }
+          if (addr_val > mem_size)
+            mem_size = addr_val;
           break;
 
         case 3: // MSTORE8
           USEGAS(STEPGAS2);
           data_val = Pop();
           data_bus[addr_val] = (int8)(data_val);
+          if (addr_val > mem_size)
+            mem_size = addr_val;
           break;
 
         case 4: // SLOAD
