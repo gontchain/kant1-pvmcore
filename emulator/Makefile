@@ -18,7 +18,6 @@ $(LIB_DIR)/simlib.a:
 	$(MYMAKE) -C ./libs_src/simlib/
 
 $(MODEL_DIR)/evm.so:
-	bash -c 'cd $(MODEL_DIR)/../ && ./build.sh'
 	$(MYMAKE) -C $(MODEL_DIR)
 
 ./tracer/tracer:
