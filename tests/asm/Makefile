@@ -1,6 +1,8 @@
 GASLIMIT=0x0
 export GASLIMIT
 
+.SILENT: compare
+
 all:
 	$(MAKE) -C lt
 	$(MAKE) -C gt
