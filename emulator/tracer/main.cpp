@@ -729,17 +729,20 @@ int RunSimulation(char* aSimName,uint32 aWait)
   else
 	 Device->SetBreakPoint(elf_res->mSize);
 #endif
-	printf("ticks address       opcode                    assembler\n");
-	cur_pc = pc_count;    
+	printf("#### TRACE ####\n\n\
+			\r------------------------------------------\n\
+		    \r| ticks |  address  | opcode | assembler |\n\
+		    \r------------------------------------------\n");
+	cur_pc = pc_count;
 	// simulation cycle
 	while(1)
 	{
 		char linec[128];
 		uint32 cur_tics;
-		cur_pc = Device->GetPc(0);    
+		cur_pc = Device->GetPc(0);
 
 #ifndef USE_BREAK_POINTS
-		if(lstr.StopPc==cur_pc) 
+		if(lstr.StopPc==cur_pc)
 			break;
 #endif
 		Device->DisAssembly(disasm,0,cur_pc,0);
@@ -757,7 +760,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		if(cur_tics > (prev_tics + 1))
 			printf("      +%d wait\n",cur_tics - prev_tics - 1);
 		PRINT_LOG("print line\n")
-		printf("%05d %s", cur_tics, disasm);
+		printf("| %05d | %s", cur_tics, disasm);
 		fflush(stdout);
 		// execute StepInfo, check 
 		PRINT_LOG("start \n")
