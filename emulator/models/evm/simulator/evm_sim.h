@@ -5,6 +5,8 @@
 
 extern uint256 KeccakAlg(TDevice* dev,uint32 offs,uint32 size);
 extern uint256 GetElfSize(TDevice* dev);
+extern void SaveToStorage(TDevice* dev,uint32 offs,uint256 value);
+extern uint256 LoadFromStorage(TDevice* dev,uint32 offs);
 // class EVM
 class EVM: public TDevice
 {
@@ -78,7 +80,6 @@ public:
   PD_REG< uint32 >  gas_price;
   PD_REG< uint256 >  ext_code_size;
   PD_REG< uint256 >  inp_data_size;
-  PD_REG<uint256>  storage_bus[256];
   PD_REG<uint256>  input_data[1024];
   PD_REG<uint256>  log_bus[1024];
   PD_REG<uint256>  stack_arr[2048];

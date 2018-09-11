@@ -1320,7 +1320,7 @@ inline uint256 EVM::GetModuleS(uint256 a,uint256 mod)
   {
   gas_available = (gas_available - 5);
   }
-   sign  =  (  is_signed  ? ( (uint256)((0 - 1))) : ( (uint256)(1)) );
+   sign  =  ( ( is_signed  != 0) ? ( (uint256)((0 - 1))) : ( (uint256)(1)) );
   if(SARG(mod) == 0)
   {
   ;
@@ -2464,7 +2464,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 50);
   }
-   data_val  = storage_bus[ addr_val ];
+   data_val  = LoadFromStorage((TDevice*)this, addr_val );
   Push( data_val );
     break;
     case 5:
@@ -2480,7 +2480,7 @@ inline int EVM::Main_decode(uint32 ocode){
   gas_available = (gas_available - 0);
   }
    data_val  = Pop();
-  storage_bus[ addr_val ] =  data_val ;
+ SaveToStorage((TDevice*)this, addr_val , data_val );
     break;
     case 6:
   ;
@@ -2594,7 +2594,7 @@ inline int EVM::Main_decode(uint32 ocode){
    a  = Pop();
    b  = Pop();
    is_c_opcode  = ((SARG(opcode) == 8) || (SARG(opcode) == 9));
-   c  =  (  is_c_opcode  ? (Pop()) : (0) );
+   c  =  ( ( is_c_opcode  != 0) ? (Pop()) : (0) );
    res  = Get_ArithmOps(SARG(opcode), a , b , c );
   Push( res );
       }
@@ -2616,7 +2616,7 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
    a  = Pop();
    is_b_opcode  = ((SARG(opcode) == 5) || (SARG(opcode) == 9));
-   b  =  (  is_b_opcode  ? (0) : (Pop()) );
+   b  =  ( ( is_b_opcode  != 0) ? (0) : (Pop()) );
    res  = Get_CompareLogOps(SARG(opcode), a , b );
   Push( res );
       }

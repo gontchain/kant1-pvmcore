@@ -7,6 +7,13 @@
 #define BLOCK_SIZE 1024*512 // 512 килобайт памяти
 #define IMEM_WS 1
 
+struct Storage {
+  uint32 key;
+  uint256 value;
+  Storage* next;
+};
+
+Storage* mainStorage;
 
 EVM *new_evm;
 
@@ -47,6 +54,42 @@ uint256 GetElfSize(TDevice* dev)
   return dev->elfSize;
 }
 
+void SaveToStorage(TDevice* dev, uint32 offs, uint256 value)
+{
+  Storage* node = mainStorage;
+  Storage* tail;
+  bool isFound = false;
+  while (node != NULL) {
+    if (node->key == -1 | node->key == offs) { // if entry is empty or address is found
+      isFound = true;
+      break;
+    }
+    tail = node;
+    node = node->next;
+  }
+  if (isFound) { // overwrite
+    node->key = offs;
+    node->value = value;
+  } else { // create new entry
+	tail->next = new Storage;
+    tail->next->key = offs;
+	tail->next->value = value;
+	tail->next->next = NULL;
+  }
+}
+
+uint256 LoadFromStorage(TDevice* dev, uint32 offs)
+{
+  Storage* node = mainStorage;
+  while (node != NULL) {
+    if (node->key == offs) {
+      return node->value;
+    }
+    node = node->next;
+  }
+  return uint256(0x0); // return 0x0 if nothing was found
+}
+
 void* Init(void* mParams)
 {
   // инициализируем подсистему памяти
@@ -71,6 +114,12 @@ void* Init(void* mParams)
   // init gas price
   new_evm->gas_available = ((ChipMem*)mParams)->GasLimit;
   new_evm->GasLimit = ((ChipMem*)mParams)->GasLimit;
+
+  // init EVM storage
+  mainStorage = new Storage;
+  mainStorage->key = -1;
+  mainStorage->value = 0x0;
+  mainStorage->next = NULL;
   return (void*)new_evm;
 }
 

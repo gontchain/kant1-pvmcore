@@ -8,7 +8,6 @@
         <gas_price SIZE="32" ASM="gas_price" ARRSIZE="0" />
         <ext_code_size SIZE="256" ASM="ext_code_size" ARRSIZE="0" />
         <inp_data_size SIZE="256" ASM="inp_data_size" ARRSIZE="0" />
-        <storage_bus SIZE="256" ARRSIZE="256" />
         <input_data SIZE="256" ARRSIZE="1024" />
         <log_bus SIZE="256" ARRSIZE="1024" />
         <stack_arr SIZE="256" ARRSIZE="2048" />
@@ -41,6 +40,19 @@
         <GetElfSize RETSIZE="256">
             <CODE />
         </GetElfSize>
+        <SaveToStorage RETSIZE="0">
+            <ARGUMENTS>
+                <offs SIZE="32" />
+                <value SIZE="256" />
+            </ARGUMENTS>
+            <CODE />
+        </SaveToStorage>
+        <LoadFromStorage RETSIZE="256">
+            <ARGUMENTS>
+                <offs SIZE="32" />
+            </ARGUMENTS>
+            <CODE />
+        </LoadFromStorage>
         <StopExec RETSIZE="256">
             <CODE>
                 <PRINT_ERROR message="1" />
@@ -3937,9 +3949,11 @@
                             </IF>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
-                                <REG name="storage_bus">
-                                    <LVAR name="addr_val" />
-                                </REG>
+                                <CALL name="LoadFromStorage">
+                                    <ARGS>
+                                        <LVAR name="addr_val" />
+                                    </ARGS>
+                                </CALL>
                             </OPERATOR>
                             <CALL name="Push">
                                 <ARGS>
@@ -3980,12 +3994,12 @@
                                 <LVAR name="data_val" />
                                 <CALL name="Pop" />
                             </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="storage_bus">
+                            <CALL name="SaveToStorage">
+                                <ARGS>
                                     <LVAR name="addr_val" />
-                                </REG>
-                                <LVAR name="data_val" />
-                            </OPERATOR>
+                                    <LVAR name="data_val" />
+                                </ARGS>
+                            </CALL>
                         </CASE>
                         <CASE index="6">
                             <IF>
