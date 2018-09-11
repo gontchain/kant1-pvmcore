@@ -828,6 +828,11 @@ int RunSimulation(char* aSimName,uint32 aWait)
 #endif  
 	} // end while
 
+	if (IsOutCode)
+	{
+		printf("\n\n#### OUTPUT ####\n\n");
+	}
+
 	CheckPostProg();
 	ProcessWarns(cur_pc);
 	// after the end of the program we get the value of the "test register"
