@@ -154,7 +154,7 @@ Device EVM
     MAIN_TYPE sign; 
     int1 is_signed = (((signed)a) < 0); 
     
-    sign = is_signed ? (MAIN_TYPE)(0-1) : (MAIN_TYPE)1;
+    sign = (is_signed!=0) ? (MAIN_TYPE)(0-1) : (MAIN_TYPE)1;
     if (mod == 0)
     {
       return 0;
@@ -589,7 +589,8 @@ Device EVM
       if( (idx(opcode)!=0x7)  && (idx(opcode)!=9) && (idx(opcode)!=0xc))
         Push(res);
     }
-    
+   
+   
         
     INST "PUSH$count", (8,int5 count,int3 0b011)
     {
@@ -759,7 +760,7 @@ Device EVM
       a = Pop();
       b = Pop();
       is_c_opcode = ((idx(opcode)== 8) || (idx(opcode) == 9));
-      c = is_c_opcode ? Pop() : 0;
+      c = (is_c_opcode != 0) ? Pop() : 0;
       // compute
       res = opcode(a,b,c);
       // push to stack
@@ -777,7 +778,7 @@ Device EVM
       a = Pop();
       
       is_b_opcode = ((idx(opcode) == 5) || (idx(opcode) == 9));
-      b = is_b_opcode ? 0: Pop();
+      b = (is_b_opcode!=0) ? 0: Pop();
       // compute
       res = opcode(a,b);
       // push to stack

@@ -565,7 +565,10 @@
                 <OPERATOR name=" = ">
                     <LVAR name="sign" />
                     <OPERATOR name="?">
-                        <LVAR name="is_signed" />
+                        <OPERATOR name=" != ">
+                            <LVAR name="is_signed" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
                         <TYPE name="uint256">
                             <OPERATOR name="-">
                                 <IMM32 value="0" />
@@ -4261,7 +4264,10 @@
                     <OPERATOR name=" = ">
                         <LVAR name="c" />
                         <OPERATOR name="?">
-                            <LVAR name="is_c_opcode" />
+                            <OPERATOR name=" != ">
+                                <LVAR name="is_c_opcode" />
+                                <IMM32 value="0" />
+                            </OPERATOR>
                             <CALL name="Pop" />
                             <IMM32 value="0" />
                         </OPERATOR>
@@ -4315,7 +4321,10 @@
                     <OPERATOR name=" = ">
                         <LVAR name="b" />
                         <OPERATOR name="?">
-                            <LVAR name="is_b_opcode" />
+                            <OPERATOR name=" != ">
+                                <LVAR name="is_b_opcode" />
+                                <IMM32 value="0" />
+                            </OPERATOR>
                             <IMM32 value="0" />
                             <CALL name="Pop" />
                         </OPERATOR>
