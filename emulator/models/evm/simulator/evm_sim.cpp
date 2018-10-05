@@ -1142,7 +1142,6 @@ inline uint256 EVM::StopExec()
 {
   ;
   CheckError("@");
-    return  (uint256)(0);
   return 0;
 };
 #undef SARG
@@ -2107,6 +2106,80 @@ inline uint256 EVM::DelegateCall()
   return 0;
 };
 #undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::PushInst(uint32 cnt)
+{
+  uint32 i ;
+  uint256 a  = 0;
+  uint256 tmp ;
+  ;
+ for( i  = 0; i  < SARG(cnt); i  = ( i  + 1)){
+  ;
+   tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
+   a  = (pd_lsh( a ,8) |  tmp );
+  }
+  Push( a );
+    return 0;
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::LogInst(uint32 count,uint32 log_ptr)
+{
+  uint32 i ;
+  ;
+ for( i  = 0; i  < SARG(count); i  = ( i  + 1)){
+  ;
+  log_bus[((SARG(log_ptr) + 2) + SARG(count))] = Pop();
+  }
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::MloadInst(uint32 addr_val)
+{
+  uint32 i ;
+  uint256 data_val ;
+  uint32 init_shift ;
+  uint256 data_tmp ;
+  ;
+   data_val  = 0;
+   init_shift  = 0;
+ for( i  = 0; i  < 32; i  = ( i  + 1)){
+  ;
+   data_val  = (pd_lsh( data_val , init_shift ) |  (uint256)(data_bus[SARG(addr_val)]));
+  SARG(addr_val) = (SARG(addr_val) + 1);
+   init_shift  = ( init_shift  + 8);
+  }
+  Push( data_val );
+    return 0;
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::MStoreInst(uint32 addr_val)
+{
+  uint32 i ;
+  uint256 data_val ;
+  uint32 init_shift ;
+  uint256 data_tmp ;
+  ;
+   data_val  = Pop();
+   init_shift  = (31 * 8);
+ for( i  = 0; i  < 32; i  = ( i  + 1)){
+  ;
+   data_tmp  = pd_rsh( data_val , init_shift );
+  data_bus[SARG(addr_val)] =  (uint8)(( data_tmp ).to_uint64());
+  SARG(addr_val) = (SARG(addr_val) + 1);
+   init_shift  = ( init_shift  - 8);
+  }
+  if(SARG(addr_val) > mem_size)
+  {
+  mem_size = SARG(addr_val);
+  }
+  return 0;
+};
+#undef SARG
 inline int EVM::Main_decode(uint32 ocode){
   TMainInst* cur_inst;
   RUN_PIPE(MainPipe,0);
@@ -2241,10 +2314,6 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 7;
   #define SARG(aidx) cur_inst->inst7.aidx
       {
-  uint32 i ;
-  uint256 a  = 0;
-  uint256 tmp ;
-  uint32 cnt  = (SARG(count) + 1);
   ;
   if(gas_available < 3)
   {
@@ -2256,14 +2325,9 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
+  PushInst(SARG(count) + 1);
   is_pc_within_inst = 1;
- for( i  = 0; i  <  cnt ; i  = ( i  + 1)){
-  ;
-   tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
-   a  = (pd_lsh( a ,8) |  tmp );
-  }
-  Push( a );
-  pc = ((pc +  cnt ) + 1);
+  pc = ((pc + SARG(count)) + 2);
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2341,10 +2405,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - (375 + (SARG(count) * 375)));
   }
- for( i  = 0; i  < SARG(count); i  = ( i  + 1)){
-  ;
-  log_bus[((log_ptr + 2) + SARG(count))] = Pop();
-  }
+  LogInst(SARG(count), m_ptr );
   log_ptr = (SARG(count) + 2);
       }
   #undef SARG
@@ -2397,15 +2458,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-   data_val  = 0;
-   init_shift  = 0;
- for( i  = 0; i  < 32; i  = ( i  + 1)){
-  ;
-   data_val  = (pd_lsh( data_val , init_shift ) |  (uint256)(data_bus[ addr_val ]));
-   addr_val  = ( addr_val  + 1);
-   init_shift  = ( init_shift  + 8);
-  }
-  Push( data_val );
+  MloadInst( addr_val );
     break;
     case 2:
   ;
@@ -2419,19 +2472,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-   data_val  = Pop();
-   init_shift  = (31 * 8);
- for( i  = 0; i  < 32; i  = ( i  + 1)){
-  ;
-   data_tmp  = pd_rsh( data_val , init_shift );
-  data_bus[ addr_val ] =  (uint8)(( data_tmp ).to_uint64());
-   addr_val  = ( addr_val  + 1);
-   init_shift  = ( init_shift  - 8);
-  }
-  if( addr_val  > mem_size)
-  {
-  mem_size =  addr_val ;
-  }
+  MStoreInst( addr_val );
     break;
     case 3:
   ;

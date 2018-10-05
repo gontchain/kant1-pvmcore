@@ -60,7 +60,6 @@ Device EVM
   MAIN_TYPE StopExec()
   {
     dbg_msg "@";
-    return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE GetExp(MAIN_TYPE base,MAIN_TYPE pow)
