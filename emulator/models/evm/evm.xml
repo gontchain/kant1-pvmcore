@@ -56,11 +56,6 @@
         <StopExec RETSIZE="256">
             <CODE>
                 <PRINT_ERROR message="1" />
-                <RETURN>
-                    <TYPE name="uint256">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
             </CODE>
         </StopExec>
         <GetExp RETSIZE="256">
