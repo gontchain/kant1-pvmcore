@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./configure-tlm
+./builder-tlm
+sudo make install-tlmu DESTDIR=/opt/qemu-tlmu/

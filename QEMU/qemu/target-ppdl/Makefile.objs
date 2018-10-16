@@ -1,0 +1,8 @@
+obj-$(CONFIG_SOFTMMU) += machine.o
+obj-y += cpu.o interrupt.o mmu.o translate.o
+obj-y += mmu_helper.o op_helper.o arglist_helper.o func_helper.o semihosting_helper.o
+obj-y += gdbstub.o
+obj-y += translate_cpu.o
+obj-y += bitfield.o
+obj-y += func_shared.o
+obj-y += func_disas.o

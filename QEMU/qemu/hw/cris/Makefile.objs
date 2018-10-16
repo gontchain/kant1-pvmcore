@@ -1,0 +1,3 @@
+obj-y += cris_pic_cpu.o
+obj-y += boot.o
+obj-y += axis_dev88.o

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#
+# Copyright (c) 2017 Perov Maxim <coder@frtk.ru>
+#
+
+sudo apt-get install zlib1g-dev libglib2.0 autoconf libpixman-1-dev libmpc3 libc6 lib32stdc++-4.8-dev libfdt-dev
+
+if [ ! -f "/usr/lib/x86_64-linux-gnu/libmpc.so.2" ]; then
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libmpc.so.3 /usr/lib/x86_64-linux-gnu/libmpc.so.2
+fi
+if [ ! -f "/usr/lib/x86_64-linux-gnu/libmpfr.so.1" ]; then
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.4 /usr/lib/x86_64-linux-gnu/libmpfr.so.1
+fi
+if [ ! -f "/usr/lib/x86_64-linux-gnu/libgmp.so.3" ]; then
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libgmp.so /usr/lib/x86_64-linux-gnu/libgmp.so.3
+fi

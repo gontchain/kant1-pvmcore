@@ -1,0 +1,1 @@
+obj-y += ppdl.o ppdl_pic.o
