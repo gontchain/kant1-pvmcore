@@ -2,15 +2,15 @@
 <DEVICE name="EVM">
     <REGS>
         <pc SIZE="32" ASM="pc" ARRSIZE="0" />
-        <cur_addr SIZE="160" ASM="cur_addr" ARRSIZE="0" />
-        <caller_addr SIZE="160" ASM="caller_addr" ARRSIZE="0" />
-        <origin_addr SIZE="160" ASM="origin_addr" ARRSIZE="0" />
+        <cur_addr SIZE="64" ASM="cur_addr" ARRSIZE="0" />
+        <caller_addr SIZE="64" ASM="caller_addr" ARRSIZE="0" />
+        <origin_addr SIZE="64" ASM="origin_addr" ARRSIZE="0" />
         <gas_price SIZE="32" ASM="gas_price" ARRSIZE="0" />
-        <ext_code_size SIZE="256" ASM="ext_code_size" ARRSIZE="0" />
-        <inp_data_size SIZE="256" ASM="inp_data_size" ARRSIZE="0" />
-        <input_data SIZE="256" ARRSIZE="1024" />
-        <log_bus SIZE="256" ARRSIZE="1024" />
-        <stack_arr SIZE="256" ARRSIZE="2048" />
+        <ext_code_size SIZE="64" ASM="ext_code_size" ARRSIZE="0" />
+        <inp_data_size SIZE="64" ASM="inp_data_size" ARRSIZE="0" />
+        <input_data SIZE="64" ARRSIZE="1024" />
+        <log_bus SIZE="64" ARRSIZE="1024" />
+        <stack_arr SIZE="64" ARRSIZE="2048" />
         <log_ptr SIZE="32" ASM="log_ptr" ARRSIZE="0" />
     </REGS>
     <MEMS>
@@ -22,50 +22,50 @@
         <gas_available SIZE="32" ASM="gas_available" />
         <mem_size SIZE="32" />
         <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
-        <CoinBase SIZE="256" ASM="CoinBase" />
-        <TimeStamp SIZE="256" ASM="TimeStamp" />
-        <Number SIZE="256" ASM="Number" />
-        <Difficulty SIZE="256" ASM="Difficulty" />
-        <GasLimit SIZE="256" ASM="GasLimit" />
+        <CoinBase SIZE="64" ASM="CoinBase" />
+        <TimeStamp SIZE="64" ASM="TimeStamp" />
+        <Number SIZE="64" ASM="Number" />
+        <Difficulty SIZE="64" ASM="Difficulty" />
+        <GasLimit SIZE="64" ASM="GasLimit" />
     </VARS>
     <FLAGS />
     <FUNCTIONS>
-        <KeccakAlg RETSIZE="256">
+        <KeccakAlg RETSIZE="64">
             <ARGUMENTS>
                 <offs SIZE="32" />
                 <size SIZE="32" />
             </ARGUMENTS>
             <CODE />
         </KeccakAlg>
-        <GetElfSize RETSIZE="256">
+        <GetElfSize RETSIZE="64">
             <CODE />
         </GetElfSize>
         <SaveToStorage RETSIZE="0">
             <ARGUMENTS>
                 <offs SIZE="32" />
-                <value SIZE="256" />
+                <value SIZE="64" />
             </ARGUMENTS>
             <CODE />
         </SaveToStorage>
-        <LoadFromStorage RETSIZE="256">
+        <LoadFromStorage RETSIZE="64">
             <ARGUMENTS>
                 <offs SIZE="32" />
             </ARGUMENTS>
             <CODE />
         </LoadFromStorage>
-        <StopExec RETSIZE="256">
+        <StopExec RETSIZE="64">
             <CODE>
                 <PRINT_ERROR message="1" />
             </CODE>
         </StopExec>
-        <GetExp RETSIZE="256">
+        <GetExp RETSIZE="64">
             <ARGUMENTS>
-                <base SIZE="256" />
-                <pow SIZE="256" />
+                <base SIZE="64" />
+                <pow SIZE="64" />
             </ARGUMENTS>
             <LOCALVARS>
-                <i SIZE="256" />
-                <res SIZE="256">
+                <i SIZE="64" />
+                <res SIZE="64">
                     <INITAL_EXP>
                         <IMM32 value="1" />
                     </INITAL_EXP>
@@ -137,9 +137,9 @@
                 </RETURN>
             </CODE>
         </GetExp>
-        <Pop RETSIZE="256">
+        <Pop RETSIZE="64">
             <LOCALVARS>
-                <ret SIZE="256" />
+                <ret SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <OPERATOR name=" = ">
@@ -162,7 +162,7 @@
         </Pop>
         <Push RETSIZE="0">
             <ARGUMENTS>
-                <val SIZE="256" />
+                <val SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <OPERATOR name=" = ">
@@ -180,16 +180,16 @@
                 </OPERATOR>
             </CODE>
         </Push>
-        <SignExtend RETSIZE="256">
+        <SignExtend RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <LOCALVARS>
                 <testBit SIZE="32" />
                 <end_bit SIZE="32" />
-                <number SIZE="256" />
-                <mask SIZE="256" />
+                <number SIZE="64" />
+                <mask SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <IF>
@@ -251,7 +251,7 @@
                             <LVAR name="mask" />
                             <OPERATOR name="-">
                                 <OPERATOR name="&lt;&lt;">
-                                    <TYPE name="uint256">
+                                    <TYPE name="uint64">
                                         <IMM32 value="1" />
                                     </TYPE>
                                     <LVAR name="testBit" />
@@ -301,16 +301,16 @@
                     </INNER>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </SignExtend>
-        <ByteFromWord RETSIZE="256">
+        <ByteFromWord RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <LOCALVARS>
                 <start_bit SIZE="32">
@@ -375,13 +375,13 @@
                 </RETURN>
             </CODE>
         </ByteFromWord>
-        <GetModule RETSIZE="256">
+        <GetModule RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <mod SIZE="256" />
+                <a SIZE="64" />
+                <mod SIZE="64" />
             </ARGUMENTS>
             <LOCALVARS>
-                <div SIZE="256" />
+                <div SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <IF>
@@ -447,13 +447,13 @@
                 </IF>
             </CODE>
         </GetModule>
-        <GetModuleAM RETSIZE="256">
+        <GetModuleAM RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <mod SIZE="256" />
+                <a SIZE="64" />
+                <mod SIZE="64" />
             </ARGUMENTS>
             <LOCALVARS>
-                <div SIZE="256" />
+                <div SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <IF>
@@ -493,7 +493,7 @@
                     </COND>
                     <INNER>
                         <RETURN>
-                            <TYPE name="uint256">
+                            <TYPE name="uint64">
                                 <IMM32 value="0" />
                             </TYPE>
                         </RETURN>
@@ -521,14 +521,14 @@
                 </IF>
             </CODE>
         </GetModuleAM>
-        <GetModuleS RETSIZE="256">
+        <GetModuleS RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <mod SIZE="256" />
+                <a SIZE="64" />
+                <mod SIZE="64" />
             </ARGUMENTS>
             <LOCALVARS>
-                <div SIZE="256" />
-                <sign SIZE="256" />
+                <div SIZE="64" />
+                <sign SIZE="64" />
                 <is_signed SIZE="1">
                     <INITAL_EXP>
                         <OPERATOR name=" &lt; ">
@@ -576,13 +576,13 @@
                             <LVAR name="is_signed" />
                             <IMM32 value="0" />
                         </OPERATOR>
-                        <TYPE name="uint256">
+                        <TYPE name="uint64">
                             <OPERATOR name="-">
                                 <IMM32 value="0" />
                                 <IMM32 value="1" />
                             </OPERATOR>
                         </TYPE>
-                        <TYPE name="uint256">
+                        <TYPE name="uint64">
                             <IMM32 value="1" />
                         </TYPE>
                     </OPERATOR>
@@ -625,7 +625,7 @@
                 </IF>
             </CODE>
         </GetModuleS>
-        <StopOp RETSIZE="256">
+        <StopOp RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -657,16 +657,16 @@
                 </IF>
                 <PRINT_ERROR message="1" />
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </StopOp>
-        <AddOp RETSIZE="256">
+        <AddOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -705,10 +705,10 @@
                 </RETURN>
             </CODE>
         </AddOp>
-        <SubOp RETSIZE="256">
+        <SubOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -747,10 +747,10 @@
                 </RETURN>
             </CODE>
         </SubOp>
-        <MulOp RETSIZE="256">
+        <MulOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -789,10 +789,10 @@
                 </RETURN>
             </CODE>
         </MulOp>
-        <DivOp RETSIZE="256">
+        <DivOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -848,10 +848,10 @@
                 </IF>
             </CODE>
         </DivOp>
-        <DivOpS RETSIZE="256">
+        <DivOpS RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -911,10 +911,10 @@
                 </IF>
             </CODE>
         </DivOpS>
-        <LtOp RETSIZE="256">
+        <LtOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -953,10 +953,10 @@
                 </RETURN>
             </CODE>
         </LtOp>
-        <LtOpS RETSIZE="256">
+        <LtOpS RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -999,10 +999,10 @@
                 </RETURN>
             </CODE>
         </LtOpS>
-        <GtOp RETSIZE="256">
+        <GtOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1041,10 +1041,10 @@
                 </RETURN>
             </CODE>
         </GtOp>
-        <GtOpS RETSIZE="256">
+        <GtOpS RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1087,10 +1087,10 @@
                 </RETURN>
             </CODE>
         </GtOpS>
-        <EqOp RETSIZE="256">
+        <EqOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1129,9 +1129,9 @@
                 </RETURN>
             </CODE>
         </EqOp>
-        <IsZeroOp RETSIZE="256">
+        <IsZeroOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
+                <a SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1170,10 +1170,10 @@
                 </RETURN>
             </CODE>
         </IsZeroOp>
-        <AndOp RETSIZE="256">
+        <AndOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1212,10 +1212,10 @@
                 </RETURN>
             </CODE>
         </AndOp>
-        <OrOp RETSIZE="256">
+        <OrOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1254,10 +1254,10 @@
                 </RETURN>
             </CODE>
         </OrOp>
-        <XorOp RETSIZE="256">
+        <XorOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1296,9 +1296,9 @@
                 </RETURN>
             </CODE>
         </XorOp>
-        <NotOp RETSIZE="256">
+        <NotOp RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
+                <a SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1336,7 +1336,7 @@
                 </RETURN>
             </CODE>
         </NotOp>
-        <CallValue RETSIZE="256">
+        <CallValue RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -1367,17 +1367,17 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </CallValue>
-        <CallDataCopy RETSIZE="256">
+        <CallDataCopy RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
-                <c SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
+                <c SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1409,13 +1409,13 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </CallDataCopy>
-        <CallDataSize RETSIZE="256">
+        <CallDataSize RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -1450,11 +1450,11 @@
                 </RETURN>
             </CODE>
         </CallDataSize>
-        <CodeCopy RETSIZE="256">
+        <CodeCopy RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
-                <c SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
+                <c SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1486,13 +1486,13 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </CodeCopy>
-        <ExtCodeSize RETSIZE="256">
+        <ExtCodeSize RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -1527,12 +1527,12 @@
                 </RETURN>
             </CODE>
         </ExtCodeSize>
-        <ExtCodeCopy RETSIZE="256">
+        <ExtCodeCopy RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
-                <c SIZE="256" />
-                <d SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
+                <c SIZE="64" />
+                <d SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1564,15 +1564,15 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </ExtCodeCopy>
-        <GetAddress RETSIZE="256">
+        <GetAddress RETSIZE="64">
             <LOCALVARS>
-                <ca SIZE="160">
+                <ca SIZE="64">
                     <INITAL_EXP>
                         <REG name="cur_addr" />
                     </INITAL_EXP>
@@ -1608,15 +1608,15 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <LVAR name="ca" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </GetAddress>
-        <GetBalance RETSIZE="256">
+        <GetBalance RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
+                <a SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1648,15 +1648,15 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </GetBalance>
-        <GetOrigin RETSIZE="256">
+        <GetOrigin RETSIZE="64">
             <LOCALVARS>
-                <oa SIZE="160">
+                <oa SIZE="64">
                     <INITAL_EXP>
                         <REG name="origin_addr" />
                     </INITAL_EXP>
@@ -1692,15 +1692,15 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <LVAR name="oa" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </GetOrigin>
-        <GetCaller RETSIZE="256">
+        <GetCaller RETSIZE="64">
             <LOCALVARS>
-                <ca SIZE="160">
+                <ca SIZE="64">
                     <INITAL_EXP>
                         <REG name="caller_addr" />
                     </INITAL_EXP>
@@ -1736,13 +1736,13 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <LVAR name="ca" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </GetCaller>
-        <GetInputData RETSIZE="256">
+        <GetInputData RETSIZE="64">
             <LOCALVARS>
                 <addr_val SIZE="32">
                     <INITAL_EXP>
@@ -1751,7 +1751,7 @@
                         </TYPE>
                     </INITAL_EXP>
                 </addr_val>
-                <inp_data SIZE="256">
+                <inp_data SIZE="64">
                     <INITAL_EXP>
                         <REG name="input_data">
                             <LVAR name="addr_val" />
@@ -1793,7 +1793,7 @@
                 </RETURN>
             </CODE>
         </GetInputData>
-        <GetCodeSize RETSIZE="256">
+        <GetCodeSize RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -1828,7 +1828,7 @@
                 </RETURN>
             </CODE>
         </GetCodeSize>
-        <GetGasPrice RETSIZE="256">
+        <GetGasPrice RETSIZE="64">
             <LOCALVARS>
                 <gp SIZE="32">
                     <INITAL_EXP>
@@ -1866,15 +1866,15 @@
                     </ELSE>
                 </IF>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <LVAR name="gp" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </GetGasPrice>
-        <BlockChainHash RETSIZE="256">
+        <BlockChainHash RETSIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
+                <a SIZE="64" />
             </ARGUMENTS>
             <CODE>
                 <IF>
@@ -1926,13 +1926,13 @@
                     <IMM32 value="1000" />
                 </OPERATOR>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </BlockChainHash>
-        <GetCoinBase RETSIZE="256">
+        <GetCoinBase RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -1967,7 +1967,7 @@
                 </RETURN>
             </CODE>
         </GetCoinBase>
-        <GetTimeStamp RETSIZE="256">
+        <GetTimeStamp RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -2002,7 +2002,7 @@
                 </RETURN>
             </CODE>
         </GetTimeStamp>
-        <GetNumber RETSIZE="256">
+        <GetNumber RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -2037,7 +2037,7 @@
                 </RETURN>
             </CODE>
         </GetNumber>
-        <GetDifficulty RETSIZE="256">
+        <GetDifficulty RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -2072,7 +2072,7 @@
                 </RETURN>
             </CODE>
         </GetDifficulty>
-        <GetGasLimit RETSIZE="256">
+        <GetGasLimit RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -2107,14 +2107,14 @@
                 </RETURN>
             </CODE>
         </GetGasLimit>
-        <CreateAccount RETSIZE="256">
+        <CreateAccount RETSIZE="64">
             <ARGUMENTS>
-                <endowment SIZE="256" />
-                <initOff SIZE="256" />
-                <initSize SIZE="256" />
+                <endowment SIZE="64" />
+                <initOff SIZE="64" />
+                <initSize SIZE="64" />
             </ARGUMENTS>
             <LOCALVARS>
-                <account SIZE="256" />
+                <account SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <IF>
@@ -2154,44 +2154,44 @@
                 </RETURN>
             </CODE>
         </CreateAccount>
-        <MakeCall RETSIZE="256">
+        <MakeCall RETSIZE="64">
             <LOCALVARS>
-                <callGas SIZE="256">
+                <callGas SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </callGas>
-                <address SIZE="256">
+                <address SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </address>
-                <value SIZE="256">
+                <value SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </value>
-                <inOff SIZE="256">
+                <inOff SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </inOff>
-                <inSize SIZE="256">
+                <inSize SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </inSize>
-                <outOff SIZE="256">
+                <outOff SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </outOff>
-                <outSize SIZE="256">
+                <outSize SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </outSize>
-                <call_res SIZE="256">
+                <call_res SIZE="64">
                     <INITAL_EXP>
                         <IMM32 value="0" />
                     </INITAL_EXP>
@@ -2231,44 +2231,44 @@
                 </RETURN>
             </CODE>
         </MakeCall>
-        <MakeCallCode RETSIZE="256">
+        <MakeCallCode RETSIZE="64">
             <LOCALVARS>
-                <callGas SIZE="256">
+                <callGas SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </callGas>
-                <address SIZE="256">
+                <address SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </address>
-                <value SIZE="256">
+                <value SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </value>
-                <inOff SIZE="256">
+                <inOff SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </inOff>
-                <inSize SIZE="256">
+                <inSize SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </inSize>
-                <outOff SIZE="256">
+                <outOff SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </outOff>
-                <outSize SIZE="256">
+                <outSize SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </outSize>
-                <call_res SIZE="256">
+                <call_res SIZE="64">
                     <INITAL_EXP>
                         <IMM32 value="0" />
                     </INITAL_EXP>
@@ -2308,7 +2308,7 @@
                 </RETURN>
             </CODE>
         </MakeCallCode>
-        <Return RETSIZE="256">
+        <Return RETSIZE="64">
             <CODE>
                 <IF>
                     <COND>
@@ -2342,45 +2342,45 @@
                     <ARGS />
                 </CALL>
                 <RETURN>
-                    <TYPE name="uint256">
+                    <TYPE name="uint64">
                         <IMM32 value="0" />
                     </TYPE>
                 </RETURN>
             </CODE>
         </Return>
-        <DelegateCall RETSIZE="256">
+        <DelegateCall RETSIZE="64">
             <LOCALVARS>
-                <callGas SIZE="256">
+                <callGas SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </callGas>
-                <address SIZE="256">
+                <address SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </address>
-                <inOff SIZE="256">
+                <inOff SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </inOff>
-                <inSize SIZE="256">
+                <inSize SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </inSize>
-                <outOff SIZE="256">
+                <outOff SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </outOff>
-                <outSize SIZE="256">
+                <outSize SIZE="64">
                     <INITAL_EXP>
                         <CALL name="Pop" />
                     </INITAL_EXP>
                 </outSize>
-                <call_res SIZE="256">
+                <call_res SIZE="64">
                     <INITAL_EXP>
                         <IMM32 value="0" />
                     </INITAL_EXP>
@@ -2426,12 +2426,12 @@
             </ARGUMENTS>
             <LOCALVARS>
                 <i SIZE="32" />
-                <a SIZE="256">
+                <a SIZE="64">
                     <INITAL_EXP>
                         <IMM32 value="0" />
                     </INITAL_EXP>
                 </a>
-                <tmp SIZE="256" />
+                <tmp SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <FOR>
@@ -2548,9 +2548,9 @@
             </ARGUMENTS>
             <LOCALVARS>
                 <i SIZE="32" />
-                <data_val SIZE="256" />
+                <data_val SIZE="64" />
                 <init_shift SIZE="32" />
-                <data_tmp SIZE="256" />
+                <data_tmp SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <OPERATOR name=" = ">
@@ -2591,7 +2591,7 @@
                                     <LVAR name="data_val" />
                                     <LVAR name="init_shift" />
                                 </OPERATOR>
-                                <TYPE name="uint256">
+                                <TYPE name="uint64">
                                     <REG name="data_bus">
                                         <ARG name="addr_val" />
                                     </REG>
@@ -2630,9 +2630,9 @@
             </ARGUMENTS>
             <LOCALVARS>
                 <i SIZE="32" />
-                <data_val SIZE="256" />
+                <data_val SIZE="64" />
                 <init_shift SIZE="32" />
-                <data_tmp SIZE="256" />
+                <data_tmp SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <OPERATOR name=" = ">
@@ -2718,11 +2718,11 @@
         </MStoreInst>
     </FUNCTIONS>
     <ARGLISTS>
-        <ArithmOps NUM_ELEMS="12" RETURN_SIZE="256">
+        <ArithmOps NUM_ELEMS="12" RETURN_SIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
-                <c SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
+                <c SIZE="64" />
             </ARGUMENTS>
             <ELEMS>
                 <ELEM ASM="STOP" ID="0">
@@ -2850,10 +2850,10 @@
                 </ELEM>
             </ELEMS>
         </ArithmOps>
-        <CompareLogOps NUM_ELEMS="11" RETURN_SIZE="256">
+        <CompareLogOps NUM_ELEMS="11" RETURN_SIZE="64">
             <ARGUMENTS>
-                <a SIZE="256" />
-                <b SIZE="256" />
+                <a SIZE="64" />
+                <b SIZE="64" />
             </ARGUMENTS>
             <ELEMS>
                 <ELEM ASM="LT" ID="0">
@@ -3030,7 +3030,7 @@
                 </ELEM>
             </ELEMS>
         </MemOps>
-        <AccountsData NUM_ELEMS="13" RETURN_SIZE="256">
+        <AccountsData NUM_ELEMS="13" RETURN_SIZE="64">
             <ELEMS>
                 <ELEM ASM="ADDRESS" ID="0">
                     <CODE>
@@ -3140,7 +3140,7 @@
                 </ELEM>
             </ELEMS>
         </AccountsData>
-        <BlockChain NUM_ELEMS="6" RETURN_SIZE="256">
+        <BlockChain NUM_ELEMS="6" RETURN_SIZE="64">
             <ELEMS>
                 <ELEM ASM="BLOCKHASH" ID="0">
                     <CODE>
@@ -3188,7 +3188,7 @@
                 </ELEM>
             </ELEMS>
         </BlockChain>
-        <SystemOps NUM_ELEMS="5" RETURN_SIZE="256">
+        <SystemOps NUM_ELEMS="5" RETURN_SIZE="64">
             <ELEMS>
                 <ELEM ASM="CREATE" ID="0">
                     <CODE>
@@ -3240,7 +3240,7 @@
                     <ARG SIZE="4" VAL="15" />
                 </OPCODE>
                 <LOCALVARS>
-                    <res SIZE="256" />
+                    <res SIZE="64" />
                 </LOCALVARS>
                 <CODE>
                     <OPERATOR name=" = ">
@@ -3271,37 +3271,37 @@
                     <ARG SIZE="8" VAL="250" />
                 </OPCODE>
                 <LOCALVARS>
-                    <callGas SIZE="256">
+                    <callGas SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </callGas>
-                    <address SIZE="256">
+                    <address SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </address>
-                    <value SIZE="256">
+                    <value SIZE="64">
                         <INITAL_EXP>
                             <IMM32 value="0" />
                         </INITAL_EXP>
                     </value>
-                    <inOff SIZE="256">
+                    <inOff SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </inOff>
-                    <inSize SIZE="256">
+                    <inSize SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </inSize>
-                    <outOff SIZE="256">
+                    <outOff SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </outOff>
-                    <outSize SIZE="256">
+                    <outSize SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
@@ -3343,12 +3343,12 @@
                     <ARG SIZE="8" VAL="253" />
                 </OPCODE>
                 <LOCALVARS>
-                    <a SIZE="256">
+                    <a SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </a>
-                    <b SIZE="256">
+                    <b SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
@@ -3393,7 +3393,7 @@
                     <ARG SIZE="8" VAL="255" />
                 </OPCODE>
                 <LOCALVARS>
-                    <a SIZE="256">
+                    <a SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
@@ -3439,7 +3439,7 @@
                     <ARG SIZE="4" VAL="4" />
                 </OPCODE>
                 <LOCALVARS>
-                    <res SIZE="256">
+                    <res SIZE="64">
                         <INITAL_EXP>
                             <LST name="BlockChain">
                                 <ARG name="gas_opcode" />
@@ -3461,7 +3461,7 @@
                     <ARG SIZE="4" VAL="3" />
                 </OPCODE>
                 <LOCALVARS>
-                    <res SIZE="256">
+                    <res SIZE="64">
                         <INITAL_EXP>
                             <LST name="AccountsData">
                                 <ARG name="opcode" />
@@ -3564,7 +3564,7 @@
                     <ARG SIZE="4" VAL="8" />
                 </OPCODE>
                 <LOCALVARS>
-                    <a SIZE="256" />
+                    <a SIZE="64" />
                 </LOCALVARS>
                 <CODE>
                     <IF>
@@ -3620,7 +3620,7 @@
                     <ARG SIZE="4" VAL="9" />
                 </OPCODE>
                 <LOCALVARS>
-                    <first_el SIZE="256">
+                    <first_el SIZE="64">
                         <INITAL_EXP>
                             <REG name="stack_arr">
                                 <OPERATOR name="+">
@@ -3699,12 +3699,12 @@
                 </OPCODE>
                 <LOCALVARS>
                     <i SIZE="32" />
-                    <l1_data SIZE="256">
+                    <l1_data SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
                     </l1_data>
-                    <l2_data SIZE="256">
+                    <l2_data SIZE="64">
                         <INITAL_EXP>
                             <CALL name="Pop" />
                         </INITAL_EXP>
@@ -3790,9 +3790,9 @@
                     <dec_cnt SIZE="32" />
                     <addr_val SIZE="32" />
                     <init_shift SIZE="32" />
-                    <data_val SIZE="256" />
-                    <pc_val SIZE="256" />
-                    <data_tmp SIZE="256" />
+                    <data_val SIZE="64" />
+                    <pc_val SIZE="64" />
+                    <data_tmp SIZE="64" />
                 </LOCALVARS>
                 <CODE>
                     <IF>
@@ -4182,7 +4182,7 @@
                             </IF>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
-                                <TYPE name="uint256">
+                                <TYPE name="uint64">
                                     <REG name="pc" />
                                 </TYPE>
                             </OPERATOR>
@@ -4223,7 +4223,7 @@
                             </IF>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
-                                <TYPE name="uint256">
+                                <TYPE name="uint64">
                                     <REG name="mem_size" />
                                 </TYPE>
                             </OPERATOR>
@@ -4264,7 +4264,7 @@
                             </IF>
                             <CALL name="Push">
                                 <ARGS>
-                                    <TYPE name="uint256">
+                                    <TYPE name="uint64">
                                         <REG name="gas_available" />
                                     </TYPE>
                                 </ARGS>
@@ -4309,10 +4309,10 @@
                     <ARG SIZE="4" VAL="0" />
                 </OPCODE>
                 <LOCALVARS>
-                    <a SIZE="256" />
-                    <b SIZE="256" />
-                    <c SIZE="256" />
-                    <res SIZE="256" />
+                    <a SIZE="64" />
+                    <b SIZE="64" />
+                    <c SIZE="64" />
+                    <res SIZE="64" />
                     <is_c_opcode SIZE="8" />
                 </LOCALVARS>
                 <CODE>
@@ -4370,10 +4370,10 @@
                     <ARG SIZE="4" VAL="1" />
                 </OPCODE>
                 <LOCALVARS>
-                    <a SIZE="256" />
-                    <b SIZE="256" />
-                    <c SIZE="256" />
-                    <res SIZE="256" />
+                    <a SIZE="64" />
+                    <b SIZE="64" />
+                    <c SIZE="64" />
+                    <res SIZE="64" />
                     <is_b_opcode SIZE="8" />
                 </LOCALVARS>
                 <CODE>
@@ -4425,9 +4425,9 @@
                     <ARG SIZE="8" VAL="32" />
                 </OPCODE>
                 <LOCALVARS>
-                    <a SIZE="256" />
-                    <b SIZE="256" />
-                    <res SIZE="256" />
+                    <a SIZE="64" />
+                    <b SIZE="64" />
+                    <res SIZE="64" />
                 </LOCALVARS>
                 <CODE>
                     <IF>

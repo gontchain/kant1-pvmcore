@@ -1,6 +1,6 @@
-#define MAIN_TYPE int256
-#define MAIN_TYPE_SIZE 256
-#define EVM_ADDR_TYPE int160
+#define MAIN_TYPE int64
+#define MAIN_TYPE_SIZE 64
+#define EVM_ADDR_TYPE int64
 #define EVM_BALANCE_TYPE int32
 
 #define DATA_SIZE 1024

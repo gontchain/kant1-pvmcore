@@ -27,6 +27,25 @@ TDataMem* log_mem;
 TDataMem* input_mem;
 
 // KECCAK algorithm
+#if 1
+uint64 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
+{
+  return 0;
+}
+uint64 GetElfSize(TDevice* dev)
+{
+  return 0;
+}
+void SaveToStorage(TDevice* dev, uint32 offs, uint64 value)
+{
+    
+}
+
+uint64 LoadFromStorage(TDevice* dev, uint32 offs)
+{
+  return 0;
+}
+#else
 uint256 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
 {
 	EVM* my_evm = (EVM*)dev;
@@ -89,6 +108,7 @@ uint256 LoadFromStorage(TDevice* dev, uint32 offs)
   }
   return uint256(0x0); // return 0x0 if nothing was found
 }
+#endif
 
 void* Init(void* mParams)
 {
@@ -144,9 +164,14 @@ LIB_EXPORT void CheckPostProgram()
       printf("\ngas limit error\n");
       exit(-1);
     }
+#if 1
+    int32 offs = (int32)new_evm->Pop();
+    int32 size = (int32)new_evm->Pop();
 
+#else
     int32 offs = (int32)new_evm->Pop().to_int();
     int32 size = (int32)new_evm->Pop().to_int();
+#endif
     printf("0x");
     for (int i = 0; i < size; i++)
     {
