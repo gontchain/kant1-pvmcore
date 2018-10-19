@@ -111,7 +111,7 @@ public:
 
 };
 
-//template<class vValType> 
+template<class vValType> 
 class TBitVE
 {
 protected:
