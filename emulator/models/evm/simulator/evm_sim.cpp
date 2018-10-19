@@ -2326,7 +2326,7 @@ inline int EVM::Main_decode(uint32 ocode){
   gas_available = (gas_available - 3);
   }
   PushInst(SARG(count) + 1);
-  is_pc_within_inst = 1;
+  is_pc_const_changed = 1;
   pc = ((pc + SARG(count)) + 2);
       }
   #undef SARG
@@ -2725,8 +2725,9 @@ void EVM::Operate(){
   uint8 code  = (*prog_bus)[pc];
   ;
   is_pc_within_inst = 0;
+  is_pc_const_changed = 0;
   Main_decode( code );
-  if(is_pc_within_inst == 0)
+  if((is_pc_within_inst == 0) & (is_pc_const_changed == 0))
   {
   pc = (pc + 1);
   }

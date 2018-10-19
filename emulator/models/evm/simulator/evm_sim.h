@@ -86,6 +86,7 @@ public:
   PD_REG< uint32 >  log_ptr;
   uint32  sp;
   uint1  is_pc_within_inst;
+  uint1  is_pc_const_changed;
   uint32  gas_available;
   uint32  mem_size;
   uint8  data_bus[1024];

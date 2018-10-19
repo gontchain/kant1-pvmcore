@@ -18,7 +18,7 @@ Device EVM
   // program couter
   Reg int32 pc,"pc";
   Var int1  is_pc_within_inst;
-  
+  Var int1  is_pc_const_changed;
   // account specific regs
   Reg EVM_ADDR_TYPE     cur_addr,"cur_addr";
   Reg EVM_ADDR_TYPE     caller_addr, "caller_addr";  
@@ -656,7 +656,7 @@ Device EVM
     {
       USEGAS(STEPGAS2);
       PushInst(count + 1);
-      is_pc_within_inst = 1;
+      is_pc_const_changed = 1;
       pc = pc + count + 2;
     }
     
@@ -843,9 +843,10 @@ Device EVM
     int8 code = prog_bus[pc];
     // reset flags
     is_pc_within_inst = 0;
+    is_pc_const_changed = 0;
     // decode and execute
     Main.decode(code);
     // increment pc flag if need
-    if(is_pc_within_inst == 0)
+    if((is_pc_within_inst == 0) && (is_pc_const_changed == 0))
       pc = pc + 1;
   }

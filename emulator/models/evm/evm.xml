@@ -19,6 +19,7 @@
     <VARS>
         <sp SIZE="32" ASM="sp" />
         <is_pc_within_inst SIZE="1" />
+        <is_pc_const_changed SIZE="1" />
         <gas_available SIZE="32" ASM="gas_available" />
         <mem_size SIZE="32" />
         <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
@@ -3543,7 +3544,7 @@
                         </ARGS>
                     </CALL>
                     <OPERATOR name=" = ">
-                        <REG name="is_pc_within_inst" />
+                        <REG name="is_pc_const_changed" />
                         <IMM32 value="1" />
                     </OPERATOR>
                     <OPERATOR name=" = ">
