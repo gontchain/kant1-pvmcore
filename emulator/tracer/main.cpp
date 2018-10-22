@@ -422,7 +422,7 @@ int CheckRegs(char* regnames)
 							RegVal[i][tmp] = reg[0];		
 							RegVal[i][tmp+1] = reg[1];
 							regval64 = (((uint64)reg[1])<<32)|(((uint64)reg[0]));
-							sprintf(tmpstr,"%s%d = %016llx, ", RegNames[i], j, regval64);
+							sprintf(tmpstr,"%s%d = %016llx\n", RegNames[i], j, regval64);
 							strcat(regnames, tmpstr);
 							strcpy(tmpstr, "");
 							flag = true;
@@ -435,7 +435,7 @@ int CheckRegs(char* regnames)
 						Device->GetReg(i, j, (char*)&reg);
 						if (RegVal[i][j] != reg[0]){
 							RegVal[i][j] = reg[0];	
-							sprintf(tmpstr,"%s%d = %08x, ", RegNames[i], j, reg[0]);
+							sprintf(tmpstr,"%s%d = %08x\n", RegNames[i], j, reg[0]);
 							strcat(regnames, tmpstr);
 							strcpy(tmpstr, "");
 							flag = true;
@@ -452,7 +452,7 @@ int CheckRegs(char* regnames)
 						RegVal[i][0] = reg[0];
 						RegVal[i][1] = reg[1];
 						regval64 = (((uint64)reg[1])<<32)|(((uint64)reg[0]));
-						sprintf(tmpstr,"%s = %016llx, ", RegNames[i], regval64);
+						sprintf(tmpstr,"%s = %016llx\n", RegNames[i], regval64);
 						strcat(regnames, tmpstr);
 						strcpy(tmpstr, "");
 						flag = true;
@@ -461,7 +461,7 @@ int CheckRegs(char* regnames)
 				else if (RegVal[i][0] != reg[0])
 				{
 					RegVal[i][0] = reg[0];
-					sprintf(tmpstr,"%s = %08x, ", RegNames[i],reg[0]);
+					sprintf(tmpstr,"%s = %08x\n", RegNames[i],reg[0]);
 					strcat(regnames, tmpstr);
 					strcpy(tmpstr, "");
 					flag = true;
@@ -715,12 +715,12 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	int reg_res;
 	uint32 prev_tics = 0;
 	/// initialization registers
-//  InitRegs();
+ InitRegs();
   {
 	// print init state of register
-		printf("Initial registers state:\n");
-	//	InitPrintRegs();
-		printf("\n");
+		// printf("Initial registers state:\n");
+		// InitPrintRegs();
+		// printf("\n");
 	}
 
 #ifdef USE_BREAK_POINTS
@@ -729,10 +729,10 @@ int RunSimulation(char* aSimName,uint32 aWait)
   else
 	 Device->SetBreakPoint(elf_res->mSize);
 #endif
-	printf("#### TRACE ####\n\n\
-			\r------------------------------------------\n\
-		    \r| ticks |  address  | opcode | assembler |\n\
-		    \r------------------------------------------\n");
+	printf("\n#### TRACE ####\n\n\
+			\r----------------------------------------\n\
+		    \rticks |  address  |  opcode  | assembler \n\
+		    \r----------------------------------------\n");
 	cur_pc = pc_count;
 	// simulation cycle
 	while(1)
@@ -760,7 +760,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		if(cur_tics > (prev_tics + 1))
 			printf("      +%d wait\n",cur_tics - prev_tics - 1);
 		PRINT_LOG("print line\n")
-		printf("| %05d | %s", cur_tics, disasm);
+		printf("%05d   %s", cur_tics, disasm);
 		fflush(stdout);
 		// execute StepInfo, check 
 		PRINT_LOG("start \n")
@@ -777,19 +777,19 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		
 			PRINT_LOG("check regs\n")
         printf("\n");
-		//	if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
+			if (CheckRegs((char*)upregs)) printf("%s\n", upregs); else printf("\n");
 			upregs[0] = 0; 
 
-			PRINT_LOG("check fifos\n")
-			CheckFifos((char*)upregs); printf("%s",upregs);
+			// PRINT_LOG("check fifos\n")
+			// CheckFifos((char*)upregs); printf("%s",upregs);
 			PRINT_LOG("end of check results\n")
 		}
 		catch(void* aHrv)
 		{
 			////check registers for update
       ErrorHeader* aHr = (ErrorHeader*)aHrv;
-      //if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
-			upregs[0] = 0; CheckFifos((char*)upregs);printf("%s",upregs);
+      if (CheckRegs((char*)upregs)) printf("%s\n", upregs); else printf("\n");
+			upregs[0] = 0; //CheckFifos((char*)upregs);printf("%s",upregs);
 			
       if (aHr->m_MsgType == MSGTYPE_EXIT)
       {
