@@ -165,9 +165,8 @@ LIB_EXPORT void CheckPostProgram()
       exit(-1);
     }
 #if 1
-    int32 offs = (int32)new_evm->Pop();
-    int32 size = (int32)new_evm->Pop();
-
+    int32 offs = (int32)new_evm->stack_arr[new_evm->sp++];
+    int32 size = (int32)new_evm->stack_arr[new_evm->sp++];
 #else
     int32 offs = (int32)new_evm->Pop().to_int();
     int32 size = (int32)new_evm->Pop().to_int();
