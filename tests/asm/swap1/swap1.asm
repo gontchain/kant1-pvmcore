@@ -1,0 +1,15 @@
+{
+    0x01
+    0x1f
+    0x03
+    swap1
+    0x00
+    mstore
+    0x20
+    mstore
+    0x40
+    mstore
+    0x01
+    0x1f
+    return
+}
