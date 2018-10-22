@@ -10,7 +10,6 @@
         <inp_data_size SIZE="64" ASM="inp_data_size" ARRSIZE="0" />
         <input_data SIZE="64" ARRSIZE="1024" />
         <log_bus SIZE="64" ARRSIZE="1024" />
-        <stack_arr SIZE="64" ARRSIZE="2048" />
         <log_ptr SIZE="32" ASM="log_ptr" ARRSIZE="0" />
     </REGS>
     <MEMS>
@@ -23,6 +22,7 @@
         <gas_available SIZE="32" ASM="gas_available" />
         <mem_size SIZE="32" />
         <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
+        <stack_arr SIZE="64" ARRSIZE="2048" />
         <CoinBase SIZE="64" ASM="CoinBase" />
         <TimeStamp SIZE="64" ASM="TimeStamp" />
         <Number SIZE="64" ASM="Number" />
@@ -151,7 +151,7 @@
                 </OPERATOR>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
-                    <OPERATOR name="+">
+                    <OPERATOR name="-">
                         <REG name="sp" />
                         <IMM32 value="1" />
                     </OPERATOR>
@@ -168,7 +168,7 @@
             <CODE>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
-                    <OPERATOR name="-">
+                    <OPERATOR name="+">
                         <REG name="sp" />
                         <IMM32 value="1" />
                     </OPERATOR>
@@ -3599,7 +3599,7 @@
                     <OPERATOR name=" = ">
                         <LVAR name="a" />
                         <REG name="stack_arr">
-                            <OPERATOR name="+">
+                            <OPERATOR name="-">
                                 <REG name="sp" />
                                 <OPERATOR name="+">
                                     <ARG name="count" />
@@ -3624,10 +3624,7 @@
                     <first_el SIZE="64">
                         <INITAL_EXP>
                             <REG name="stack_arr">
-                                <OPERATOR name="+">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
+                                <REG name="sp" />
                             </REG>
                         </INITAL_EXP>
                     </first_el>
@@ -3663,29 +3660,26 @@
                     </IF>
                     <OPERATOR name=" = ">
                         <REG name="stack_arr">
-                            <OPERATOR name="+">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
+                            <REG name="sp" />
                         </REG>
                         <REG name="stack_arr">
-                            <OPERATOR name="+">
+                            <OPERATOR name="-">
+                                <REG name="sp" />
                                 <OPERATOR name="+">
-                                    <REG name="sp" />
                                     <ARG name="count" />
+                                    <IMM32 value="1" />
                                 </OPERATOR>
-                                <IMM32 value="2" />
                             </OPERATOR>
                         </REG>
                     </OPERATOR>
                     <OPERATOR name=" = ">
                         <REG name="stack_arr">
-                            <OPERATOR name="+">
+                            <OPERATOR name="-">
+                                <REG name="sp" />
                                 <OPERATOR name="+">
-                                    <REG name="sp" />
                                     <ARG name="count" />
+                                    <IMM32 value="1" />
                                 </OPERATOR>
-                                <IMM32 value="2" />
                             </OPERATOR>
                         </REG>
                         <LVAR name="first_el" />
@@ -4496,7 +4490,10 @@
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="sp" />
-            <IMM32 value="800" />
+            <OPERATOR name="-">
+                <IMM32 value="0" />
+                <IMM32 value="1" />
+            </OPERATOR>
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="log_ptr" />
@@ -4510,7 +4507,10 @@
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="sp" />
-            <IMM32 value="800" />
+            <OPERATOR name="-">
+                <IMM32 value="0" />
+                <IMM32 value="1" />
+            </OPERATOR>
         </OPERATOR>
         <OPERATOR name=" = ">
             <REG name="log_ptr" />

@@ -1175,7 +1175,7 @@ inline uint64 EVM::Pop()
   uint64 ret ;
   ;
    ret  = stack_arr[sp];
-  sp = (sp + 1);
+  sp = (sp - 1);
     return  ret ;
   return 0;
 };
@@ -1184,7 +1184,7 @@ inline uint64 EVM::Pop()
 inline void EVM::Push(uint64 val)
 {
   ;
-  sp = (sp - 1);
+  sp = (sp + 1);
   stack_arr[sp] = SARG(val);
 };
 #undef SARG
@@ -2351,7 +2351,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-   a  = stack_arr[(sp + (SARG(count) + 1))];
+   a  = stack_arr[(sp - (SARG(count) + 1))];
   Push( a );
       }
   #undef SARG
@@ -2364,7 +2364,7 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 9;
   #define SARG(aidx) cur_inst->inst9.aidx
       {
-  uint64 first_el  = stack_arr[(sp + 1)];
+  uint64 first_el  = stack_arr[sp];
   ;
   if(gas_available < 3)
   {
@@ -2376,8 +2376,8 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   gas_available = (gas_available - 3);
   }
-  stack_arr[(sp + 1)] = stack_arr[((sp + SARG(count)) + 2)];
-  stack_arr[((sp + SARG(count)) + 2)] =  first_el ;
+  stack_arr[sp] = stack_arr[(sp - (SARG(count) + 1))];
+  stack_arr[(sp - (SARG(count) + 1))] =  first_el ;
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2736,7 +2736,7 @@ void EVM::Operate(){
 void EVM::ResetDevice(){
   ;
   pc = 0;
-  sp = 2048;
+  sp = (0 - 1);
   log_ptr = 0;
   MainPipe.Reset();
   pc.ResetMutable();

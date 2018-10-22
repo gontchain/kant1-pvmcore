@@ -82,7 +82,6 @@ public:
   PD_REG< uint64 >  inp_data_size;
   PD_REG<uint64>  input_data[1024];
   PD_REG<uint64>  log_bus[1024];
-  PD_REG<uint64>  stack_arr[2048];
   PD_REG< uint32 >  log_ptr;
   uint32  sp;
   uint1  is_pc_within_inst;
@@ -90,6 +89,7 @@ public:
   uint32  gas_available;
   uint32  mem_size;
   uint8  data_bus[1024];
+  uint64  stack_arr[2048];
   uint64  CoinBase;
   uint64  TimeStamp;
   uint64  Number;

@@ -45,7 +45,7 @@ Device EVM
   // Reg MAIN_TYPE storage_bus[STORAGE_SIZE]; // replaced by mainStorage list
   Reg MAIN_TYPE input_data[INPUT_DATA_SIZE];
   Reg MAIN_TYPE log_bus[LOG_AREA_SIZE];
-  Reg MAIN_TYPE stack_arr[STACK_SIZE];
+  Var MAIN_TYPE stack_arr[STACK_SIZE];
   
   // log pointer
   Reg int32 log_ptr, "log_ptr";
@@ -80,13 +80,13 @@ Device EVM
   {
     MAIN_TYPE ret;
     ret = stack_arr[sp];
-    sp = sp + 1;
+    sp = sp - 1;
     return ret;
   }
  // push result to stack
   void Push(MAIN_TYPE val)
   {
-    sp = sp - 1;
+    sp = sp + 1;
     stack_arr[sp] = val;
   }
 
@@ -664,7 +664,7 @@ Device EVM
     {
       USEGAS(STEPGAS2);
       MAIN_TYPE a;
-      a = stack_arr[sp  + (count + 1)];
+      a = stack_arr[sp - (count + 1)];
       Push(a);
     }
     
@@ -672,10 +672,10 @@ Device EVM
     INST "SWAP$count", (8,int4 count,int4 0x9)
     {
       USEGAS(STEPGAS2);
-      MAIN_TYPE first_el = stack_arr[sp + 1];
-      stack_arr[sp + 1] = stack_arr[sp + count + 2];
-      stack_arr[sp + count + 2] = first_el;
-    }
+      MAIN_TYPE first_el = stack_arr[sp];
+      stack_arr[sp] = stack_arr[sp - (count + 1)];
+      stack_arr[sp - (count + 1)] = first_el;
+          }
     
     INST "LOG$count", (8, int3 count,int1 0,int4 0xa)
     {
@@ -834,7 +834,7 @@ Device EVM
    RESET
    {
      pc = 0;
-     sp = STACK_SIZE;
+     sp = 0-1;
      log_ptr = 0;
    }
 
