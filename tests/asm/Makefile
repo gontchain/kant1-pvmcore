@@ -1,7 +1,7 @@
 GASLIMIT=0x0
 export GASLIMIT
 
-.SILENT: compare
+.SILENT: compare test-cemu test-qemu
 
 all:
 	$(MAKE) -C lt
@@ -39,6 +39,114 @@ all:
 	$(MAKE) -C sha3
 	$(MAKE) -C msize
 	$(MAKE) -C sload
+
+test-qemu:
+	@rm -rf passes
+	@rm -rf fails
+	$(MAKE) -C lt test-qemu
+	$(MAKE) -C gt test-qemu
+	$(MAKE) -C slt test-qemu
+	$(MAKE) -C sgt test-qemu
+	$(MAKE) -C eq test-qemu
+	$(MAKE) -C iszero test-qemu
+	$(MAKE) -C and test-qemu
+	$(MAKE) -C or test-qemu
+	$(MAKE) -C xor test-qemu
+	$(MAKE) -C not test-qemu
+	$(MAKE) -C byte test-qemu
+	$(MAKE) -C add test-qemu
+	$(MAKE) -C sub test-qemu
+	$(MAKE) -C mul test-qemu
+	$(MAKE) -C div test-qemu
+	$(MAKE) -C mod test-qemu
+	$(MAKE) -C smod test-qemu
+	$(MAKE) -C addmod test-qemu
+	$(MAKE) -C mulmod test-qemu
+	$(MAKE) -C exp test-qemu
+	$(MAKE) -C signextend test-qemu
+	$(MAKE) -C gaslimit test-qemu
+	$(MAKE) -C gaslimit test-qemu GASLIMIT=0xffff
+	$(MAKE) -C gas test-qemu
+	$(MAKE) -C gas test-qemu GASLIMIT=0xffff
+	$(MAKE) -C gasprice test-qemu
+	# with segfault $(MAKE) -C address test-qemu
+	# with segfault $(MAKE) -C balance test-qemu
+	# with segfault $(MAKE) -C origin test-qemu
+	# with segfault $(MAKE) -C caller test-qemu
+	$(MAKE) -C callvalue test-qemu
+	$(MAKE) -C codesize test-qemu
+	$(MAKE) -C sha3 test-qemu
+	$(MAKE) -C msize test-qemu
+	$(MAKE) -C sload test-qemu
+	# with segfault $(MAKE) -C extcodesize test-qemu
+
+	echo "\nTest Result Summary:"
+	echo "\tPASS: \c"
+	if [ -f passes ]; then \
+		echo "`cat passes | wc -l`"; \
+	else \
+		echo "0"; \
+	fi
+	echo "\tFAILS: \c"
+	if [ -f fails ]; then \
+		echo "`cat fails | wc -l`\n"; \
+	else \
+		echo "0\n"; \
+	fi
+
+test-cemu:
+	@rm -rf passes
+	@rm -rf fails
+	$(MAKE) -C lt test-cemu
+	$(MAKE) -C gt test-cemu
+	$(MAKE) -C slt test-cemu
+	$(MAKE) -C sgt test-cemu
+	$(MAKE) -C eq test-cemu
+	$(MAKE) -C iszero test-cemu
+	$(MAKE) -C and test-cemu
+	$(MAKE) -C or test-cemu
+	$(MAKE) -C xor test-cemu
+	$(MAKE) -C not test-cemu
+	$(MAKE) -C byte test-cemu
+	$(MAKE) -C add test-cemu
+	$(MAKE) -C sub test-cemu
+	$(MAKE) -C mul test-cemu
+	$(MAKE) -C div test-cemu
+	$(MAKE) -C mod test-cemu
+	$(MAKE) -C smod test-cemu
+	$(MAKE) -C addmod test-cemu
+	$(MAKE) -C mulmod test-cemu
+	$(MAKE) -C exp test-cemu
+	$(MAKE) -C signextend test-cemu
+	$(MAKE) -C gaslimit test-cemu
+	$(MAKE) -C gaslimit test-cemu GASLIMIT=0xffff
+	$(MAKE) -C gas test-cemu
+	$(MAKE) -C gas test-cemu GASLIMIT=0xffff
+	$(MAKE) -C gasprice test-cemu
+	# with segfault $(MAKE) -C address test-cemu
+	# with segfault $(MAKE) -C balance test-cemu
+	# with segfault $(MAKE) -C origin test-cemu
+	# with segfault $(MAKE) -C caller test-cemu
+	$(MAKE) -C callvalue test-cemu
+	$(MAKE) -C codesize test-cemu
+	$(MAKE) -C sha3 test-cemu
+	$(MAKE) -C msize test-cemu
+	$(MAKE) -C sload test-cemu
+	# with segfault $(MAKE) -C extcodesize test-cemu
+
+	echo "\nTest Result Summary:"
+	echo "\tPASS: \c"
+	if [ -f passes ]; then \
+		echo "`cat passes | wc -l`"; \
+	else \
+		echo "0"; \
+	fi
+	echo "\tFAILS: \c"
+	if [ -f fails ]; then \
+		echo "`cat fails | wc -l`\n"; \
+	else \
+		echo "0\n"; \
+	fi
 
 compare:
 	@rm -rf passes
@@ -93,6 +201,45 @@ compare:
 	else \
 		echo "0\n"; \
 	fi
+
+run-qemu:
+	$(MAKE) -C lt run-qemu
+	$(MAKE) -C gt run-qemu
+	$(MAKE) -C slt run-qemu
+	$(MAKE) -C sgt run-qemu
+	$(MAKE) -C eq run-qemu
+	$(MAKE) -C iszero run-qemu
+	$(MAKE) -C and run-qemu
+	$(MAKE) -C or run-qemu
+	$(MAKE) -C xor run-qemu
+	$(MAKE) -C not run-qemu
+	$(MAKE) -C byte run-qemu
+	$(MAKE) -C add run-qemu
+	$(MAKE) -C sub run-qemu
+	$(MAKE) -C mul run-qemu
+	$(MAKE) -C div run-qemu
+	$(MAKE) -C sdiv run-qemu
+	$(MAKE) -C mod run-qemu
+	$(MAKE) -C smod run-qemu
+	$(MAKE) -C addmod run-qemu
+	$(MAKE) -C mulmod run-qemu
+	$(MAKE) -C exp run-qemu
+	$(MAKE) -C signextend run-qemu
+	$(MAKE) -C gaslimit run-qemu
+	$(MAKE) -C gaslimit run-qemu GASLIMIT=0xfff
+	$(MAKE) -C gas run-qemu
+	$(MAKE) -C gas run-qemu GASLIMIT=0xfff
+	$(MAKE) -C gasprice run-qemu
+	$(MAKE) -C address run-qemu
+	$(MAKE) -C balance run-qemu
+	$(MAKE) -C origin run-qemu
+	$(MAKE) -C caller run-qemu
+	$(MAKE) -C callvalue run-qemu
+	$(MAKE) -C codesize run-qemu
+	$(MAKE) -C extcodesize run-qemu
+	$(MAKE) -C sha3 run-qemu
+	$(MAKE) -C msize run-qemu
+	$(MAKE) -C sload run-qemu
 
 run-evm:
 	$(MAKE) -C lt run-evm
