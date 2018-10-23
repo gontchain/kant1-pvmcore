@@ -5,7 +5,7 @@
         <cur_addr SIZE="64" ASM="cur_addr" ARRSIZE="0" />
         <caller_addr SIZE="64" ASM="caller_addr" ARRSIZE="0" />
         <origin_addr SIZE="64" ASM="origin_addr" ARRSIZE="0" />
-        <gas_price SIZE="32" ASM="gas_price" ARRSIZE="0" />
+        <gas_price SIZE="64" ASM="gas_price" ARRSIZE="0" />
         <ext_code_size SIZE="64" ASM="ext_code_size" ARRSIZE="0" />
         <inp_data_size SIZE="64" ASM="inp_data_size" ARRSIZE="0" />
         <input_data SIZE="64" ARRSIZE="1024" />
@@ -19,10 +19,10 @@
         <sp SIZE="32" ASM="sp" />
         <is_pc_within_inst SIZE="1" />
         <is_pc_const_changed SIZE="1" />
-        <gas_available SIZE="32" ASM="gas_available" />
+        <gas_available SIZE="64" ASM="gas_available" />
         <mem_size SIZE="32" />
         <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
-        <stack_arr SIZE="64" ARRSIZE="2048" />
+        <stack_arr SIZE="64" ASM="stack[$]" ARRSIZE="2048" />
         <CoinBase SIZE="64" ASM="CoinBase" />
         <TimeStamp SIZE="64" ASM="TimeStamp" />
         <Number SIZE="64" ASM="Number" />
@@ -2850,7 +2850,7 @@
         </GetCodeSize>
         <GetGasPrice RETSIZE="64">
             <LOCALVARS>
-                <gp SIZE="32">
+                <gp SIZE="64">
                     <INITAL_EXP>
                         <REG name="gas_price" />
                     </INITAL_EXP>

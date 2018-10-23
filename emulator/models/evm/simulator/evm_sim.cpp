@@ -11,29 +11,31 @@ const char *reg_7 = "log_ptr";
 const char *var_8 = "sp";
 const char *var_9 = "gas_available";
 const char *var_10 = "data";
-const char *var_11 = "CoinBase";
-const char *var_12 = "TimeStamp";
-const char *var_13 = "Number";
-const char *var_14 = "Difficulty";
-const char *var_15 = "GasLimit";
+const char *var_11 = "stack[$]";
+const char *var_12 = "CoinBase";
+const char *var_13 = "TimeStamp";
+const char *var_14 = "Number";
+const char *var_15 = "Difficulty";
+const char *var_16 = "GasLimit";
 
-const tDRegister EVM_regs[16] = {
+const tDRegister EVM_regs[17] = {
   {reg_0,4,0,0},
   {reg_1,8,0,0},
   {reg_2,8,0,0},
   {reg_3,8,0,0},
-  {reg_4,4,0,0},
+  {reg_4,8,0,0},
   {reg_5,8,0,0},
   {reg_6,8,0,0},
   {reg_7,4,0,0},
   {var_8,9,0,0},
   {var_9,10,0,0},
   {var_10,1,1024,0},
-  {var_11,12,0,0},
+  {var_11,8,2048,0},
   {var_12,13,0,0},
   {var_13,14,0,0},
   {var_14,15,0,0},
   {var_15,16,0,0},
+  {var_16,17,0,0},
 };
 
 
@@ -43,7 +45,7 @@ const tDMemBus EVM_membus[] = {
 
 
 const tDProcCfg EVM_ProcCfg = {
-  16,EVM_regs,
+  17,EVM_regs,
   1,EVM_membus,
   0,NULL,
   0,NULL,
@@ -1018,18 +1020,19 @@ int EVM::SetReg(int rnum,int anum,char* val){
   case 1: cur_addr = *((uint64*)val); UpdateRegs(); break;
   case 2: caller_addr = *((uint64*)val); UpdateRegs(); break;
   case 3: origin_addr = *((uint64*)val); UpdateRegs(); break;
-  case 4: gas_price = *((uint32*)val); UpdateRegs(); break;
+  case 4: gas_price = *((uint64*)val); UpdateRegs(); break;
   case 5: ext_code_size = *((uint64*)val); UpdateRegs(); break;
   case 6: inp_data_size = *((uint64*)val); UpdateRegs(); break;
   case 7: log_ptr = *((uint32*)val); UpdateRegs(); break;
   case 8: sp = *((uint32*)val); break;
-  case 9: gas_available = *((uint32*)val); break;
+  case 9: gas_available = *((uint64*)val); break;
   case 10: data_bus[anum] = *((uint8*)val); break;
-  case 11: CoinBase = *((uint64*)val); break;
-  case 12: TimeStamp = *((uint64*)val); break;
-  case 13: Number = *((uint64*)val); break;
-  case 14: Difficulty = *((uint64*)val); break;
-  case 15: GasLimit = *((uint64*)val); break;
+  case 11: stack_arr[anum] = *((uint64*)val); break;
+  case 12: CoinBase = *((uint64*)val); break;
+  case 13: TimeStamp = *((uint64*)val); break;
+  case 14: Number = *((uint64*)val); break;
+  case 15: Difficulty = *((uint64*)val); break;
+  case 16: GasLimit = *((uint64*)val); break;
     default: return 0;
     }
   return 1;
@@ -1050,7 +1053,7 @@ int EVM::GetReg(int rnum,int anum,char* val){
      *((uint64*)val) = origin_addr;
     break;
     case 4:
-     *((uint32*)val) = gas_price;
+     *((uint64*)val) = gas_price;
     break;
     case 5:
      *((uint64*)val) = ext_code_size;
@@ -1065,24 +1068,27 @@ int EVM::GetReg(int rnum,int anum,char* val){
      *((uint32*)val) = sp;
     break;
     case 9:
-     *((uint32*)val) = gas_available;
+     *((uint64*)val) = gas_available;
     break;
     case 10:
      *((uint8*)val) = data_bus[anum];
     break;
     case 11:
-     *((uint64*)val) = CoinBase;
+     *((uint64*)val) = stack_arr[anum];
     break;
     case 12:
-     *((uint64*)val) = TimeStamp;
+     *((uint64*)val) = CoinBase;
     break;
     case 13:
-     *((uint64*)val) = Number;
+     *((uint64*)val) = TimeStamp;
     break;
     case 14:
-     *((uint64*)val) = Difficulty;
+     *((uint64*)val) = Number;
     break;
     case 15:
+     *((uint64*)val) = Difficulty;
+    break;
+    case 16:
      *((uint64*)val) = GasLimit;
     break;
     default: return 0;
@@ -2021,7 +2027,7 @@ inline uint64 EVM::GetCodeSize()
 #define SARG(aidx) aidx
 inline uint64 EVM::GetGasPrice()
 {
-  uint32 gp  = gas_price;
+  uint64 gp  = gas_price;
   ;
   if(gas_available < 2)
   {

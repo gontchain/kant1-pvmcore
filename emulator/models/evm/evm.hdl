@@ -45,7 +45,7 @@ Device EVM
   // Reg MAIN_TYPE storage_bus[STORAGE_SIZE]; // replaced by mainStorage list
   Reg MAIN_TYPE input_data[INPUT_DATA_SIZE];
   Reg MAIN_TYPE log_bus[LOG_AREA_SIZE];
-  Var MAIN_TYPE stack_arr[STACK_SIZE];
+  Var MAIN_TYPE stack_arr[STACK_SIZE], "stack[$]";
   
   // log pointer
   Reg int32 log_ptr, "log_ptr";
