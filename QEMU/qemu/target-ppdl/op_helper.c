@@ -67,15 +67,15 @@ void HELPER(tracer)(CPUPPDLState *env, uint32_t arg)
 {
     static int32_t prev_tick = 0;
     if (print_ticks == 0) {
+        if (use_regtracer || use_ctracer)
+            compareState(&envSaved, env);
+        saveState(&envSaved, env);
         if (use_tracer || use_ctracer) {
             PrintDisasmLine(env, env->pc, tick);
             if (tick > (prev_tick + 1))
                 printf("      +%ld wait\n", tick - prev_tick - 1);
             prev_tick = tick;
         }
-        if (use_regtracer || use_ctracer)
-            compareState(&envSaved, env);
-        saveState(&envSaved, env);
     }
     tick++;
 }
@@ -145,7 +145,7 @@ void HELPER(error_message)(CPUPPDLState *env, uint64_t index, uint64_t data)
     FILE *log_file = fopen("qemu.err.log", "w");
     switch (index) {
         case 1:
-            printf("@\n");
+            //printf("@\n");
             fprintf(log_file, "@\n");
             break;
     }

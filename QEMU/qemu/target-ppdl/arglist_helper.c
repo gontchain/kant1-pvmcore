@@ -10,7 +10,7 @@ uint64_t HELPER(AccountsData)(CPUPPDLState *env, uint64_t aVal) {
 			return GetAddress(env);
 			break;
 		case 1:
-			return GetBalance(env, Pop(env));
+			return GetBalance(env);
 			break;
 		case 2:
 			return GetOrigin(env);
@@ -28,13 +28,13 @@ uint64_t HELPER(AccountsData)(CPUPPDLState *env, uint64_t aVal) {
 			return CallDataSize(env);
 			break;
 		case 7:
-			return CallDataCopy(env, Pop(env), Pop(env), Pop(env));
+			return CallDataCopy(env);
 			break;
 		case 8:
 			return GetCodeSize(env);
 			break;
 		case 9:
-			return CodeCopy(env, Pop(env), Pop(env), Pop(env));
+			return CodeCopy(env);
 			break;
 		case 10:
 			return GetGasPrice(env);
@@ -43,7 +43,7 @@ uint64_t HELPER(AccountsData)(CPUPPDLState *env, uint64_t aVal) {
 			return ExtCodeSize(env);
 			break;
 		case 12:
-			return ExtCodeCopy(env, Pop(env), Pop(env), Pop(env), Pop(env));
+			return ExtCodeCopy(env);
 			break;
 	}
 }
@@ -51,7 +51,7 @@ uint64_t HELPER(AccountsData)(CPUPPDLState *env, uint64_t aVal) {
 uint64_t HELPER(SystemOps)(CPUPPDLState *env, uint64_t aVal) {
 	switch (aVal) {
 		case 0:
-			return CreateAccount(env, Pop(env), Pop(env), Pop(env));
+			return CreateAccount(env);
 			break;
 		case 1:
 			return MakeCall(env);
@@ -68,43 +68,43 @@ uint64_t HELPER(SystemOps)(CPUPPDLState *env, uint64_t aVal) {
 	}
 }
 
-uint64_t HELPER(ArithmOps)(CPUPPDLState *env, uint64_t aVal, uint64_t a, uint64_t b, uint64_t c) {
+uint64_t HELPER(ArithmOps)(CPUPPDLState *env, uint64_t aVal) {
 	switch (aVal) {
 		case 0:
 			return StopOp(env);
 			break;
 		case 1:
-			return AddOp(env, a, b);
+			return AddOp(env);
 			break;
 		case 2:
-			return MulOp(env, a, b);
+			return MulOp(env);
 			break;
 		case 3:
-			return SubOp(env, a, b);
+			return SubOp(env);
 			break;
 		case 4:
-			return DivOp(env, a, b);
+			return DivOp(env);
 			break;
 		case 5:
-			return DivOpS(env, a, b);
+			return DivOpS(env);
 			break;
 		case 6:
-			return GetModule(env, a, b);
+			return GetModule(env);
 			break;
 		case 7:
-			return GetModuleS(env, a, b);
+			return GetModuleS(env);
 			break;
 		case 8:
-			return GetModuleAM(env, (a+b), c);
+			return GetModuleAdd(env);
 			break;
 		case 9:
-			return GetModuleAM(env, (a*b), c);
+			return GetModuleMul(env);
 			break;
 		case 10:
-			return GetExp(env, a, b);
+			return GetExp(env);
 			break;
 		case 11:
-			return SignExtend(env, a, b);
+			return SignExtend(env);
 			break;
 	}
 }
@@ -153,7 +153,7 @@ uint64_t HELPER(MemOps)(CPUPPDLState *env, uint64_t aVal) {
 uint64_t HELPER(BlockChain)(CPUPPDLState *env, uint64_t aVal) {
 	switch (aVal) {
 		case 0:
-			return BlockChainHash(env, Pop(env));
+			return BlockChainHash(env);
 			break;
 		case 1:
 			return GetCoinBase(env);
@@ -173,40 +173,40 @@ uint64_t HELPER(BlockChain)(CPUPPDLState *env, uint64_t aVal) {
 	}
 }
 
-uint64_t HELPER(CompareLogOps)(CPUPPDLState *env, uint64_t aVal, uint64_t a, uint64_t b) {
+uint64_t HELPER(CompareLogOps)(CPUPPDLState *env, uint64_t aVal) {
 	switch (aVal) {
 		case 0:
-			return LtOp(env, a, b);
+			return LtOp(env);
 			break;
 		case 1:
-			return GtOp(env, a, b);
+			return GtOp(env);
 			break;
 		case 2:
-			return LtOpS(env, a, b);
+			return LtOpS(env);
 			break;
 		case 3:
-			return GtOpS(env, a, b);
+			return GtOpS(env);
 			break;
 		case 4:
-			return EqOp(env, a, b);
+			return EqOp(env);
 			break;
 		case 5:
-			return IsZeroOp(env, a);
+			return IsZeroOp(env);
 			break;
 		case 6:
-			return AndOp(env, a, b);
+			return AndOp(env);
 			break;
 		case 7:
-			return OrOp(env, a, b);
+			return OrOp(env);
 			break;
 		case 8:
-			return XorOp(env, a, b);
+			return XorOp(env);
 			break;
 		case 9:
-			return NotOp(env, a);
+			return NotOp(env);
 			break;
 		case 10:
-			return ByteFromWord(env, a, b);
+			return ByteFromWord(env);
 			break;
 	}
 }

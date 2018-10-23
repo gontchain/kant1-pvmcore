@@ -12,7 +12,7 @@
 #include "disas/disas.h"
 #include "qemu/log.h"
 #include "config.h"
-#include "exec/cpu_ldst.h" // cpu_ldl_code
+#include "exec/cpu_ldst.h" // cpu_ldsb_code
 
 #if defined(CONFIG_LINUX_USER)
 #include "linux-user/qemu.h"
@@ -35,6 +35,7 @@
 
 uint64_t end_pc;
 CPUPPDLState envSaved;
+int changed_pc = 0;
 
 #include "translate_tcgreg.h"
 
@@ -60,15 +61,15 @@ static void disas_ppdl_insn(DisasContext *dc, PPDLCPU *cpu)
 {
     CPUPPDLState *env = &cpu->env;
     insn = cpu_ldsb_code(env, dc->pc);
+    if (use_tracer || use_regtracer || use_ctracer)
+        gen_helper_tracer(cpu_env, tcg_const_local_i32(1));
     dc->npc = dc->pc + 1;
-    dc->pc = dc->npc; // инкрементируем счетчик pc - читаем 2 инструкции за раз
+    dc->pc = dc->npc; // инкрементируем счетчик pc
     INFO_PRINT("genBlock_Main: insn = %" PRIx8 "\n", insn); // DBG output
     genBlock_Main(env, insn, dc->pc - 1);
 #if defined(CONFIG_DEBUG)
     gen_helper_print(cpu_env);
 #endif
-    if (use_tracer || use_regtracer || use_ctracer)
-        gen_helper_tracer(cpu_env, tcg_const_local_i32(1));
 #ifdef CONFIG_USER_ONLY
     if (use_gdb)
         gen_helper_gdb_handling(cpu_env);
@@ -198,7 +199,11 @@ static inline void gen_intermediate_code_internal(PPDLCPU *cpu,
     }
     if (dc->is_jmp == DISAS_NEXT) {
         dc->is_jmp = DISAS_UPDATE;
+        int label = gen_new_label();
+        tcg_gen_brcondi_tl(TCG_COND_NE, cpu_is_pc_const_changed, 0x0, label);
         tcg_gen_movi_tl(cpu_pc, dc->pc);
+        gen_set_label(label);
+        tcg_gen_movi_tl(cpu_is_pc_const_changed, 0x0);
     }
     if (unlikely(cs->singlestep_enabled)) {
         if (dc->is_jmp == DISAS_NEXT) {

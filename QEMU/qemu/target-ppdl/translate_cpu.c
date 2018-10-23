@@ -24,7 +24,7 @@ void RESET(CPUPPDLState *env) {
 		env->data_bus[i] = data_bus[i];
 	}
 	#endif
-	env->sp = 0x800;
+	env->sp = (0x0-0x1);
 	env->log_ptr = 0x0;
 	saveState(&envSaved, env);
 }
@@ -43,7 +43,7 @@ void OPER(CPUPPDLState *env) {
 		env->data_bus[i] = data_bus[i];
 	}
 	#endif
-	env->sp = 0x800;
+	env->sp = (0x0-0x1);
 	env->log_ptr = 0x0;
 	saveState(&envSaved, env);
 }
@@ -58,12 +58,12 @@ void saveState(CPUPPDLState *out, CPUPPDLState *in) {
 	out->caller_addr = in->caller_addr;
 	out->inp_data_size = in->inp_data_size;
 	out->ext_code_size = in->ext_code_size;
+	out->Number = in->Number;
 	out->TimeStamp = in->TimeStamp;
 	out->sp = in->sp;
 	out->GasLimit = in->GasLimit;
-	out->Number = in->Number;
-	out->Difficulty = in->Difficulty;
 	out->gas_available = in->gas_available;
+	out->Difficulty = in->Difficulty;
 	out->CoinBase = in->CoinBase;
 	for (i = 0; i < 1024; i++) {
 		out->data_bus[i] = in->data_bus[i];
@@ -103,33 +103,33 @@ void compareState(CPUPPDLState *stateBefore, CPUPPDLState *state) {
 		if (use_regtracer) printf("ext_code_size: %08lx -> %08lx\n", stateBefore->ext_code_size, state->ext_code_size);
 		if (use_ctracer)   printf("ext_code_size = %08lx\n", state->ext_code_size);
 	}
+	if ((stateBefore->Number != state->Number) && qemu_reg_mask("Number", -1)) {
+		if (use_regtracer) printf("Number%d: %08lx -> %08lx\n", i, stateBefore->Number, state->Number);
+		if (use_ctracer)   printf("Number = %08lx\n", state->Number);
+	}
 	if ((stateBefore->TimeStamp != state->TimeStamp) && qemu_reg_mask("TimeStamp", -1)) {
 		if (use_regtracer) printf("TimeStamp%d: %08lx -> %08lx\n", i, stateBefore->TimeStamp, state->TimeStamp);
-		if (use_ctracer)   printf("TimeStamp%d = %08lx\n", i, state->TimeStamp);
+		if (use_ctracer)   printf("TimeStamp = %08lx\n", state->TimeStamp);
 	}
 	if ((stateBefore->sp != state->sp) && qemu_reg_mask("sp", -1)) {
 		if (use_regtracer) printf("sp%d: %08lx -> %08lx\n", i, stateBefore->sp, state->sp);
-		if (use_ctracer)   printf("sp%d = %08lx\n", i, state->sp);
+		if (use_ctracer)   printf("sp = %08lx\n", state->sp);
 	}
 	if ((stateBefore->GasLimit != state->GasLimit) && qemu_reg_mask("GasLimit", -1)) {
 		if (use_regtracer) printf("GasLimit%d: %08lx -> %08lx\n", i, stateBefore->GasLimit, state->GasLimit);
-		if (use_ctracer)   printf("GasLimit%d = %08lx\n", i, state->GasLimit);
-	}
-	if ((stateBefore->Number != state->Number) && qemu_reg_mask("Number", -1)) {
-		if (use_regtracer) printf("Number%d: %08lx -> %08lx\n", i, stateBefore->Number, state->Number);
-		if (use_ctracer)   printf("Number%d = %08lx\n", i, state->Number);
-	}
-	if ((stateBefore->Difficulty != state->Difficulty) && qemu_reg_mask("Difficulty", -1)) {
-		if (use_regtracer) printf("Difficulty%d: %08lx -> %08lx\n", i, stateBefore->Difficulty, state->Difficulty);
-		if (use_ctracer)   printf("Difficulty%d = %08lx\n", i, state->Difficulty);
+		if (use_ctracer)   printf("GasLimit = %08lx\n", state->GasLimit);
 	}
 	if ((stateBefore->gas_available != state->gas_available) && qemu_reg_mask("gas_available", -1)) {
 		if (use_regtracer) printf("gas_available%d: %08lx -> %08lx\n", i, stateBefore->gas_available, state->gas_available);
-		if (use_ctracer)   printf("gas_available%d = %08lx\n", i, state->gas_available);
+		if (use_ctracer)   printf("gas_available = %08lx\n", state->gas_available);
+	}
+	if ((stateBefore->Difficulty != state->Difficulty) && qemu_reg_mask("Difficulty", -1)) {
+		if (use_regtracer) printf("Difficulty%d: %08lx -> %08lx\n", i, stateBefore->Difficulty, state->Difficulty);
+		if (use_ctracer)   printf("Difficulty = %08lx\n", state->Difficulty);
 	}
 	if ((stateBefore->CoinBase != state->CoinBase) && qemu_reg_mask("CoinBase", -1)) {
 		if (use_regtracer) printf("CoinBase%d: %08lx -> %08lx\n", i, stateBefore->CoinBase, state->CoinBase);
-		if (use_ctracer)   printf("CoinBase%d = %08lx\n", i, state->CoinBase);
+		if (use_ctracer)   printf("CoinBase = %08lx\n", state->CoinBase);
 	}
 	for (i = 0; i < 1024; i++) {
 		if ((stateBefore->data_bus[i] != state->data_bus[i])  && qemu_reg_mask("data_bus", i)) {

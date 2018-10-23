@@ -251,3 +251,12 @@ void HELPER(mem_st32)(CPUPPDLState *env, uint64_t addr, uint64_t data) {
 #endif
     }
 }
+
+uint64_t HELPER(mem_ld8)(CPUPPDLState *env, uint64_t addr) {
+    uint64_t data;
+    INFO_PRINT("mem_ld8: addr: %" PRIX64 "\n", addr);
+    data = cpu_ldsb_data(env, addr);
+    if (use_memtracer & qemu_mem_mask(addr))
+        printf("mem load 8: addr: %" PRIX64 ", data: %" PRIX64 "\n", addr, data);
+    return data;
+}

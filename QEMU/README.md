@@ -5,9 +5,14 @@
 ./first-start
 ```
 
+* Если возникла необходимость обновить подмодули, нужно выполнить (**ВНИМАНИЕ**, требуется ввести **логин и пароль** от GitLab'а):
+```
+./update-submodules
+```
+
 * Для компиляции эмулятора необходимо из каталога qemu/ выполнить:
 ```
-./configure --target-list=ppdl-softmmu --enable-debug
+./configure --target-list=ppdl-softmmu --extra-cflags="-fPIC -D EVM" --enable-debug --disable-werror --disable-pie --disable-curses --disable-sdl --disable-vnc --disable-xen --disable-kvm
 make
 ```
 

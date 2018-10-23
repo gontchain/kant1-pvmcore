@@ -1,6 +1,6 @@
-DEF_HELPER_FLAGS_5(ArithmOps, 0, i64, env, i64, i64, i64, i64)
+DEF_HELPER_FLAGS_2(ArithmOps, 0, i64, env, i64)
 DEF_HELPER_FLAGS_2(SystemOps, 0, i64, env, i64)
 DEF_HELPER_FLAGS_2(AccountsData, 0, i64, env, i64)
 DEF_HELPER_FLAGS_2(MemOps, 0, i64, env, i64)
 DEF_HELPER_FLAGS_2(BlockChain, 0, i64, env, i64)
-DEF_HELPER_FLAGS_4(CompareLogOps, 0, i64, env, i64, i64, i64)
+DEF_HELPER_FLAGS_2(CompareLogOps, 0, i64, env, i64)

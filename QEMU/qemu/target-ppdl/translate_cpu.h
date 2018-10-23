@@ -23,27 +23,28 @@ typedef struct CPUPPDLState {
 	CPUPPDLTLBContext * tlb;
 	#endif
 	uint32_t 	pc;
-	uint64_t 	stack_arr[2048];
-	uint64_t 	gas_price;
-	uint64_t 	log_ptr;
-	uint64_t 	cur_addr;
-	uint64_t 	origin_addr;
 	uint64_t 	input_data[1024];
 	uint64_t 	caller_addr;
 	uint64_t 	inp_data_size;
+	uint64_t 	gas_price;
+	uint64_t 	log_ptr;
+	uint64_t 	cur_addr;
 	uint64_t 	log_bus[1024];
+	uint64_t 	origin_addr;
 	uint64_t 	ext_code_size;
 	/*--------------------- VARS ---------------------*/
-	uint64_t 	Difficulty;
-	uint64_t 	gas_available;
-	uint64_t 	data_bus[1024];
-	uint64_t 	is_pc_within_inst;
+	uint64_t 	stack_arr[2048];
 	uint64_t 	mem_size;
-	uint64_t 	CoinBase;
-	uint64_t 	TimeStamp;
 	uint64_t 	sp;
 	uint64_t 	GasLimit;
 	uint64_t 	Number;
+	uint64_t 	is_pc_const_changed;
+	uint64_t 	Difficulty;
+	uint64_t 	gas_available;
+	uint64_t 	TimeStamp;
+	uint64_t 	CoinBase;
+	uint64_t 	data_bus[1024];
+	uint64_t 	is_pc_within_inst;
 	uint32_t sr;
 	target_ulong eear;
 	#ifndef CONFIG_USER_ONLY

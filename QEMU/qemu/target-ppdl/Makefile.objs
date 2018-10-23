@@ -6,3 +6,4 @@ obj-y += translate_cpu.o
 obj-y += bitfield.o
 obj-y += func_shared.o
 obj-y += func_disas.o
+obj-y += functions.o

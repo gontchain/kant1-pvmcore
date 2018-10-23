@@ -3154,15 +3154,15 @@ int ppdl_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int reg) {
 			break;
 		case 1:
 			env->cur_addr = tmp;
-			return 20;
+			return 8;
 			break;
 		case 2:
 			env->caller_addr = tmp;
-			return 20;
+			return 8;
 			break;
 		case 3:
 			env->origin_addr = tmp;
-			return 20;
+			return 8;
 			break;
 		case 4:
 			env->gas_price = tmp;
@@ -3170,11 +3170,11 @@ int ppdl_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int reg) {
 			break;
 		case 5:
 			env->ext_code_size = tmp;
-			return 32;
+			return 8;
 			break;
 		case 6:
 			env->inp_data_size = tmp;
-			return 32;
+			return 8;
 			break;
 		case 7:
 			env->log_ptr = tmp;
@@ -7286,23 +7286,23 @@ int ppdl_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int reg) {
 			break;
 		case 1034:
 			env->CoinBase = tmp;
-			return 32;
+			return 8;
 			break;
 		case 1035:
 			env->TimeStamp = tmp;
-			return 32;
+			return 8;
 			break;
 		case 1036:
 			env->Number = tmp;
-			return 32;
+			return 8;
 			break;
 		case 1037:
 			env->Difficulty = tmp;
-			return 32;
+			return 8;
 			break;
 		case 1038:
 			env->GasLimit = tmp;
-			return 32;
+			return 8;
 			break;
 		default:
 			return 8;
