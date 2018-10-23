@@ -9,7 +9,11 @@
 
 struct Storage {
   uint32 key;
+#if 1
+  uint64 value;
+#else
   uint256 value;
+#endif
   Storage* next;
 };
 
@@ -32,48 +36,44 @@ uint64 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
 {
   return 0;
 }
-uint64 GetElfSize(TDevice* dev)
-{
-  return 0;
-}
-void SaveToStorage(TDevice* dev, uint32 offs, uint64 value)
-{
-    
-}
-
-uint64 LoadFromStorage(TDevice* dev, uint32 offs)
-{
-  return 0;
-}
 #else
 uint256 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
 {
-	EVM* my_evm = (EVM*)dev;
-	char buf[255], ret[259] = "0x", tmp[3] = "";
-	uint8 *start = my_evm->data_bus + offs;
-	unsigned int hashSize = 256;
+  EVM* my_evm = (EVM*)dev;
+  char buf[255], ret[259] = "0x", tmp[3] = "";
+  uint8 *start = my_evm->data_bus + offs;
+  unsigned int hashSize = 256;
 
-	memcpy(buf, my_evm->data_bus + offs, size);
+  memcpy(buf, my_evm->data_bus + offs, size);
 
-	// Keccak
-	keccakState *st = keccakCreate(hashSize);
-	keccakUpdate((uint8_t*)buf, 0, size, st);
-	unsigned char *op = keccakDigest(st);
+  // Keccak
+  keccakState *st = keccakCreate(hashSize);
+  keccakUpdate((uint8_t*)buf, 0, size, st);
+  unsigned char *op = keccakDigest(st);
 
-	for (unsigned int i = 0; i != (hashSize / 8); i++)
-	{
-		sprintf(tmp, "%.2x", *(op++));
-		strcat(ret, tmp);
-	}
-	return uint256(ret);
+  for (unsigned int i = 0; i != (hashSize / 8); i++)
+  {
+    sprintf(tmp, "%.2x", *(op++));
+    strcat(ret, tmp);
+  }
+  return uint256(ret);
 }
+#endif
 
+#if 1
+uint64 GetElfSize(TDevice* dev)
+#else
 uint256 GetElfSize(TDevice* dev)
+#endif
 {
   return dev->elfSize;
 }
 
+#if 1
+void SaveToStorage(TDevice* dev, uint32 offs, uint64 value)
+#else
 void SaveToStorage(TDevice* dev, uint32 offs, uint256 value)
+#endif
 {
   Storage* node = mainStorage;
   Storage* tail;
@@ -90,14 +90,19 @@ void SaveToStorage(TDevice* dev, uint32 offs, uint256 value)
     node->key = offs;
     node->value = value;
   } else { // create new entry
-	tail->next = new Storage;
+  tail->next = new Storage;
     tail->next->key = offs;
-	tail->next->value = value;
-	tail->next->next = NULL;
+  tail->next->value = value;
+  tail->next->next = NULL;
   }
 }
 
+
+#if 1
+uint64 LoadFromStorage(TDevice* dev, uint32 offs)
+#else
 uint256 LoadFromStorage(TDevice* dev, uint32 offs)
+#endif
 {
   Storage* node = mainStorage;
   while (node != NULL) {
@@ -106,9 +111,12 @@ uint256 LoadFromStorage(TDevice* dev, uint32 offs)
     }
     node = node->next;
   }
+  #if 1
+  return uint64(0x0); // return 0x0 if nothing was found
+  #else
   return uint256(0x0); // return 0x0 if nothing was found
+  #endif
 }
-#endif
 
 void* Init(void* mParams)
 {
