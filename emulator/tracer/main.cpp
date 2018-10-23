@@ -84,7 +84,12 @@ TGetDevCore       GetDevCore;
 // config file name
 char*  ConfigFileName;
 // GAS limit
-uint64 GasLimitValue = 10000000000;
+#if 1
+uint64 GasMaxLimitValue = 0xFFFFFFFF;
+#else
+uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
+#endif
+uint64 GasLimitValue = GasMaxLimitValue;
 char*  ProfileFileName;
 int    default_config_file;
 // second device file name
@@ -469,9 +474,6 @@ int CheckRegs(char* regnames)
 			}
 			if (flag) fl++;
 	}//end for
-	//erase last symbol ','
-	int l = strlen(regnames)-1;
-	regnames[l-1] = '\0';
 	return fl;	
 }
 
@@ -1208,7 +1210,7 @@ int main(int argc,char* argv[])
 				}
 				// if Gas limit was set 0x0 - set infinite GAS
 				if (GasLimitValue == 0x0) {
-					GasLimitValue = 0xFFFFFFFFFFFFFFFF;
+					GasLimitValue = GasMaxLimitValue;
 				}
 				i_args++;
 			}
