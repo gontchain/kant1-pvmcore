@@ -12,6 +12,8 @@
 #   define INFO_PRINT(...)
 #endif
 
+extern int changed_pc;
+
 void genBlock_Main(CPUPPDLState *env, uint64_t insn, target_ulong pc) {
 	/*
 	 * $syscall
@@ -276,6 +278,7 @@ void genBlock_Main(CPUPPDLState *env, uint64_t insn, target_ulong pc) {
 		// CALL
 		tcg_gen_addi_tl(res_in_call1, tcg_count, 0x1);
 		gen_helper_PushInst(nores, cpu_env, res_in_call1);
+		changed_pc = 1;
 		tcg_gen_movi_tl(cpu_is_pc_const_changed, 0x1);
 		tcg_gen_mov_tl(nores, cpu_is_pc_const_changed);
 		tcg_gen_add_tl(res_l_2, cpu_pc, tcg_count);

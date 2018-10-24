@@ -185,6 +185,13 @@ static inline void gen_intermediate_code_internal(PPDLCPU *cpu,
         if (dc->pc == end_pc) {
             break;
         }
+        if (changed_pc && !singlestep) {
+            changed_pc = 0;
+            dc->is_jmp = DISAS_NEXT;
+            break;
+        } else {
+            tcg_gen_addi_tl(cpu_pc, cpu_pc, 0x1);
+        }
     } while (!dc->is_jmp
              && tcg_ctx.gen_opc_ptr < gen_opc_end
              && !cs->singlestep_enabled
