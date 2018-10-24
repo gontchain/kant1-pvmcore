@@ -3,6 +3,7 @@ COMPILER = solc
 ASMSRC = ${wildcard *.asm}
 SOLOUT = ${ASMSRC:.asm=.out}
 
+QEMU_MODE =
 GASLIMIT_ELSE = 0x0
 _GASLIMIT := $(if $(GASLIMIT),$(GASLIMIT),$(GASLIMIT_ELSE))
 
@@ -17,7 +18,7 @@ ${TARGET}: ${SOLOUT} Makefile
 run: run-evm
 
 run-qemu: ${TARGET}
-	../../../QEMU/qemu/ppdl-softmmu/qemu-system-ppdl -gas $(_GASLIMIT) -nodebug -singlestep -nodefaults -nographic -kernel ${TARGET}.bin
+	../../../QEMU/qemu/ppdl-softmmu/qemu-system-ppdl -gas $(_GASLIMIT) -nodebug ${QEMU_MODE} -nodefaults -nographic -kernel ${TARGET}.bin
 
 run-evm: ${TARGET}
 	../../../ethereum/build/bin/evm --gas $(_GASLIMIT) --code `cat ${TARGET}.bin` run
@@ -28,7 +29,7 @@ run-cemu: ${TARGET}
 test-qemu: ${TARGET}
 	../../../ethereum/build/bin/evm --gas $(_GASLIMIT) --code `cat ${TARGET}.bin` run > out.evm
 	@echo `cat out.evm | awk '{print toupper($$0)}'` > out.evm
-	../../../QEMU/qemu/ppdl-softmmu/qemu-system-ppdl -gas $(_GASLIMIT) -nodebug -singlestep -nodefaults -nographic -kernel ${TARGET}.bin > out.qemu
+	../../../QEMU/qemu/ppdl-softmmu/qemu-system-ppdl -gas $(_GASLIMIT) -nodebug ${QEMU_MODE} -nodefaults -nographic -kernel ${TARGET}.bin > out.qemu
 	@echo `cat out.qemu | awk '{print toupper($$0)}'` > out.qemu
 	@bash -c 'diff -q out.evm out.qemu 1>/dev/null; if [ $$? -eq 0 ]; then echo -e "$? is PASSED\n"; echo "PASS" >> ../passes; else echo -e "$? is FAILED\n"; echo "FAIL" >> ../fails;fi'
 
@@ -40,7 +41,7 @@ test-cemu: ${TARGET}
 	@bash -c 'diff -q out.evm out.cemu 1>/dev/null; if [ $$? -eq 0 ]; then echo -e "$? is PASSED\n"; echo "PASS" >> ../passes; else echo -e "$? is FAILED\n"; echo "FAIL" >> ../fails;fi'
 
 compare: ${TARGET}
-	../../../QEMU/qemu/ppdl-softmmu/qemu-system-ppdl -gas $(_GASLIMIT) -nodebug -singlestep -nodefaults -nographic -kernel ${TARGET}.bin > out.qemu
+	../../../QEMU/qemu/ppdl-softmmu/qemu-system-ppdl -gas $(_GASLIMIT) -nodebug ${QEMU_MODE} -nodefaults -nographic -kernel ${TARGET}.bin > out.qemu
 	@echo `cat out.qemu | awk '{print toupper($$0)}'` > out.qemu
 	../../../emulator/bins/cemu -nt -gas $(_GASLIMIT) ../../../emulator/models/evm/simulator/evm.so ${TARGET}.bin > out.cemu
 	@echo `cat out.cemu | awk '{print toupper($$0)}'` > out.cemu
