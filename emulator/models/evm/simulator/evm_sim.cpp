@@ -11,29 +11,31 @@ const char *reg_7 = "log_ptr";
 const char *var_8 = "sp";
 const char *var_9 = "gas_available";
 const char *var_10 = "data";
-const char *var_11 = "CoinBase";
-const char *var_12 = "TimeStamp";
-const char *var_13 = "Number";
-const char *var_14 = "Difficulty";
-const char *var_15 = "GasLimit";
+const char *var_11 = "stack[$]";
+const char *var_12 = "CoinBase";
+const char *var_13 = "TimeStamp";
+const char *var_14 = "Number";
+const char *var_15 = "Difficulty";
+const char *var_16 = "GasLimit";
 
-const tDRegister EVM_regs[16] = {
+const tDRegister EVM_regs[17] = {
   {reg_0,4,0,0},
   {reg_1,8,0,0},
   {reg_2,8,0,0},
   {reg_3,8,0,0},
-  {reg_4,4,0,0},
+  {reg_4,8,0,0},
   {reg_5,8,0,0},
   {reg_6,8,0,0},
   {reg_7,4,0,0},
   {var_8,9,0,0},
-  {var_9,10,0,0},
+  {var_9,8,4,0},
   {var_10,1,1024,0},
-  {var_11,12,0,0},
+  {var_11,8,2048,0},
   {var_12,13,0,0},
   {var_13,14,0,0},
   {var_14,15,0,0},
   {var_15,16,0,0},
+  {var_16,17,0,0},
 };
 
 
@@ -43,7 +45,7 @@ const tDMemBus EVM_membus[] = {
 
 
 const tDProcCfg EVM_ProcCfg = {
-  16,EVM_regs,
+  17,EVM_regs,
   1,EVM_membus,
   0,NULL,
   0,NULL,
@@ -1018,18 +1020,19 @@ int EVM::SetReg(int rnum,int anum,char* val){
   case 1: cur_addr = *((uint64*)val); UpdateRegs(); break;
   case 2: caller_addr = *((uint64*)val); UpdateRegs(); break;
   case 3: origin_addr = *((uint64*)val); UpdateRegs(); break;
-  case 4: gas_price = *((uint32*)val); UpdateRegs(); break;
+  case 4: gas_price = *((uint64*)val); UpdateRegs(); break;
   case 5: ext_code_size = *((uint64*)val); UpdateRegs(); break;
   case 6: inp_data_size = *((uint64*)val); UpdateRegs(); break;
   case 7: log_ptr = *((uint32*)val); UpdateRegs(); break;
   case 8: sp = *((uint32*)val); break;
-  case 9: gas_available = *((uint32*)val); break;
+  case 9: gas_available[anum] = *((uint64*)val); break;
   case 10: data_bus[anum] = *((uint8*)val); break;
-  case 11: CoinBase = *((uint64*)val); break;
-  case 12: TimeStamp = *((uint64*)val); break;
-  case 13: Number = *((uint64*)val); break;
-  case 14: Difficulty = *((uint64*)val); break;
-  case 15: GasLimit = *((uint64*)val); break;
+  case 11: stack_arr[anum] = *((uint64*)val); break;
+  case 12: CoinBase = *((uint64*)val); break;
+  case 13: TimeStamp = *((uint64*)val); break;
+  case 14: Number = *((uint64*)val); break;
+  case 15: Difficulty = *((uint64*)val); break;
+  case 16: GasLimit = *((uint64*)val); break;
     default: return 0;
     }
   return 1;
@@ -1050,7 +1053,7 @@ int EVM::GetReg(int rnum,int anum,char* val){
      *((uint64*)val) = origin_addr;
     break;
     case 4:
-     *((uint32*)val) = gas_price;
+     *((uint64*)val) = gas_price;
     break;
     case 5:
      *((uint64*)val) = ext_code_size;
@@ -1065,24 +1068,27 @@ int EVM::GetReg(int rnum,int anum,char* val){
      *((uint32*)val) = sp;
     break;
     case 9:
-     *((uint32*)val) = gas_available;
+     *((uint64*)val) = gas_available[anum];
     break;
     case 10:
      *((uint8*)val) = data_bus[anum];
     break;
     case 11:
-     *((uint64*)val) = CoinBase;
+     *((uint64*)val) = stack_arr[anum];
     break;
     case 12:
-     *((uint64*)val) = TimeStamp;
+     *((uint64*)val) = CoinBase;
     break;
     case 13:
-     *((uint64*)val) = Number;
+     *((uint64*)val) = TimeStamp;
     break;
     case 14:
-     *((uint64*)val) = Difficulty;
+     *((uint64*)val) = Number;
     break;
     case 15:
+     *((uint64*)val) = Difficulty;
+    break;
+    case 16:
      *((uint64*)val) = GasLimit;
     break;
     default: return 0;
@@ -1153,16 +1159,7 @@ inline uint64 EVM::GetExp()
   uint64 i ;
   uint64 res  = 1;
   ;
-  if(gas_available < 10)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 10);
-  }
+ UseGas((TDevice*)this,10);
  for( i  = 0; i  <  pow ; i  = ( i  + 1)){
   ;
    res  = ( res  *  base );
@@ -1202,16 +1199,7 @@ inline uint64 EVM::SignExtend()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
+ UseGas((TDevice*)this,5);
   sp = (sp - 1);
   if( a  < 31)
   {
@@ -1243,16 +1231,7 @@ inline uint64 EVM::ByteFromWord()
   uint32 start_bit  =  (uint32)(((31 -  a ) * 8));
   uint32 end_bit  = ( start_bit  + 7);
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] =  TBitVE< uint64 >( b , end_bit , start_bit );
     return  (uint64)(0);
@@ -1266,16 +1245,7 @@ inline uint64 EVM::GetModule()
   uint64 mod  = stack_arr[(sp - 1)];
   uint64 div ;
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
+ UseGas((TDevice*)this,5);
   sp = (sp - 1);
   if( mod  == 0)
   {
@@ -1302,16 +1272,7 @@ inline uint64 EVM::GetModuleAdd()
   uint64 mod  = stack_arr[(sp - 2)];
   uint64 div ;
   ;
-  if(gas_available < 8)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 8);
-  }
+ UseGas((TDevice*)this,8);
   sp = (sp - 2);
   if( mod  == 0)
   {
@@ -1338,16 +1299,7 @@ inline uint64 EVM::GetModuleMul()
   uint64 mod  = stack_arr[(sp - 2)];
   uint64 div ;
   ;
-  if(gas_available < 8)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 8);
-  }
+ UseGas((TDevice*)this,8);
   sp = (sp - 2);
   if( mod  == 0)
   {
@@ -1374,16 +1326,7 @@ inline uint64 EVM::GetModuleS()
   uint64 sign ;
   uint1 is_signed  = ( ((int64)( a )) < 0);
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
+ UseGas((TDevice*)this,5);
   sp = (sp - 1);
    sign  =  ( ( is_signed  != 0) ? ( (uint64)((0 - 1))) : ( (uint64)(1)) );
   if( mod  == 0)
@@ -1406,16 +1349,7 @@ inline uint64 EVM::GetModuleS()
 inline uint64 EVM::StopOp()
 {
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
+ UseGas((TDevice*)this,0);
   CheckError("@");
     return  (uint64)(0);
   return 0;
@@ -1427,16 +1361,7 @@ inline uint64 EVM::AddOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  +  b );
     return  (uint64)(0);
@@ -1449,16 +1374,7 @@ inline uint64 EVM::SubOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  -  b );
     return  (uint64)(0);
@@ -1471,16 +1387,7 @@ inline uint64 EVM::MulOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
+ UseGas((TDevice*)this,5);
   sp = (sp - 1);
   stack_arr[sp] = ( a  *  b );
     return  (uint64)(0);
@@ -1493,29 +1400,19 @@ inline uint64 EVM::DivOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
+ UseGas((TDevice*)this,5);
   sp = (sp - 1);
   if( b  == 0)
   {
   ;
   stack_arr[sp] =  (uint64)(0);
-    return  (uint64)(0);
   }
   else
   {
   ;
   stack_arr[sp] = ( a  /  b );
-    return  (uint64)(0);
   }
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
@@ -1525,29 +1422,19 @@ inline uint64 EVM::DivOpS()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
+ UseGas((TDevice*)this,5);
   sp = (sp - 1);
   if( b  == 0)
   {
   ;
   stack_arr[sp] =  (uint64)(0);
-    return  (uint64)(0);
   }
   else
   {
   ;
   stack_arr[sp] =  ((int64)(( a  /  ((int64)( b )))));
-    return  (uint64)(0);
   }
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
@@ -1557,16 +1444,7 @@ inline uint64 EVM::LtOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  <  b );
     return  (uint64)(0);
@@ -1579,16 +1457,7 @@ inline uint64 EVM::LtOpS()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] =  ((int64)(( a  <  ((int64)( b )))));
     return  (uint64)(0);
@@ -1601,16 +1470,7 @@ inline uint64 EVM::GtOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  >  b );
     return  (uint64)(0);
@@ -1623,16 +1483,7 @@ inline uint64 EVM::GtOpS()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] =  ((int64)(( a  >  ((int64)( b )))));
     return  (uint64)(0);
@@ -1645,16 +1496,7 @@ inline uint64 EVM::EqOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  ==  b );
     return  (uint64)(0);
@@ -1666,16 +1508,7 @@ inline uint64 EVM::IsZeroOp()
 {
   uint64 a  = stack_arr[sp];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   stack_arr[sp] = ( a  == 0);
     return  (uint64)(0);
   return 0;
@@ -1687,16 +1520,7 @@ inline uint64 EVM::AndOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  &  b );
     return  (uint64)(0);
@@ -1709,16 +1533,7 @@ inline uint64 EVM::OrOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  |  b );
     return  (uint64)(0);
@@ -1731,16 +1546,7 @@ inline uint64 EVM::XorOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  ^  b );
     return  (uint64)(0);
@@ -1752,16 +1558,7 @@ inline uint64 EVM::NotOp()
 {
   uint64 a  = stack_arr[sp];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   stack_arr[sp] = (~ a );
     return  (uint64)(0);
   return 0;
@@ -1771,16 +1568,7 @@ inline uint64 EVM::NotOp()
 inline uint64 EVM::CallValue()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] =  (uint64)(0);
     return  (uint64)(0);
@@ -1794,16 +1582,7 @@ inline uint64 EVM::CallDataCopy()
   uint64 b  = stack_arr[(sp - 1)];
   uint64 c  = stack_arr[(sp - 2)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 3);
     return  (uint64)(0);
   return 0;
@@ -1813,16 +1592,7 @@ inline uint64 EVM::CallDataCopy()
 inline uint64 EVM::CallDataSize()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] = inp_data_size;
     return  (uint64)(0);
@@ -1836,16 +1606,7 @@ inline uint64 EVM::CodeCopy()
   uint64 b  = stack_arr[(sp - 1)];
   uint64 c  = stack_arr[(sp - 2)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   sp = (sp - 3);
     return  (uint64)(0);
   return 0;
@@ -1855,16 +1616,7 @@ inline uint64 EVM::CodeCopy()
 inline uint64 EVM::ExtCodeSize()
 {
   ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
+ UseGas((TDevice*)this,20);
   sp = (sp + 1);
   stack_arr[sp] = ext_code_size;
     return  (uint64)(0);
@@ -1879,16 +1631,7 @@ inline uint64 EVM::ExtCodeCopy()
   uint64 c  = stack_arr[(sp - 2)];
   uint64 d  = stack_arr[(sp - 3)];
   ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
+ UseGas((TDevice*)this,20);
   sp = (sp - 4);
     return  (uint64)(0);
   return 0;
@@ -1899,16 +1642,7 @@ inline uint64 EVM::GetAddress()
 {
   uint64 ca  = cur_addr;
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] =  (uint64)( ca );
     return  (uint64)(0);
@@ -1920,16 +1654,7 @@ inline uint64 EVM::GetBalance()
 {
   uint64 a  = stack_arr[sp];
   ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
+ UseGas((TDevice*)this,20);
   stack_arr[sp] =  (uint64)(0);
     return  (uint64)(0);
   return 0;
@@ -1940,16 +1665,7 @@ inline uint64 EVM::GetOrigin()
 {
   uint64 oa  = origin_addr;
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] =  (uint64)( oa );
     return  (uint64)(0);
@@ -1961,16 +1677,7 @@ inline uint64 EVM::GetCaller()
 {
   uint64 ca  = caller_addr;
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] =  (uint64)( ca );
     return  (uint64)(0);
@@ -1983,16 +1690,7 @@ inline uint64 EVM::GetInputData()
   uint32 addr_val  =  (uint32)(stack_arr[sp]);
   uint64 inp_data  = input_data[ addr_val ];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   stack_arr[sp] =  inp_data ;
     return  (uint64)(0);
   return 0;
@@ -2002,16 +1700,7 @@ inline uint64 EVM::GetInputData()
 inline uint64 EVM::GetCodeSize()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] = GetElfSize((TDevice*)this);
     return  (uint64)(0);
@@ -2021,18 +1710,9 @@ inline uint64 EVM::GetCodeSize()
 #define SARG(aidx) aidx
 inline uint64 EVM::GetGasPrice()
 {
-  uint32 gp  = gas_price;
+  uint64 gp  = gas_price;
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] =  (uint64)( gp );
     return  (uint64)(0);
@@ -2044,16 +1724,7 @@ inline uint64 EVM::BlockChainHash()
 {
   uint64 a  = stack_arr[sp];
   ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
+ UseGas((TDevice*)this,20);
   CoinBase = 16;
   TimeStamp = 4096;
   Number = 0x1234543234LL;
@@ -2068,16 +1739,7 @@ inline uint64 EVM::BlockChainHash()
 inline uint64 EVM::GetCoinBase()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] = CoinBase;
     return  (uint64)(0);
@@ -2088,16 +1750,7 @@ inline uint64 EVM::GetCoinBase()
 inline uint64 EVM::GetTimeStamp()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] = TimeStamp;
     return  (uint64)(0);
@@ -2108,16 +1761,7 @@ inline uint64 EVM::GetTimeStamp()
 inline uint64 EVM::GetNumber()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] = Number;
     return  (uint64)(0);
@@ -2128,16 +1772,7 @@ inline uint64 EVM::GetNumber()
 inline uint64 EVM::GetDifficulty()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] = Difficulty;
     return  (uint64)(0);
@@ -2148,16 +1783,7 @@ inline uint64 EVM::GetDifficulty()
 inline uint64 EVM::GetGasLimit()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
   stack_arr[sp] = GasLimit;
     return  (uint64)(0);
@@ -2172,16 +1798,7 @@ inline uint64 EVM::CreateAccount()
   uint64 initSize  = stack_arr[(sp - 2)];
   uint64 account ;
   ;
-  if(gas_available < 32000)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 32000);
-  }
+ UseGas((TDevice*)this,32000);
    account  = 1193046;
   sp = (sp - 2);
   stack_arr[sp] =  account ;
@@ -2201,16 +1818,7 @@ inline uint64 EVM::MakeCall()
   uint64 outSize  = stack_arr[(sp - 6)];
   uint64 call_res  = 0;
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
+ UseGas((TDevice*)this,40);
   sp = (sp - 6);
   stack_arr[sp] =  call_res ;
     return  (uint64)(0);
@@ -2229,16 +1837,7 @@ inline uint64 EVM::MakeCallCode()
   uint64 outSize  = stack_arr[(sp - 6)];
   uint64 call_res  = 0;
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
+ UseGas((TDevice*)this,40);
   sp = (sp - 6);
   stack_arr[sp] =  call_res ;
     return  (uint64)(0);
@@ -2249,16 +1848,7 @@ inline uint64 EVM::MakeCallCode()
 inline uint64 EVM::Return()
 {
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
+ UseGas((TDevice*)this,0);
   StopExec();
     return  (uint64)(0);
   return 0;
@@ -2275,16 +1865,7 @@ inline uint64 EVM::DelegateCall()
   uint64 outSize  = stack_arr[(sp - 5)];
   uint64 call_res  = 0;
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
+ UseGas((TDevice*)this,40);
   sp = (sp - 5);
   stack_arr[sp] =  call_res ;
     return  (uint64)(0);
@@ -2400,16 +1981,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint64 outSize  = stack_arr[(sp - 5)];
   uint64 call_res  = 0;
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
+ UseGas((TDevice*)this,40);
   sp = (sp - 5);
   stack_arr[sp] =  call_res ;
       }
@@ -2425,16 +1997,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
+ UseGas((TDevice*)this,0);
   sp = (sp - 2);
   StopExec();
       }
@@ -2449,16 +2012,7 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint64 a  = stack_arr[sp];
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
+ UseGas((TDevice*)this,0);
   sp = (sp - 1);
   StopExec();
       }
@@ -2499,16 +2053,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst7.aidx
       {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   PushInst(SARG(count) + 1);
   is_pc_const_changed = 1;
   pc = ((pc + SARG(count)) + 2);
@@ -2525,16 +2070,7 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint64 a ;
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
    a  = stack_arr[(sp - (SARG(count) + 1))];
   sp = (sp + 1);
   stack_arr[sp] =  a ;
@@ -2551,16 +2087,7 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint64 first_el  = stack_arr[sp];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   stack_arr[sp] = stack_arr[(sp - (SARG(count) + 1))];
   stack_arr[(sp - (SARG(count) + 1))] =  first_el ;
       }
@@ -2580,16 +2107,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint32 m_ptr  =  (uint32)( l1_data );
   uint32 m_size  =  (uint32)( l2_data );
   ;
-  if(gas_available < (375 + (SARG(count) * 375)))
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - (375 + (SARG(count) * 375)));
-  }
+ UseGas((TDevice*)this,375 + (SARG(count) * 375));
   LogInst(SARG(count), m_ptr );
   log_ptr = (SARG(count) + 2);
   sp = (sp - 2);
@@ -2622,58 +2140,22 @@ inline int EVM::Main_decode(uint32 ocode){
   {
     case 0:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   Pop();
     break;
     case 1:
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   MloadInst( addr_val );
     break;
     case 2:
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
   MStoreInst( addr_val );
     break;
     case 3:
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+ UseGas((TDevice*)this,3);
    data_val  = stack_arr[sp];
   sp = (sp - 1);
   data_bus[ addr_val ] =  (uint8)( data_val );
@@ -2684,63 +2166,27 @@ inline int EVM::Main_decode(uint32 ocode){
     break;
     case 4:
   ;
-  if(gas_available < 50)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 50);
-  }
+ UseGas((TDevice*)this,50);
    data_val  = LoadFromStorage((TDevice*)this, addr_val );
   sp = (sp + 1);
   stack_arr[sp] =  data_val ;
     break;
     case 5:
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
+ UseGas((TDevice*)this,0);
    data_val  = stack_arr[sp];
   sp = (sp - 1);
  SaveToStorage((TDevice*)this, addr_val , data_val );
     break;
     case 6:
   ;
-  if(gas_available < 8)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 8);
-  }
+ UseGas((TDevice*)this,8);
   pc =  addr_val ;
   is_pc_within_inst = 1;
     break;
     case 7:
   ;
-  if(gas_available < 10)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 10);
-  }
+ UseGas((TDevice*)this,10);
   if(stack_arr[sp] != 0)
   {
   ;
@@ -2751,63 +2197,27 @@ inline int EVM::Main_decode(uint32 ocode){
     break;
     case 8:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
    data_val  =  (uint64)(pc);
   sp = (sp + 1);
   stack_arr[sp] =  data_val ;
     break;
     case 9:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
    data_val  =  (uint64)(mem_size);
   sp = (sp + 1);
   stack_arr[sp] =  data_val ;
     break;
     case 10:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+ UseGas((TDevice*)this,2);
   sp = (sp + 1);
-  stack_arr[sp] =  (uint64)(gas_available);
+  stack_arr[sp] =  (uint64)(gas_available[0]);
     break;
     case 11:
   ;
-  if(gas_available < 1)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 1);
-  }
+ UseGas((TDevice*)this,1);
     break;
   }
       }
@@ -2848,17 +2258,7 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint64 res  = -559038737;
   ;
-  if(gas_available < 30)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 30);
-  }
-  sp = (sp - 1);
+ UseGas((TDevice*)this,30);
   stack_arr[sp] =  res ;
       }
   #undef SARG

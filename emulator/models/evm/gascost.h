@@ -25,4 +25,4 @@
 #define CALLSTIPEND      2300
 #define CALLNEWACCOUNT   25000
 
-#define USEGAS(c) if(gas_available < (c)){ gas_available = 0xFFFFFFFF; StopExec(); }else gas_available = gas_available - (c);
+#define USEGAS(c) UseGas((c));

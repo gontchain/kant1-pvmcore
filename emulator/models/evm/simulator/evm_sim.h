@@ -7,6 +7,7 @@ extern uint64 KeccakAlg(TDevice* dev,uint32 offs,uint32 size);
 extern uint64 GetElfSize(TDevice* dev);
 extern void SaveToStorage(TDevice* dev,uint32 offs,uint64 value);
 extern uint64 LoadFromStorage(TDevice* dev,uint32 offs);
+extern void UseGas(TDevice* dev,uint64 value);
 // class EVM
 class EVM: public TDevice
 {
@@ -77,7 +78,7 @@ public:
   PD_REG< uint64 >  cur_addr;
   PD_REG< uint64 >  caller_addr;
   PD_REG< uint64 >  origin_addr;
-  PD_REG< uint32 >  gas_price;
+  PD_REG< uint64 >  gas_price;
   PD_REG< uint64 >  ext_code_size;
   PD_REG< uint64 >  inp_data_size;
   PD_REG<uint64>  input_data[1024];
@@ -86,7 +87,7 @@ public:
   uint32  sp;
   uint1  is_pc_within_inst;
   uint1  is_pc_const_changed;
-  uint32  gas_available;
+  uint64  gas_available[4];
   uint32  mem_size;
   uint8  data_bus[1024];
   uint64  stack_arr[2048];

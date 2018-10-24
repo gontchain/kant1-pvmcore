@@ -1,5 +1,6 @@
 #define MAIN_TYPE int64
 #define MAIN_TYPE_SIZE 64
+#define MAIN_TYPE_BLOCK_SIZE 4
 #define EVM_ADDR_TYPE int64
 #define EVM_BALANCE_TYPE int64
 
@@ -25,7 +26,7 @@ Device EVM
   Reg EVM_ADDR_TYPE     origin_addr, "origin_addr";
  
   Reg EVM_BALANCE_TYPE  gas_price, "gas_price";  
-  Var EVM_BALANCE_TYPE  gas_available, "gas_available";
+  Var EVM_BALANCE_TYPE  gas_available[MAIN_TYPE_BLOCK_SIZE], "gas_available";
   
   // Reg MAIN_TYPE  code_size,"code_size"; // replaced by GetElfSize() call
   Reg MAIN_TYPE  ext_code_size,"ext_code_size";
@@ -45,7 +46,7 @@ Device EVM
   // Reg MAIN_TYPE storage_bus[STORAGE_SIZE]; // replaced by mainStorage list
   Reg MAIN_TYPE input_data[INPUT_DATA_SIZE];
   Reg MAIN_TYPE log_bus[LOG_AREA_SIZE];
-  Var MAIN_TYPE stack_arr[STACK_SIZE];
+  Var MAIN_TYPE stack_arr[STACK_SIZE], "stack[$]";
   
   // log pointer
   Reg int32 log_ptr, "log_ptr";
@@ -56,6 +57,7 @@ Device EVM
   extern MAIN_TYPE GetElfSize();
   extern void      SaveToStorage(int32 offs, MAIN_TYPE value);
   extern MAIN_TYPE LoadFromStorage(int32 offs);
+  extern void      UseGas(MAIN_TYPE value);
 
   MAIN_TYPE StopExec()
   {
@@ -1003,14 +1005,13 @@ Device EVM
          data_val  = (MAIN_TYPE)mem_size;
          sp = sp + 1;
          stack_arr[sp] = data_val;
-         // Push(data_val);
          break;
 
         case 10: // GAS
          USEGAS(STEPGAS1);
          sp = sp + 1;
-         stack_arr[sp] = (MAIN_TYPE)gas_available;
-         // Push((MAIN_TYPE)gas_available);
+         // TODO fix gas to-stack write
+         stack_arr[sp] = (MAIN_TYPE)gas_available[0];
          break;
 
         case 11: // JUMPDEST

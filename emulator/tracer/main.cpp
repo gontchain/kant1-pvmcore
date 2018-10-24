@@ -84,8 +84,8 @@ TGetDevCore       GetDevCore;
 // config file name
 char*  ConfigFileName;
 // GAS limit
-#if 1
-uint64 GasMaxLimitValue = 0xFFFFFFFF;
+#if 0
+uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
 #else
 uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
 #endif
@@ -452,7 +452,7 @@ int CheckRegs(char* regnames)
 			{
 				int t = cfg->regs[i].type;
 				Device->GetReg(i, 0, (char*)&reg);		  
-				if (t == 8){//64 bit
+				if (t >= 8){//64 bit
 					if ((RegVal[i][0] != reg[0]) || RegVal[i][1] != reg[1]){
 						RegVal[i][0] = reg[0];
 						RegVal[i][1] = reg[1];
@@ -1082,7 +1082,7 @@ char usage_text[] = "usage: cemu [keys] [-bsp bsp_file_name]simulator_lib_name e
 	"  -rp - print return value, but returns 0 if success, -1 or -2 if error;\n"\
 	"  -lmem - out log of memory operations;\n"\
 	"  -ra - print all 'gr', 'ar' values every tact;\n"\
-	"  -gas GASLIMIT - gas limit for the evm (default: 10000000000);\n";
+	"  -gas GASLIMIT - gas limit for the evm (default: 10000000000, '-gas 0x0' - set infinite gas);\n";
 
 
 void usage(int exit_code)

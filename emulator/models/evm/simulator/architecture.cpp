@@ -3,6 +3,7 @@
 #include "ppdl.h"
 #include "evm_sim.h"
 #include "sha3/Keccak.h"
+#include "bignum/v_bignum.h"
 
 #define BLOCK_SIZE 1024*512 // 512 килобайт памяти
 #define IMEM_WS 1
@@ -29,6 +30,22 @@ TDataMem* data_mem;
 TDataMem* storage_mem;
 TDataMem* log_mem;
 TDataMem* input_mem;
+
+void UseGas(TDevice* dev, uint64 value) {
+  uint64 *gas = ((EVM*)dev)->gas_available;
+  uint64 ret[4];
+  VBigDig VBIGNUM(x, 256);
+  VBigDig VBIGNUM(y, 64);
+  char value_string[35];
+  v_bignum_set_bignum(x, v_bignum_reg_to_bignum(gas));
+  sprintf(value_string, "0x%llx", value);
+  v_bignum_set_string_hex(y, value_string);
+  v_bignum_sub(x, y);
+  v_bignum_bignum_to_reg(ret, x);
+  for (int i = 0; i < 4; i++) {
+    gas[i] = ret[i];
+  }
+}
 
 // KECCAK algorithm
 #if 1
@@ -140,7 +157,8 @@ void* Init(void* mParams)
   new_evm->input_data = input_mem;
   */
   // init gas price
-  new_evm->gas_available = ((ChipMem*)mParams)->GasLimit;
+  for (int i = 0; i < 4; i++)
+    new_evm->gas_available[i] = ((ChipMem*)mParams)->GasLimit;
   new_evm->GasLimit = ((ChipMem*)mParams)->GasLimit;
 
   // init EVM storage

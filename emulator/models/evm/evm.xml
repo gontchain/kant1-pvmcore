@@ -5,7 +5,7 @@
         <cur_addr SIZE="64" ASM="cur_addr" ARRSIZE="0" />
         <caller_addr SIZE="64" ASM="caller_addr" ARRSIZE="0" />
         <origin_addr SIZE="64" ASM="origin_addr" ARRSIZE="0" />
-        <gas_price SIZE="32" ASM="gas_price" ARRSIZE="0" />
+        <gas_price SIZE="64" ASM="gas_price" ARRSIZE="0" />
         <ext_code_size SIZE="64" ASM="ext_code_size" ARRSIZE="0" />
         <inp_data_size SIZE="64" ASM="inp_data_size" ARRSIZE="0" />
         <input_data SIZE="64" ARRSIZE="1024" />
@@ -19,10 +19,10 @@
         <sp SIZE="32" ASM="sp" />
         <is_pc_within_inst SIZE="1" />
         <is_pc_const_changed SIZE="1" />
-        <gas_available SIZE="32" ASM="gas_available" />
+        <gas_available SIZE="64" ASM="gas_available" ARRSIZE="4" />
         <mem_size SIZE="32" />
         <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
-        <stack_arr SIZE="64" ARRSIZE="2048" />
+        <stack_arr SIZE="64" ASM="stack[$]" ARRSIZE="2048" />
         <CoinBase SIZE="64" ASM="CoinBase" />
         <TimeStamp SIZE="64" ASM="TimeStamp" />
         <Number SIZE="64" ASM="Number" />
@@ -54,6 +54,12 @@
             </ARGUMENTS>
             <CODE />
         </LoadFromStorage>
+        <UseGas RETSIZE="0">
+            <ARGUMENTS>
+                <value SIZE="64" />
+            </ARGUMENTS>
+            <CODE />
+        </UseGas>
         <StopExec RETSIZE="64">
             <CODE>
                 <PRINT_ERROR message="1" />
@@ -86,34 +92,11 @@
                 </res>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="A" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="A" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="A" />
+                    </ARGS>
+                </CALL>
                 <FOR>
                     <FOR_START>
                         <OPERATOR name=" = ">
@@ -234,34 +217,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="5" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="5" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -414,34 +374,11 @@
                 </end_bit>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -490,34 +427,11 @@
                 <div SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="5" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="5" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -618,34 +532,11 @@
                 <div SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="8" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="8" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="8" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -746,34 +637,11 @@
                 <div SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="8" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="8" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="8" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -867,34 +735,11 @@
                 </is_signed>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="5" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="5" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -978,34 +823,11 @@
         </GetModuleS>
         <StopOp RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="0" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="0" />
+                    </ARGS>
+                </CALL>
                 <PRINT_ERROR message="1" />
                 <RETURN>
                     <TYPE name="uint64">
@@ -1035,34 +857,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1107,34 +906,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1179,34 +955,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="5" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="5" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1251,34 +1004,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="5" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="5" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1302,11 +1032,6 @@
                                 <IMM32 value="0" />
                             </TYPE>
                         </OPERATOR>
-                        <RETURN>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </RETURN>
                     </INNER>
                     <ELSE>
                         <INNER>
@@ -1319,14 +1044,14 @@
                                     <LVAR name="b" />
                                 </OPERATOR>
                             </OPERATOR>
-                            <RETURN>
-                                <TYPE name="uint64">
-                                    <IMM32 value="0" />
-                                </TYPE>
-                            </RETURN>
                         </INNER>
                     </ELSE>
                 </IF>
+                <RETURN>
+                    <TYPE name="uint64">
+                        <IMM32 value="0" />
+                    </TYPE>
+                </RETURN>
             </CODE>
         </DivOp>
         <DivOpS RETSIZE="64">
@@ -1350,34 +1075,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="5" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="5" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1401,11 +1103,6 @@
                                 <IMM32 value="0" />
                             </TYPE>
                         </OPERATOR>
-                        <RETURN>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </RETURN>
                     </INNER>
                     <ELSE>
                         <INNER>
@@ -1422,14 +1119,14 @@
                                     </OPERATOR>
                                 </SIGNED64>
                             </OPERATOR>
-                            <RETURN>
-                                <TYPE name="uint64">
-                                    <IMM32 value="0" />
-                                </TYPE>
-                            </RETURN>
                         </INNER>
                     </ELSE>
                 </IF>
+                <RETURN>
+                    <TYPE name="uint64">
+                        <IMM32 value="0" />
+                    </TYPE>
+                </RETURN>
             </CODE>
         </DivOpS>
         <LtOp RETSIZE="64">
@@ -1453,34 +1150,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1525,34 +1199,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1601,34 +1252,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1673,34 +1301,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1749,34 +1354,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1811,34 +1393,11 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="stack_arr">
                         <REG name="sp" />
@@ -1876,34 +1435,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -1948,34 +1484,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -2020,34 +1533,11 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -2082,34 +1572,11 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="stack_arr">
                         <REG name="sp" />
@@ -2127,34 +1594,11 @@
         </NotOp>
         <CallValue RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2208,34 +1652,11 @@
                 </c>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -2252,34 +1673,11 @@
         </CallDataCopy>
         <CallDataSize RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2331,34 +1729,11 @@
                 </c>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -2375,34 +1750,11 @@
         </CodeCopy>
         <ExtCodeSize RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="14" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="14" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="14" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2464,34 +1816,11 @@
                 </d>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="14" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="14" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="14" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -2515,34 +1844,11 @@
                 </ca>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2576,34 +1882,11 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="14" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="14" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="14" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="stack_arr">
                         <REG name="sp" />
@@ -2628,34 +1911,11 @@
                 </oa>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2687,34 +1947,11 @@
                 </ca>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2757,34 +1994,11 @@
                 </inp_data>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="3" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="stack_arr">
                         <REG name="sp" />
@@ -2800,34 +2014,11 @@
         </GetInputData>
         <GetCodeSize RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2850,41 +2041,18 @@
         </GetCodeSize>
         <GetGasPrice RETSIZE="64">
             <LOCALVARS>
-                <gp SIZE="32">
+                <gp SIZE="64">
                     <INITAL_EXP>
                         <REG name="gas_price" />
                     </INITAL_EXP>
                 </gp>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -2918,34 +2086,11 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="14" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="14" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="14" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="CoinBase" />
                     <IMM32 value="10" />
@@ -2983,34 +2128,11 @@
         </BlockChainHash>
         <GetCoinBase RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -3033,34 +2155,11 @@
         </GetCoinBase>
         <GetTimeStamp RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -3083,34 +2182,11 @@
         </GetTimeStamp>
         <GetNumber RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -3133,34 +2209,11 @@
         </GetNumber>
         <GetDifficulty RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -3183,34 +2236,11 @@
         </GetDifficulty>
         <GetGasLimit RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="2" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
@@ -3263,34 +2293,11 @@
                 <account SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="7D00" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="7D00" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="7D00" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <LVAR name="account" />
                     <IMM32 value="123456" />
@@ -3391,34 +2398,11 @@
                 </call_res>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="28" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="28" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="28" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -3515,34 +2499,11 @@
                 </call_res>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="28" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="28" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="28" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -3565,34 +2526,11 @@
         </MakeCallCode>
         <Return RETSIZE="64">
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="0" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="0" />
+                    </ARGS>
+                </CALL>
                 <CALL name="StopExec">
                     <ARGS />
                 </CALL>
@@ -3669,34 +2607,11 @@
                 </call_res>
             </LOCALVARS>
             <CODE>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <REG name="gas_available" />
-                            <IMM32 value="28" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="gas_available" />
-                            <IMM32 value="FFFFFFFF" />
-                        </OPERATOR>
-                        <CALL name="StopExec">
-                            <ARGS />
-                        </CALL>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="-">
-                                    <REG name="gas_available" />
-                                    <IMM32 value="28" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="28" />
+                    </ARGS>
+                </CALL>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
@@ -4551,34 +3466,11 @@
                     </call_res>
                 </LOCALVARS>
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <IMM32 value="28" />
-                            </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="28" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <IMM32 value="28" />
+                        </ARGS>
+                    </CALL>
                     <OPERATOR name=" = ">
                         <REG name="sp" />
                         <OPERATOR name="-">
@@ -4618,34 +3510,11 @@
                     </b>
                 </LOCALVARS>
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <IMM32 value="0" />
-                            </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="0" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <IMM32 value="0" />
+                        </ARGS>
+                    </CALL>
                     <OPERATOR name=" = ">
                         <REG name="sp" />
                         <OPERATOR name="-">
@@ -4672,34 +3541,11 @@
                     </a>
                 </LOCALVARS>
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <IMM32 value="0" />
-                            </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="0" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <IMM32 value="0" />
+                        </ARGS>
+                    </CALL>
                     <OPERATOR name=" = ">
                         <REG name="sp" />
                         <OPERATOR name="-">
@@ -4743,34 +3589,11 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="3" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <IMM32 value="3" />
+                        </ARGS>
+                    </CALL>
                     <CALL name="PushInst">
                         <ARGS>
                             <OPERATOR name="+">
@@ -4804,34 +3627,11 @@
                     <a SIZE="64" />
                 </LOCALVARS>
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="3" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <IMM32 value="3" />
+                        </ARGS>
+                    </CALL>
                     <OPERATOR name=" = ">
                         <LVAR name="a" />
                         <REG name="stack_arr">
@@ -4874,34 +3674,11 @@
                     </first_el>
                 </LOCALVARS>
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="3" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <IMM32 value="3" />
+                        </ARGS>
+                    </CALL>
                     <OPERATOR name=" = ">
                         <REG name="stack_arr">
                             <REG name="sp" />
@@ -4971,46 +3748,17 @@
                     </m_size>
                 </LOCALVARS>
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <OPERATOR name="+">
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <OPERATOR name="+">
+                                <IMM32 value="177" />
+                                <OPERATOR name="*">
+                                    <ARG name="count" />
                                     <IMM32 value="177" />
-                                    <OPERATOR name="*">
-                                        <ARG name="count" />
-                                        <IMM32 value="177" />
-                                    </OPERATOR>
                                 </OPERATOR>
                             </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <OPERATOR name="+">
-                                            <IMM32 value="177" />
-                                            <OPERATOR name="*">
-                                                <ARG name="count" />
-                                                <IMM32 value="177" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
+                        </ARGS>
+                    </CALL>
                     <CALL name="LogInst">
                         <ARGS>
                             <ARG name="count" />
@@ -5084,67 +3832,21 @@
                             </TYPE>
                         </EXPRESSION>
                         <CASE index="0">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="2" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="2" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="2" />
+                                </ARGS>
+                            </CALL>
                             <CALL name="Pop">
                                 <ARGS />
                             </CALL>
                         </CASE>
                         <CASE index="1">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="3" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="3" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="3" />
+                                </ARGS>
+                            </CALL>
                             <CALL name="MloadInst">
                                 <ARGS>
                                     <LVAR name="addr_val" />
@@ -5152,34 +3854,11 @@
                             </CALL>
                         </CASE>
                         <CASE index="2">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="3" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="3" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="3" />
+                                </ARGS>
+                            </CALL>
                             <CALL name="MStoreInst">
                                 <ARGS>
                                     <LVAR name="addr_val" />
@@ -5187,34 +3866,11 @@
                             </CALL>
                         </CASE>
                         <CASE index="3">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="3" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="3" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="3" />
+                                </ARGS>
+                            </CALL>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
                                 <REG name="stack_arr">
@@ -5252,34 +3908,11 @@
                             </IF>
                         </CASE>
                         <CASE index="4">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="32" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="32" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="32" />
+                                </ARGS>
+                            </CALL>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
                                 <CALL name="LoadFromStorage">
@@ -5303,34 +3936,11 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="5">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="0" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="0" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="0" />
+                                </ARGS>
+                            </CALL>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
                                 <REG name="stack_arr">
@@ -5352,34 +3962,11 @@
                             </CALL>
                         </CASE>
                         <CASE index="6">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="8" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="8" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="8" />
+                                </ARGS>
+                            </CALL>
                             <OPERATOR name=" = ">
                                 <REG name="pc" />
                                 <LVAR name="addr_val" />
@@ -5390,34 +3977,11 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="7">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="A" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="A" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="A" />
+                                </ARGS>
+                            </CALL>
                             <IF>
                                 <COND>
                                     <OPERATOR name=" != ">
@@ -5449,34 +4013,11 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="8">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="2" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="2" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="2" />
+                                </ARGS>
+                            </CALL>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
                                 <TYPE name="uint64">
@@ -5498,34 +4039,11 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="9">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="2" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="2" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="2" />
+                                </ARGS>
+                            </CALL>
                             <OPERATOR name=" = ">
                                 <LVAR name="data_val" />
                                 <TYPE name="uint64">
@@ -5547,34 +4065,11 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="10">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="2" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="2" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="2" />
+                                </ARGS>
+                            </CALL>
                             <OPERATOR name=" = ">
                                 <REG name="sp" />
                                 <OPERATOR name="+">
@@ -5587,39 +4082,18 @@
                                     <REG name="sp" />
                                 </REG>
                                 <TYPE name="uint64">
-                                    <REG name="gas_available" />
+                                    <REG name="gas_available">
+                                        <IMM32 value="0" />
+                                    </REG>
                                 </TYPE>
                             </OPERATOR>
                         </CASE>
                         <CASE index="11">
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="1" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="FFFFFFFF" />
-                                    </OPERATOR>
-                                    <CALL name="StopExec">
-                                        <ARGS />
-                                    </CALL>
-                                </INNER>
-                                <ELSE>
-                                    <INNER>
-                                        <OPERATOR name=" = ">
-                                            <REG name="gas_available" />
-                                            <OPERATOR name="-">
-                                                <REG name="gas_available" />
-                                                <IMM32 value="1" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </INNER>
-                                </ELSE>
-                            </IF>
+                            <CALL name="UseGas">
+                                <ARGS>
+                                    <IMM32 value="1" />
+                                </ARGS>
+                            </CALL>
                         </CASE>
                     </SWITCH>
                 </CODE>
@@ -5660,41 +4134,11 @@
                     </res>
                 </LOCALVARS>
                 <CODE>
-                    <IF>
-                        <COND>
-                            <OPERATOR name=" &lt; ">
-                                <REG name="gas_available" />
-                                <IMM32 value="1E" />
-                            </OPERATOR>
-                        </COND>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="gas_available" />
-                                <IMM32 value="FFFFFFFF" />
-                            </OPERATOR>
-                            <CALL name="StopExec">
-                                <ARGS />
-                            </CALL>
-                        </INNER>
-                        <ELSE>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <REG name="gas_available" />
-                                    <OPERATOR name="-">
-                                        <REG name="gas_available" />
-                                        <IMM32 value="1E" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                        </ELSE>
-                    </IF>
-                    <OPERATOR name=" = ">
-                        <REG name="sp" />
-                        <OPERATOR name="-">
-                            <REG name="sp" />
-                            <IMM32 value="1" />
-                        </OPERATOR>
-                    </OPERATOR>
+                    <CALL name="UseGas">
+                        <ARGS>
+                            <IMM32 value="1E" />
+                        </ARGS>
+                    </CALL>
                     <OPERATOR name=" = ">
                         <REG name="stack_arr">
                             <REG name="sp" />
