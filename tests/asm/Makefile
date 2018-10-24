@@ -1,3 +1,7 @@
+ifndef VERBOSE
+MAKEFLAGS += --no-print-directory
+endif
+
 GASLIMIT=0x0
 export GASLIMIT
 
