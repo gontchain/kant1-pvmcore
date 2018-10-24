@@ -15,3 +15,5 @@
 out.cemu
 out.evm
 bins/cemu
+QEMU/qemu/roms/seabios/config.mak
+QEMU/qemu/roms/vgabios/config.mak
