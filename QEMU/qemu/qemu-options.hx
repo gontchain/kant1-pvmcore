@@ -3478,11 +3478,11 @@ Translate only floating point instructions
 ETEXI
 
 DEF("gas", HAS_ARG, QEMU_OPTION_gas, \
-    "-gas GASLIMIT   gas limit for the evm (default: 10000000000)\n", QEMU_ARCH_PPDL)
+    "-gas GASLIMIT   gas limit for the evm (default: 10000000000, '-gas 0x0' - set infinite gas)\n", QEMU_ARCH_PPDL)
 STEXI
 @item -gas @var{GASLIMIT}
 @findex -gas
-Set gas limit for the evm (default: 10000000000)
+Set gas limit for the evm (default: 10000000000, '-gas 0x0' - set infinite gas)
 ETEXI
 
 STEXI
