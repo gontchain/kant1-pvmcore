@@ -199,6 +199,7 @@ char qemu_mem_trace_list[100][22] = {"NA"};
 int debug = 1;
 int use_tlm = 0;
 int tlm_debug = 0;
+#define GAS_DEFAULT_VALUE 0xFFFFFFFFFFFFFFFF
 uint64_t gas = 10000000000;
 
 typedef struct FWBootEntry FWBootEntry;
@@ -4028,6 +4029,8 @@ int vl_main(int ignore_sigint, int no_sdl, int no_gui_timer,
                 break;
             case QEMU_OPTION_gas:
                 gas = atol(optarg);
+                if (gas == 0x0)
+                    gas = GAS_DEFAULT_VALUE;
                 break;
             default:
                 os_parse_cmd_args(popt->index, optarg);
