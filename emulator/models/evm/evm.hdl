@@ -78,7 +78,6 @@ Device EVM
     }
     sp = sp - 1;
     stack_arr[sp] = res;
-    // return res;
     return (MAIN_TYPE)0;
   }
 
@@ -118,7 +117,6 @@ Device EVM
       else
         number = b & mask;
       stack_arr[sp] = number;
-      // return number;
       return (MAIN_TYPE)0;
     }
     stack_arr[sp] = (MAIN_TYPE)0;
@@ -135,7 +133,6 @@ Device EVM
      int32 end_bit = start_bit + 7;
      sp = sp - 1;
      stack_arr[sp] = b[end_bit:start_bit];
-     // return b[end_bit:start_bit];
      return (MAIN_TYPE)0;
   }
 
@@ -155,7 +152,6 @@ Device EVM
     {
       div = a / mod;
       stack_arr[sp] = a - (div * mod);
-      // return a - (div * mod);
       return (MAIN_TYPE)0;
     }
   }
@@ -177,7 +173,6 @@ Device EVM
     {
       div = base / mod;
       stack_arr[sp] = base - (div * mod);
-      // return base - (div * mod);
       return (MAIN_TYPE)0;
     }
   }
@@ -199,7 +194,6 @@ Device EVM
     {
       div = base / mod;
       stack_arr[sp] = base - (div * mod);
-      // return base - (div * mod);
       return (MAIN_TYPE)0;
     }
   }
@@ -223,7 +217,6 @@ Device EVM
     {
       div = a / mod;
       stack_arr[sp] = (sign * (a - (div * mod)));
-      // return (sign * (a - (div * mod)));
       return (MAIN_TYPE)0;
     }// if(mod == 0) .. else
   }
@@ -242,7 +235,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a + b;
-    // return a + b ;
     return (MAIN_TYPE)0;
   }
 
@@ -253,7 +245,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a - b;
-    // return a - b ;
     return (MAIN_TYPE)0;
   }
 
@@ -264,7 +255,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a * b;
-    // return a * b ;
     return (MAIN_TYPE)0;
   }
 
@@ -276,13 +266,11 @@ Device EVM
     sp = sp - 1;
     if (b == 0) {
       stack_arr[sp] = (MAIN_TYPE)0;
-      return (MAIN_TYPE)0;
     }
     else {
       stack_arr[sp] = a / b;
-      // return a / b;
-      return (MAIN_TYPE)0;
     }
+    return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE DivOpS()
@@ -293,13 +281,11 @@ Device EVM
     sp = sp - 1;
     if (b == 0) {
       stack_arr[sp] = (MAIN_TYPE)0;
-      return (MAIN_TYPE)0;
     }
     else {
       stack_arr[sp] = (signed)a / (signed)b;
-      // return (signed)a / (signed)b;
-      return (MAIN_TYPE)0;
     }
+    return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE LtOp()
@@ -309,7 +295,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a < b;
-    // return a < b;
     return (MAIN_TYPE)0;
   }
 
@@ -320,7 +305,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = (signed)a < (signed)b;
-    // return (signed)a < (signed)b;
     return (MAIN_TYPE)0;
   }
 
@@ -331,7 +315,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a > b;
-    // return a > b;
     return (MAIN_TYPE)0;
   }
 
@@ -342,7 +325,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = (signed)a > (signed)b;
-    // return (signed)a > (signed)b;
     return (MAIN_TYPE)0;
   }
 
@@ -353,7 +335,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a == b;
-    // return a == b;
     return (MAIN_TYPE)0;
   }
 
@@ -362,7 +343,6 @@ Device EVM
     USEGAS(STEPGAS2);
     MAIN_TYPE a = stack_arr[sp];
     stack_arr[sp] = a == 0;
-    // return a == 0;
     return (MAIN_TYPE)0;
   }
 
@@ -373,7 +353,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a & b;
-    // return a & b;
     return (MAIN_TYPE)0;
   }
 
@@ -384,7 +363,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a | b;
-    // return a | b;
     return (MAIN_TYPE)0;
   }
 
@@ -395,7 +373,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a ^ b;
-    // return a ^ b;
     return (MAIN_TYPE)0;
   }
 
@@ -404,7 +381,6 @@ Device EVM
     USEGAS(STEPGAS2);
     MAIN_TYPE a = stack_arr[sp];
     stack_arr[sp] = ~a;
-    // return ~a;
     return (MAIN_TYPE)0;
   }
 
@@ -473,7 +449,6 @@ Device EVM
     USEGAS(STEPGAS1);
     sp = sp + 1;
     stack_arr[sp] = inp_data_size;
-    // return inp_data_size;
     return (MAIN_TYPE)0;
   }
 
@@ -493,7 +468,6 @@ Device EVM
     USEGAS(STEPGAS6);
     sp = sp + 1;
     stack_arr[sp] = ext_code_size;
-    // return ext_code_size;
     return (MAIN_TYPE)0;
   }
 
@@ -516,7 +490,6 @@ Device EVM
    EVM_ADDR_TYPE ca = cur_addr;
    sp = sp + 1;
    stack_arr[sp] = (MAIN_TYPE)ca;
-   // return (MAIN_TYPE)ca;
    return (MAIN_TYPE)0;
   }
 
@@ -535,7 +508,6 @@ Device EVM
    EVM_ADDR_TYPE oa = origin_addr;
    sp = sp + 1;
    stack_arr[sp] = (MAIN_TYPE)oa;
-   // return (MAIN_TYPE)oa;
    return (MAIN_TYPE)0;
   }
 
@@ -545,7 +517,6 @@ Device EVM
    USEGAS(STEPGAS1);
    sp = sp + 1;
    stack_arr[sp] = (MAIN_TYPE)ca;
-   // return (MAIN_TYPE)ca;
    return (MAIN_TYPE)0;
   }
 
@@ -555,7 +526,6 @@ Device EVM
    int32 addr_val = (int32)(stack_arr[sp]);
    MAIN_TYPE inp_data = input_data[addr_val];
    stack_arr[sp] = inp_data;
-   // return inp_data;
    return (MAIN_TYPE)0;
   }
 
@@ -564,7 +534,6 @@ Device EVM
    USEGAS(STEPGAS1);
    sp = sp + 1;
    stack_arr[sp] = GetElfSize();
-   // return GetElfSize();
    return (MAIN_TYPE)0;
   }
 
@@ -574,7 +543,6 @@ Device EVM
      EVM_BALANCE_TYPE gp = gas_price;
      sp = sp + 1;
      stack_arr[sp] = (MAIN_TYPE)gp;
-     // return (MAIN_TYPE)gp;
      return (MAIN_TYPE)0;
    }
 
@@ -618,7 +586,6 @@ Device EVM
     USEGAS(STEPGAS1);
     sp = sp + 1;
     stack_arr[sp] = CoinBase;
-    // return CoinBase;
     return (MAIN_TYPE)0;
   }
 
@@ -627,7 +594,6 @@ Device EVM
     USEGAS(STEPGAS1);
     sp = sp + 1;
     stack_arr[sp] = TimeStamp;
-    // return TimeStamp;
     return (MAIN_TYPE)0;
   }
 
@@ -636,7 +602,6 @@ Device EVM
     USEGAS(STEPGAS1);
     sp = sp + 1;
     stack_arr[sp] = Number;
-    // return Number;
     return (MAIN_TYPE)0;
   }
 
@@ -645,7 +610,6 @@ Device EVM
     USEGAS(STEPGAS1);
     sp = sp + 1;
     stack_arr[sp] = Difficulty;
-    // return Difficulty;
     return (MAIN_TYPE)0;
   }
 
@@ -654,7 +618,6 @@ Device EVM
     USEGAS(STEPGAS1);
     sp = sp + 1;
     stack_arr[sp] = GasLimit;
-    // return GasLimit;
     return (MAIN_TYPE)0;
   }
 
@@ -679,7 +642,6 @@ Device EVM
     // TODO
     sp = sp - 2;
     stack_arr[sp] = account;
-    // return account;
     return (MAIN_TYPE)0;
   }
    
@@ -697,7 +659,6 @@ Device EVM
     // TODO
     sp = sp - 6;
     stack_arr[sp] = call_res;
-    // return call_res;
     return (MAIN_TYPE)0;
   }
    
@@ -715,7 +676,6 @@ Device EVM
     // TODO
     sp = sp - 6;
     stack_arr[sp] = call_res;
-    // return call_res;
     return (MAIN_TYPE)0;
   }
    
@@ -741,7 +701,6 @@ Device EVM
     // TODO
     sp = sp - 5;
     stack_arr[sp] = call_res;
-    // return call_res;
     return (MAIN_TYPE)0;
   }
  
@@ -765,7 +724,6 @@ Device EVM
     }
     sp = sp + 1;
     stack_arr[sp] = a;
-    // Push(a);
     return 0;
   }
 
@@ -796,7 +754,6 @@ Device EVM
     }
     sp = sp + 1;
     stack_arr[sp] = data_val;
-    // Push(data_val);
     return 0;
   }
 
@@ -825,10 +782,7 @@ Device EVM
   {
     INST "$syscall",(8,int4 syscall = SystemOps,int4 0xf)
     {
-      // MAIN_TYPE res;
       syscall;
-      // if(idx(syscall) != 0x3) // except return
-      //  Push(res);
     }
 
     INST "STATICCALL",(8,int8 0xfa)
@@ -871,10 +825,7 @@ Device EVM
 
     INST "$opcode",(8,int4 opcode = AccountsData,int4 0x3)
     {
-      // MAIN_TYPE res = opcode;
       opcode;
-      // if( (idx(opcode)!=0x7)  && (idx(opcode)!=9) && (idx(opcode)!=0xc))
-      //   Push(res);
     }
 
     INST "PUSH$count", (8,int5 count,int3 0b011)
@@ -892,7 +843,6 @@ Device EVM
       a = stack_arr[sp - (count + 1)];
       sp = sp + 1;
       stack_arr[sp] = a;
-      // Push(a);
     }
 
     INST "SWAP$count", (8,int4 count,int4 0x9)
@@ -951,7 +901,6 @@ Device EVM
         case 3: // MSTORE8
           USEGAS(STEPGAS2);
           data_val = stack_arr[sp];
-          // data_val = Pop();
           sp = sp - 1;
           data_bus[addr_val] = (int8)(data_val);
           if (addr_val > mem_size)
@@ -960,19 +909,15 @@ Device EVM
 
         case 4: // SLOAD
           USEGAS(SLOADGAS);
-          // data_val = storage_bus[addr_val];
           data_val = LoadFromStorage(addr_val);
           sp = sp + 1;
           stack_arr[sp] = data_val;
-          // Push(data_val);
           break;
 
         case 5: // SSTORE
           USEGAS(STEPGAS0);
-          // data_val = Pop();
           data_val = stack_arr[sp];
           sp = sp - 1;
-          // storage_bus[addr_val] = data_val;
           SaveToStorage(addr_val, data_val);
           break;
 
@@ -997,7 +942,6 @@ Device EVM
          data_val = (MAIN_TYPE)pc;
          sp = sp + 1;
          stack_arr[sp] = data_val;
-         // Push(data_val);
          break;
 
         case 9: // MSIZE
@@ -1022,57 +966,23 @@ Device EVM
 
     INST "$opcode",(8,int4 opcode = ArithmOps,int4 0x0)
     {
-      // MAIN_TYPE a;
-      // MAIN_TYPE b;
-      // MAIN_TYPE c;
-      // MAIN_TYPE res;
-      // int8 is_c_opcode;
-      // get args;
-      // a = Pop();
-      // b = Pop();
-      // is_c_opcode = ((idx(opcode)== 8) || (idx(opcode) == 9));
-      // c = (is_c_opcode != 0) ? Pop() : 0;
-      // compute
-      // res = opcode(a,b,c);
       opcode;
-      // push to stack
-      // Push(res);
     }
 
     INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
     {
-      // MAIN_TYPE a;
-      // MAIN_TYPE b;
-      // MAIN_TYPE c;
-      // MAIN_TYPE res;
-      // int8 is_b_opcode;
-      // get args;
-      // a = Pop();
-      
-      // is_b_opcode = ((idx(opcode) == 5) || (idx(opcode) == 9));
-      // b = (is_b_opcode!=0) ? 0: Pop();
-      // compute
-      //res = opcode(a,b);
       opcode;
-      // push to stack
-      // Push(res);
     }
 
     INST "SHA3", (8,int8 0x20)
     {
       USEGAS(SHA3GAS);
-       // compute Keccak-256 hash
-      // MAIN_TYPE a;
-      // MAIN_TYPE b;
+      // compute Keccak-256 hash
       MAIN_TYPE res = 0xdeadbeef;
-      // a = Pop();
-      // b = Pop();
-      // res = KeccakAlg((int32)a,(int32)b);
       // TODO Keccak does not support 64-bit hash. Add 256-bit support, delete argument passing and uncomment
       // KeccakAlg((int32)a,(int32)b);
-      sp = sp - 1;
+      // sp = sp - 1;
       stack_arr[sp] = res;
-      // Push(res);
     }
 
   }// end of ISET
