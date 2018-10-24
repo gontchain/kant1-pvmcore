@@ -57,16 +57,29 @@ uint32_t is_branch_delayed_first = 1;
 #include "translate.h"
 uint8_t     insn;
 
+inline unsigned int get_ppdl_shift_pc(uint8_t instraction) {
+    /*
+     * PUSH$count
+     */
+    if (( instraction & 0xe0 ) == 0x60) {
+		uint8_t count = extract32((uint32_t)instraction, 0, 5);
+        return count + 0x2;
+    }
+    return 0x1;
+}
+
 static void disas_ppdl_insn(DisasContext *dc, PPDLCPU *cpu)
 {
+    unsigned int shift;
     CPUPPDLState *env = &cpu->env;
     insn = cpu_ldsb_code(env, dc->pc);
+    shift = get_ppdl_shift_pc(insn);
     if (use_tracer || use_regtracer || use_ctracer)
         gen_helper_tracer(cpu_env, tcg_const_local_i32(1));
-    dc->npc = dc->pc + 1;
+    dc->npc = dc->pc + shift;
     dc->pc = dc->npc; // инкрементируем счетчик pc
     INFO_PRINT("genBlock_Main: insn = %" PRIx8 "\n", insn); // DBG output
-    genBlock_Main(env, insn, dc->pc - 1);
+    genBlock_Main(env, insn, dc->pc - shift);
 #if defined(CONFIG_DEBUG)
     gen_helper_print(cpu_env);
 #endif
@@ -187,8 +200,6 @@ static inline void gen_intermediate_code_internal(PPDLCPU *cpu,
         }
         if (changed_pc && !singlestep) {
             changed_pc = 0;
-            dc->is_jmp = DISAS_NEXT;
-            break;
         } else if (!singlestep)
                 tcg_gen_addi_tl(cpu_pc, cpu_pc, 0x1);
     } while (!dc->is_jmp

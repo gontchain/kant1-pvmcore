@@ -12,8 +12,6 @@
 #   define INFO_PRINT(...)
 #endif
 
-extern int changed_pc;
-
 void genBlock_Main(CPUPPDLState *env, uint64_t insn, target_ulong pc) {
 	/*
 	 * $syscall
