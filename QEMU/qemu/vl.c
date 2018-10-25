@@ -4028,7 +4028,7 @@ int vl_main(int ignore_sigint, int no_sdl, int no_gui_timer,
                 only_floating = 1;
                 break;
             case QEMU_OPTION_gas:
-                gas = atol(optarg);
+                gas = (uint64_t)strtol(optarg, NULL, 0);
                 if (gas == 0x0)
                     gas = GAS_DEFAULT_VALUE;
                 break;
