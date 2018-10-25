@@ -33,11 +33,18 @@ cd $CURDIR/emulator
 make clean && make
 checkSuccess cemu 3
 
+# build qemu evm
+echo -e "\n-----------------------\nBuilding QEMU EVM\n-----------------------\n"
+cd $CURDIR/QEMU/qemu
+./configure-evm
+make clean && make
+checkSuccess qemu 4
+
 echo -e "\n-----------------------\nBuilding Test System....\n-----------------------\n"
 # build tests
 cd $CURDIR/tests/asm
 make clean && make
-checkSuccess tests 4
+checkSuccess tests 5
 
 cd $CURDIR
 echo -e "\n-----------------------\nBuild Done.\n"
