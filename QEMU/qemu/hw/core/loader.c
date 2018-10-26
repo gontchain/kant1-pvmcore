@@ -59,7 +59,6 @@ bool rom_file_has_mr = true;
 
 static int roms_loaded;
 extern uint64_t end_pc;
-uint8_t data_bus[1024];
 
 /* return the size or -1 if error */
 int get_image_size(const char *filename)
@@ -691,7 +690,6 @@ int rom_add_file(const char *file, const char *fw_dir,
                 tmp_data[index] = origin_data[k] - 0x61 + 0xA;
         if (k % 2) {
             rom->data[i] = (tmp_data[0]<<4) + tmp_data[1];
-            data_bus[i] = rom->data[i];
             i++;
         }
     }

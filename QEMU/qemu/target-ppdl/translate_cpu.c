@@ -6,7 +6,6 @@
 extern uint64_t elf_entry;
 #ifdef EVM
 extern uint64_t gas;
-extern uint64_t data_bus[1024];
 #endif
 #endif
 
@@ -20,9 +19,6 @@ void RESET(CPUPPDLState *env) {
 	#ifdef EVM
 	env->gas_available = gas;
 	env->GasLimit = gas;
-	for (i = 0; i < 1024; i++) {
-		env->data_bus[i] = data_bus[i];
-	}
 	#endif
 	env->sp = (0x0-0x1);
 	env->log_ptr = 0x0;
@@ -39,9 +35,6 @@ void OPER(CPUPPDLState *env) {
 	#ifdef EVM
 	env->gas_available = gas;
 	env->GasLimit = gas;
-	for (i = 0; i < 1024; i++) {
-		env->data_bus[i] = data_bus[i];
-	}
 	#endif
 	env->sp = (0x0-0x1);
 	env->log_ptr = 0x0;
