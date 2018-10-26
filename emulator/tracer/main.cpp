@@ -296,7 +296,7 @@ void InitRegs()
 			int t = cfg->regs[i].type;
 			Dev->GetReg(i, 0, (char*)&reg);
 			//fill register value
-			if (t >= 8)//in case of 64 bit register
+			if (t == 8)//in case of 64 bit register
 			{       
 				RegVal[i] = new int[2];
 				RegVal[i][0] = reg[0];
@@ -456,7 +456,7 @@ int CheckRegs(char* regnames)
 				int t = cfg->regs[i].type;
         reg[0] = 0;
         Device->GetReg(i, 0, (char*)&reg);		  
-				if (t >= 8){//64 bit
+				if (t == 8){//64 bit
 					if ((RegVal[i][0] != reg[0]) || RegVal[i][1] != reg[1]){
 						RegVal[i][0] = reg[0];
 						RegVal[i][1] = reg[1];
