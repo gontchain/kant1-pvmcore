@@ -295,7 +295,7 @@ void InitRegs()
 			int t = cfg->regs[i].type;
 			Dev->GetReg(i, 0, (char*)&reg);
 			//fill register value
-			if (t == 8)//in case of 64 bit register
+			if (t >= 8)//in case of 64 bit register
 			{       
 				RegVal[i] = new int[2];
 				RegVal[i][0] = reg[0];
