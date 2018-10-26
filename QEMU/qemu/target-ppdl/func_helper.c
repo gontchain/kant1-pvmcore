@@ -373,7 +373,7 @@ uint64_t HELPER(GetModuleS)(CPUPPDLState *env) {
 }
 
 uint64_t HELPER(GetGasPrice)(CPUPPDLState *env) {
-	uint32_t gp;
+	uint64_t gp;
 	gp = env->gas_price;
 	if ((env->gas_available < 0x2)) {
 		env->gas_available = 0xFFFFFFFF;

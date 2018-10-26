@@ -292,7 +292,7 @@ void DevDisasm(CPUArchState* env, char* disasm_buf,uint32_t aCurPc)
   }
   else
   {
-    sprintf(disasm_buf, "%08X %08X %08X\t%s\t", aCurPc, HI_WRD(opcode), LO_WRD(opcode), disasm_code);
+    sprintf(disasm_buf, "%08X %08X    %-09s", aCurPc, LO_WRD(opcode), disasm_code);
   }
 }
 
