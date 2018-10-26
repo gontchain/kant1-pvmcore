@@ -9,7 +9,7 @@ const char *reg_5 = "ext_code_size";
 const char *reg_6 = "inp_data_size";
 const char *reg_7 = "log_ptr";
 const char *var_8 = "sp";
-const char *var_9 = "gas_available";
+const char *var_9 = "gas_available$";
 const char *var_10 = "data_bus$";
 const char *var_11 = "stack_arr$";
 const char *var_12 = "CoinBase";
@@ -28,11 +28,7 @@ const tDRegister EVM_regs[17] = {
   {reg_6,8,0,0},
   {reg_7,4,0,0},
   {var_8,4,0},
-<<<<<<< HEAD
   {var_9,8,4},
-=======
-  {var_9,8,0},
->>>>>>> 371f82f8... init data_bus at reset
   {var_10,1,1024},
   {var_11,8,2048},
   {var_12,8,0},

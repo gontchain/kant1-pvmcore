@@ -52,6 +52,12 @@ void DoArithm(TDevice* dev, uint32 opcode) {
   int32 sp = ((EVM*)dev)->sp;
   uint64 *arg1, *arg2, *arg3, *ret;
   VBigDig VBIGNUM(a, 256), VBIGNUM(b, 256), VBIGNUM(c, 256), VBIGNUM(tmp, 256);
+  // printf("opcode: %x\n", opcode);
+  // printf("stack: \n");
+  // for (i = sp; i >=0; i--) {
+  //   printf("%d: %llx\n", i, ((EVM*)dev)->stack_arr[i]);
+  // }
+  // printf("\n");
   switch (opcode) {
     case 1 ... 7:
     case 10:
@@ -60,6 +66,10 @@ void DoArithm(TDevice* dev, uint32 opcode) {
       arg2 = &(((EVM*)dev)->stack_arr[sp-7]);
       v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
       v_bignum_set_bignum(b, v_bignum_reg_to_bignum(arg2, true));
+      printf("a: ");
+      v_bignum_print_hex_lf(a);
+      printf("b: ");
+      v_bignum_print_hex_lf(b);
       sp = sp - (2*4 - 1);
       break;
     case 8:
@@ -70,6 +80,12 @@ void DoArithm(TDevice* dev, uint32 opcode) {
       v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
       v_bignum_set_bignum(b, v_bignum_reg_to_bignum(arg2, true));
       v_bignum_set_bignum(c, v_bignum_reg_to_bignum(arg3, true));
+      // printf("a: ");
+      // v_bignum_print_hex_lf(a);
+      // printf("b: ");
+      // v_bignum_print_hex_lf(b);
+      // printf("c: ");
+      // v_bignum_print_hex_lf(c);
       sp = sp - (3*4 - 1);
       break;
   }
@@ -125,6 +141,8 @@ void DoArithm(TDevice* dev, uint32 opcode) {
         break;
     }
     v_bignum_bignum_to_reg(ret, a);
+    printf("r: ");
+    v_bignum_print_hex_lf(a);
 }
 
 void DoCompare(TDevice* dev, uint32 opcode) {
@@ -132,11 +150,19 @@ void DoCompare(TDevice* dev, uint32 opcode) {
   int32 sp = ((EVM*)dev)->sp;
   uint64 *arg1, *arg2, *arg3, *ret;
   VBigDig VBIGNUM(a, 256), VBIGNUM(b, 256), VBIGNUM(tmp, 256);
+  // printf("opcode: %x\n", opcode);
+  // printf("stack: \n");
+  // for (i = sp; i >=0; i--) {
+  //   printf("%d: %llx\n", i, ((EVM*)dev)->stack_arr[i]);
+  // }
+  // printf("\n");
   switch (opcode) {
     case 5:
     case 9:
       arg1 = &(((EVM*)dev)->stack_arr[sp-3]);
       v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
+      printf("a: ");
+      v_bignum_print_hex_lf(a);
       sp = sp - (1*4 - 1);
       break;
     case 0 ... 4:
@@ -146,6 +172,10 @@ void DoCompare(TDevice* dev, uint32 opcode) {
       arg2 = &(((EVM*)dev)->stack_arr[sp-7]);
       v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
       v_bignum_set_bignum(b, v_bignum_reg_to_bignum(arg2, true));
+      printf("a: ");
+      v_bignum_print_hex_lf(a);
+      printf("b: ");
+      v_bignum_print_hex_lf(b);
       sp = sp - (2*4 - 1);
       break;
   }
@@ -205,6 +235,8 @@ void DoCompare(TDevice* dev, uint32 opcode) {
         break;
     }
     v_bignum_bignum_to_reg(ret, a);
+    printf("r: ");
+    v_bignum_print_hex_lf(a);
 }
 
 // KECCAK algorithm
@@ -350,10 +382,29 @@ LIB_EXPORT void CheckPostProgram()
       printf("\ngas limit error\n");
       exit(-1);
     }
+#if 1
     char value_string[67] = "0x", part_string[17];
     int32 offs = (int32)new_evm->stack_arr[new_evm->sp-3];
     int32 size = (int32)new_evm->stack_arr[new_evm->sp-7];
-    new_evm->sp -= 8;
+    printf("offs %x size %x\n", offs, size);
+    new_evm->sp -= 7;
+    // for (int i = 3; i >= 0; i--) {
+    //   sprintf(part_string, "%016llx", new_evm->stack_arr[new_evm->sp--]);
+    //   strcat(value_string, part_string);
+    // }
+    // printf("offs: %s\n", value_string);
+    // offs = new uint256(value_string);
+    // sprintf(value_string, "0x");
+    // for (int i = 3; i >= 0; i--) {
+    //   sprintf(part_string, "%016llx", new_evm->stack_arr[new_evm->sp--]);
+    //   strcat(value_string, part_string);
+    // }
+    // printf("size: %s\n", value_string);
+    // offs = new uint256(value_string);
+#else
+    int32 offs = (int32)new_evm->Pop().to_int();
+    int32 size = (int32)new_evm->Pop().to_int();
+#endif
     printf("0x");
     for (int i = 0; i < size; i++)
     {
