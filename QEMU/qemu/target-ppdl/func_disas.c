@@ -278,7 +278,7 @@ int EVM_GetInstructNum(uint64 wrd){ return EVM_Main_GetInstNum((uint8)wrd);}
 
 void DevDisasm(CPUArchState* env, char* disasm_buf,uint32_t aCurPc)
 {
-  uint64_t opcode;
+  uint8_t opcode;
   char* disasm_code;
   int size = 0;
 
