@@ -27,15 +27,15 @@ const tDRegister EVM_regs[17] = {
   {reg_5,8,0,0},
   {reg_6,8,0,0},
   {reg_7,4,0,0},
-  {var_8,9,0,0},
-  {var_9,10,0,0},
-  {var_10,1,1024,0},
-  {var_11,8,2048,0},
-  {var_12,13,0,0},
-  {var_13,14,0,0},
-  {var_14,15,0,0},
-  {var_15,16,0,0},
-  {var_16,17,0,0},
+  {var_8,4,0},
+  {var_9,8,0},
+  {var_10,1,1024},
+  {var_11,8,2048},
+  {var_12,8,0},
+  {var_13,8,0},
+  {var_14,8,0},
+  {var_15,8,0},
+  {var_16,8,0},
 };
 
 
@@ -2916,6 +2916,10 @@ void EVM::ResetDevice(){
   pc = 0;
   sp = (0 - 1);
   log_ptr = 0;
+ for(counter = 0;counter < 1024;counter = (counter + 1)){
+  ;
+  data_bus[counter] = 0;
+  }
   MainPipe.Reset();
   pc.ResetMutable();
   prog_bus->ResetMemMutable();

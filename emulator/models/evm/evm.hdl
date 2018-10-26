@@ -1076,11 +1076,16 @@ Device EVM
 
   }// end of ISET
 
+   Var int32 counter;
    RESET
    {
      pc = 0;
      sp = 0-1;
      log_ptr = 0;
+     for(counter = 0 ; counter< DATA_SIZE;counter = counter + 1)
+     {
+       data_bus[counter] = 0;
+     }
    }
 
   Operate
