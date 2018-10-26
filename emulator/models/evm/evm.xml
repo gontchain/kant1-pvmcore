@@ -22,7 +22,7 @@
         <gas_available SIZE="64" ASM="gas_available" ARRSIZE="4" />
         <mem_size SIZE="32" />
         <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
-        <stack_arr SIZE="64" ASM="stack[$]" ARRSIZE="2048" />
+        <stack_arr SIZE="64" ASM="stack_arr$" ARRSIZE="2048" />
         <CoinBase SIZE="64" ASM="CoinBase" />
         <TimeStamp SIZE="64" ASM="TimeStamp" />
         <Number SIZE="64" ASM="Number" />

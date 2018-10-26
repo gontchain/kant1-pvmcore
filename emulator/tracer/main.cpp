@@ -732,9 +732,9 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	 Device->SetBreakPoint(elf_res->mSize);
 #endif
 	printf("\n#### TRACE ####\n\n\
-			\r----------------------------------------\n\
-		    \rticks |  address  |  opcode  | assembler \n\
-		    \r----------------------------------------\n");
+			\r-------------------------------------\n\
+		    \rticks | address | opcode | assembler \n\
+		    \r-------------------------------------\n");
 	cur_pc = pc_count;
 	// simulation cycle
 	while(1)
@@ -762,7 +762,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		if(cur_tics > (prev_tics + 1))
 			printf("      +%d wait\n",cur_tics - prev_tics - 1);
 		PRINT_LOG("print line\n")
-		printf("%05d   %s", cur_tics, disasm);
+		printf("%05d %s", cur_tics, disasm);
 		fflush(stdout);
 		// execute StepInfo, check 
 		PRINT_LOG("start \n")
@@ -779,7 +779,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		
 			PRINT_LOG("check regs\n")
         printf("\n");
-			if (CheckRegs((char*)upregs)) printf("%s\n", upregs); else printf("\n");
+			if (CheckRegs((char*)upregs)) printf("%s", upregs); else printf("\n");
 			upregs[0] = 0; 
 
 			// PRINT_LOG("check fifos\n")
@@ -790,7 +790,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		{
 			////check registers for update
       ErrorHeader* aHr = (ErrorHeader*)aHrv;
-      if (CheckRegs((char*)upregs)) printf("%s\n", upregs); else printf("\n");
+      if (CheckRegs((char*)upregs)) printf("%s", upregs); else printf("\n");
 			upregs[0] = 0; //CheckFifos((char*)upregs);printf("%s",upregs);
 			
       if (aHr->m_MsgType == MSGTYPE_EXIT)
