@@ -279,6 +279,7 @@ void InitRegs()
 			{
 				//in case of 32 bit registers
 				RegVal[i] = new int[cfg->regs[i].arrsize];
+        reg[0] = 0;
 				for( int j = 0; j < cfg->regs[i].arrsize; j++ ){
 					Dev->GetReg(i, j, (char*)&reg);
 					//fill register value from register array
@@ -344,6 +345,7 @@ void InitPrintRegs()
 				}
 				else
 				{//32 bit
+
 					for( int j = 0; j < arrsize; j++ ){
 						Device->GetReg(i, j, (char*)&reg);
 						printf("\t%s%d = %08x\n", RegNames[i], j, reg[0]);
@@ -437,7 +439,8 @@ int CheckRegs(char* regnames)
 				else
 				{//32 bit
 					for( int j = 0; j < arrsize; j++ ){
-						Device->GetReg(i, j, (char*)&reg);
+            reg[0] = 0;
+            Device->GetReg(i, j, (char*)&reg);
 						if (RegVal[i][j] != reg[0]){
 							RegVal[i][j] = reg[0];	
 							sprintf(tmpstr,"%s%d = %08x\n", RegNames[i], j, reg[0]);
@@ -451,7 +454,8 @@ int CheckRegs(char* regnames)
 			else if(strcmp(cfg->regs[i].name,WARN_FLAGS))
 			{
 				int t = cfg->regs[i].type;
-				Device->GetReg(i, 0, (char*)&reg);		  
+        reg[0] = 0;
+        Device->GetReg(i, 0, (char*)&reg);		  
 				if (t >= 8){//64 bit
 					if ((RegVal[i][0] != reg[0]) || RegVal[i][1] != reg[1]){
 						RegVal[i][0] = reg[0];
@@ -689,7 +693,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	int out_flag = 0;
 	unsigned long st, end;
 	int ElfFileNumber = -1;
-	char upregs[2048];//здесь имена регистров изменивших значение 
+	char upregs[128*1024];//здесь имена регистров изменивших значение 
 	tDisAsmArea* elf_res;
 	uint32 cur_pc;
   
