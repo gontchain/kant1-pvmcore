@@ -59,6 +59,9 @@ Device EVM
   extern MAIN_TYPE LoadFromStorage(int32 offs);
   extern void      UseGas(MAIN_TYPE value);
 
+  extern void      DoArithm(int32 opcode);
+  extern void      DoCompare(int32 opcode);
+
   MAIN_TYPE StopExec()
   {
     dbg_msg "@";
@@ -392,31 +395,16 @@ Device EVM
     "DIV","SDIV","MOD","SMOD",
     // 8
     "ADDMOD","MULMOD","EXP","SIGNEXTEND"
-  },
-  {
-    // 0
-    StopOp(), AddOp(), MulOp(), SubOp(),
-    // 4
-    DivOp(), DivOpS(), GetModule(), GetModuleS(),
-    // 8
-    GetModuleAdd(), GetModuleMul(), GetExp(), SignExtend()
   };
-    
-    
+
   ArgList MAIN_TYPE CompareLogOps(),
   {
     // 
     "LT","GT","SLT","SGT",
     "EQ","ISZERO","AND","OR",
     "XOR","NOT","BYTE"
-  },
-  {
-    LtOp(), GtOp(), LtOpS(), GtOpS(), 
-    EqOp(), IsZeroOp(), AndOp(), OrOp(), 
-    XorOp(), NotOp(), ByteFromWord()
-  };   
-    
-    
+  };
+
   ArgList MAIN_TYPE MemOps,
   {
     "POP", "MLOAD", "MSTORE", "MSTORE8",
@@ -682,8 +670,6 @@ Device EVM
   MAIN_TYPE Return()
   {
     USEGAS(STEPGAS0);
-    // MAIN_TYPE a = Pop();
-    // MAIN_TYPE b = Pop();
     StopExec();
     return (MAIN_TYPE)0;
   }
@@ -715,15 +701,33 @@ Device EVM
   Func PushInst(int32 cnt)
   {
     int32 i;
+    int32 j;
     MAIN_TYPE a = 0;
     MAIN_TYPE tmp;
-    for(i = 0; i < cnt; i=i+1)
-    {
-      tmp = prog_bus[pc + i + 1] & 0xFF;
-      a = (a<< 8) | tmp;
+    for(j = 0; j < (cnt/8); j=j+1) {
+      a = 0;
+      for(i = 0; i < 8; i=i+1)
+      {
+        tmp = prog_bus[pc + i + 1] & 0xFF;
+        a = (a<< 8) | tmp;
+      }
+      sp = sp + 1;
+      stack_arr[sp] = a;
     }
-    sp = sp + 1;
-    stack_arr[sp] = a;
+    if ((cnt&7) != 0) {
+      a = 0;
+      for(i = 0; i < (cnt&7); i=i+1)
+      {
+        tmp = prog_bus[pc + i + 1] & 0xFF;
+        a = (a<< 8) | tmp;
+      }
+      sp = sp + 1;
+      stack_arr[sp] = a;
+    }
+    for(j=j+1; j < 4; j=j+1) {
+      sp = sp + 1;
+      stack_arr[sp] = (MAIN_TYPE)0;
+    }
     return 0;
   }
 
@@ -741,37 +745,49 @@ Device EVM
   Func MloadInst(int32 addr_val)
   {
     int32 i;
-    MAIN_TYPE data_val;
+    int32 j;
+    MAIN_TYPE data_val[4];
     int32 init_shift;
     MAIN_TYPE data_tmp;
-    data_val = 0;
-    init_shift = 0; // most significant byte is first
-    for(i = 0; i < 32; i=i+1)
-    {
-      data_val = (data_val << init_shift) | ((MAIN_TYPE)data_bus[addr_val]);
-      addr_val = addr_val + 1;
-      init_shift = init_shift + 8;
+    for(j = 3; j >= 0; j=j-1) {
+      // data_val[j] = 0;
+      init_shift = 0; // most significant byte is first
+      for(i = 0; i < 8; i=i+1)
+      {
+        // data_val[j] = (data_val[j] << init_shift) | ((MAIN_TYPE)data_bus[addr_val]);
+        addr_val = addr_val + 1;
+        init_shift = init_shift + 8;
+      }
     }
-    sp = sp + 1;
-    stack_arr[sp] = data_val;
+    // stack_arr[sp] = data_val[0];
+    // stack_arr[sp+1] = data_val[1];
+    // stack_arr[sp+2] = data_val[2];
+    // stack_arr[sp+3] = data_val[3];
+    sp = sp + 3;
     return 0;
   }
 
   Func MStoreInst(int32 addr_val)
   {
     int32 i;
-    MAIN_TYPE data_val;
+    int32 j;
+    MAIN_TYPE data_val[4];
     int32 init_shift;
     MAIN_TYPE data_tmp;
-    data_val = stack_arr[sp];
-    sp = sp - 1;
-    init_shift = 31 * 8; // most significant byte is first
-    for(i = 0; i < 32; i=i+1)
-    {
-      data_tmp = (data_val >> init_shift);
-      data_bus[addr_val] = (int8)(data_tmp);
-      addr_val = addr_val + 1;
-      init_shift = init_shift - 8;
+    // data_val[3] = stack_arr[sp];
+    // data_val[2] = stack_arr[sp-1];
+    // data_val[1] = stack_arr[sp-2];
+    // data_val[0] = stack_arr[sp-3];
+    sp = sp - 3;
+    for(j = 0; j < 4; j=j+1) {
+      init_shift = 7 * 8; // most significant byte is first
+      for(i = 0; i < 8; i=i+1)
+      {
+        // data_tmp = (data_val[j] >> init_shift);
+        data_bus[addr_val] = (int8)(data_tmp);
+        addr_val = addr_val + 1;
+        init_shift = init_shift - 8;
+      }
     }
     if (addr_val > mem_size)
       mem_size = addr_val;
@@ -879,7 +895,7 @@ Device EVM
 
       if(opcode < 8) {
         addr_val = (int32)stack_arr[sp];
-        sp = sp - 1;
+        sp = sp - 3;
       }
       switch((int32)opcode)
       {
@@ -966,12 +982,12 @@ Device EVM
 
     INST "$opcode",(8,int4 opcode = ArithmOps,int4 0x0)
     {
-      opcode;
+      DoArithm((int32)opcode);
     }
 
     INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
     {
-      opcode;
+      DoCompare((int32)opcode);
     }
 
     INST "SHA3", (8,int8 0x20)

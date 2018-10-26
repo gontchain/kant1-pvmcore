@@ -27,15 +27,15 @@ const tDRegister EVM_regs[17] = {
   {reg_5,8,0,0},
   {reg_6,8,0,0},
   {reg_7,4,0,0},
-  {var_8,9,0,0},
-  {var_9,8,4,0},
-  {var_10,1,1024,0},
-  {var_11,8,2048,0},
-  {var_12,13,0,0},
-  {var_13,14,0,0},
-  {var_14,15,0,0},
-  {var_15,16,0,0},
-  {var_16,17,0,0},
+  {var_8,4,0},
+  {var_9,8,4},
+  {var_10,1,1024},
+  {var_11,8,2048},
+  {var_12,8,0},
+  {var_13,8,0},
+  {var_14,8,0},
+  {var_15,8,0},
+  {var_16,8,0},
 };
 
 
@@ -290,18 +290,18 @@ TCycleCount EVM::ArithmOps_GetLock(int aPipeNum,int aIdx){
 }
 inline uint64 EVM::Get_ArithmOps(uint32 aIdx){
   switch (aIdx){
-    case 0: return StopOp(); break; // value of the element 0 of the list
-    case 1: return AddOp(); break; // value of the element 1 of the list
-    case 2: return MulOp(); break; // value of the element 2 of the list
-    case 3: return SubOp(); break; // value of the element 3 of the list
-    case 4: return DivOp(); break; // value of the element 4 of the list
-    case 5: return DivOpS(); break; // value of the element 5 of the list
-    case 6: return GetModule(); break; // value of the element 6 of the list
-    case 7: return GetModuleS(); break; // value of the element 7 of the list
-    case 8: return GetModuleAdd(); break; // value of the element 8 of the list
-    case 9: return GetModuleMul(); break; // value of the element 9 of the list
-    case 10: return GetExp(); break; // value of the element 10 of the list
-    case 11: return SignExtend(); break; // value of the element 11 of the list
+    case 0: return 0; break; // value of the element 0 of the list
+    case 1: return 1; break; // value of the element 1 of the list
+    case 2: return 2; break; // value of the element 2 of the list
+    case 3: return 3; break; // value of the element 3 of the list
+    case 4: return 4; break; // value of the element 4 of the list
+    case 5: return 5; break; // value of the element 5 of the list
+    case 6: return 6; break; // value of the element 6 of the list
+    case 7: return 7; break; // value of the element 7 of the list
+    case 8: return 8; break; // value of the element 8 of the list
+    case 9: return 9; break; // value of the element 9 of the list
+    case 10: return 10; break; // value of the element 10 of the list
+    case 11: return 11; break; // value of the element 11 of the list
     default: return aIdx; break;
   };
   return 0;
@@ -446,17 +446,17 @@ TCycleCount EVM::CompareLogOps_GetLock(int aPipeNum,int aIdx){
 }
 inline uint64 EVM::Get_CompareLogOps(uint32 aIdx){
   switch (aIdx){
-    case 0: return LtOp(); break; // value of the element 0 of the list
-    case 1: return GtOp(); break; // value of the element 1 of the list
-    case 2: return LtOpS(); break; // value of the element 2 of the list
-    case 3: return GtOpS(); break; // value of the element 3 of the list
-    case 4: return EqOp(); break; // value of the element 4 of the list
-    case 5: return IsZeroOp(); break; // value of the element 5 of the list
-    case 6: return AndOp(); break; // value of the element 6 of the list
-    case 7: return OrOp(); break; // value of the element 7 of the list
-    case 8: return XorOp(); break; // value of the element 8 of the list
-    case 9: return NotOp(); break; // value of the element 9 of the list
-    case 10: return ByteFromWord(); break; // value of the element 10 of the list
+    case 0: return 0; break; // value of the element 0 of the list
+    case 1: return 1; break; // value of the element 1 of the list
+    case 2: return 2; break; // value of the element 2 of the list
+    case 3: return 3; break; // value of the element 3 of the list
+    case 4: return 4; break; // value of the element 4 of the list
+    case 5: return 5; break; // value of the element 5 of the list
+    case 6: return 6; break; // value of the element 6 of the list
+    case 7: return 7; break; // value of the element 7 of the list
+    case 8: return 8; break; // value of the element 8 of the list
+    case 9: return 9; break; // value of the element 9 of the list
+    case 10: return 10; break; // value of the element 10 of the list
     default: return aIdx; break;
   };
   return 0;
@@ -1876,16 +1876,38 @@ inline uint64 EVM::DelegateCall()
 inline uint64 EVM::PushInst(uint32 cnt)
 {
   uint32 i ;
+  uint32 j ;
   uint64 a  = 0;
   uint64 tmp ;
   ;
- for( i  = 0; i  < SARG(cnt); i  = ( i  + 1)){
+ for( j  = 0; j  < (SARG(cnt) / 8); j  = ( j  + 1)){
+  ;
+   a  = 0;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
   ;
    tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
    a  = (pd_lsh( a ,8) |  tmp );
   }
   sp = (sp + 1);
   stack_arr[sp] =  a ;
+  }
+  if((SARG(cnt) & 7) != 0)
+  {
+  ;
+   a  = 0;
+ for( i  = 0; i  < (SARG(cnt) & 7); i  = ( i  + 1)){
+  ;
+   tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
+   a  = (pd_lsh( a ,8) |  tmp );
+  }
+  sp = (sp + 1);
+  stack_arr[sp] =  a ;
+  }
+ for( j  = ( j  + 1); j  < 4; j  = ( j  + 1)){
+  ;
+  sp = (sp + 1);
+  stack_arr[sp] =  (uint64)(0);
+  }
     return 0;
   return 0;
 };
@@ -1907,20 +1929,21 @@ inline uint64 EVM::LogInst(uint32 count,uint32 log_ptr)
 inline uint64 EVM::MloadInst(uint32 addr_val)
 {
   uint32 i ;
-  uint64 data_val ;
+  uint32 j ;
+  uint64 data_val[119] ;
   uint32 init_shift ;
   uint64 data_tmp ;
   ;
-   data_val  = 0;
-   init_shift  = 0;
- for( i  = 0; i  < 32; i  = ( i  + 1)){
+ for( j  = 3; j  >= 0; j  = ( j  - 1)){
   ;
-   data_val  = (pd_lsh( data_val , init_shift ) |  (uint64)(data_bus[SARG(addr_val)]));
+   init_shift  = 0;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
   SARG(addr_val) = (SARG(addr_val) + 1);
    init_shift  = ( init_shift  + 8);
   }
-  sp = (sp + 1);
-  stack_arr[sp] =  data_val ;
+  }
+  sp = (sp + 3);
     return 0;
   return 0;
 };
@@ -1929,19 +1952,21 @@ inline uint64 EVM::MloadInst(uint32 addr_val)
 inline uint64 EVM::MStoreInst(uint32 addr_val)
 {
   uint32 i ;
-  uint64 data_val ;
+  uint32 j ;
+  uint64 data_val[119] ;
   uint32 init_shift ;
   uint64 data_tmp ;
   ;
-   data_val  = stack_arr[sp];
-  sp = (sp - 1);
-   init_shift  = (31 * 8);
- for( i  = 0; i  < 32; i  = ( i  + 1)){
+  sp = (sp - 3);
+ for( j  = 0; j  < 4; j  = ( j  + 1)){
   ;
-   data_tmp  = pd_rsh( data_val , init_shift );
+   init_shift  = (7 * 8);
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
   data_bus[SARG(addr_val)] =  (uint8)( data_tmp );
   SARG(addr_val) = (SARG(addr_val) + 1);
    init_shift  = ( init_shift  - 8);
+  }
   }
   if(SARG(addr_val) > mem_size)
   {
@@ -2134,7 +2159,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   ;
    addr_val  =  (uint32)(stack_arr[sp]);
-  sp = (sp - 1);
+  sp = (sp - 3);
   }
   switch( (uint32)(Get_MemOps(SARG(opcode))))
   {
@@ -2232,7 +2257,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst12.aidx
       {
   ;
-  Get_ArithmOps(SARG(opcode));
+ DoArithm((TDevice*)this, (uint32)(Get_ArithmOps(SARG(opcode))));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2245,7 +2270,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst13.aidx
       {
   ;
-  Get_CompareLogOps(SARG(opcode));
+ DoCompare((TDevice*)this, (uint32)(Get_CompareLogOps(SARG(opcode))));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)

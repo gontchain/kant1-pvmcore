@@ -60,6 +60,18 @@
             </ARGUMENTS>
             <CODE />
         </UseGas>
+        <DoArithm RETSIZE="0">
+            <ARGUMENTS>
+                <opcode SIZE="32" />
+            </ARGUMENTS>
+            <CODE />
+        </DoArithm>
+        <DoCompare RETSIZE="0">
+            <ARGUMENTS>
+                <opcode SIZE="32" />
+            </ARGUMENTS>
+            <CODE />
+        </DoCompare>
         <StopExec RETSIZE="64">
             <CODE>
                 <PRINT_ERROR message="1" />
@@ -2638,6 +2650,7 @@
             </ARGUMENTS>
             <LOCALVARS>
                 <i SIZE="32" />
+                <j SIZE="32" />
                 <a SIZE="64">
                     <INITAL_EXP>
                         <IMM32 value="0" />
@@ -2649,66 +2662,224 @@
                 <FOR>
                     <FOR_START>
                         <OPERATOR name=" = ">
-                            <LVAR name="i" />
+                            <LVAR name="j" />
                             <IMM32 value="0" />
                         </OPERATOR>
                     </FOR_START>
                     <FOR_STOP_COND>
                         <OPERATOR name=" &lt; ">
-                            <LVAR name="i" />
-                            <ARG name="cnt" />
+                            <LVAR name="j" />
+                            <OPERATOR name="/">
+                                <ARG name="cnt" />
+                                <IMM32 value="8" />
+                            </OPERATOR>
                         </OPERATOR>
                     </FOR_STOP_COND>
                     <FOR_ITERATION>
                         <OPERATOR name=" = ">
-                            <LVAR name="i" />
+                            <LVAR name="j" />
                             <OPERATOR name="+">
-                                <LVAR name="i" />
+                                <LVAR name="j" />
                                 <IMM32 value="1" />
                             </OPERATOR>
                         </OPERATOR>
                     </FOR_ITERATION>
                     <CODE>
                         <OPERATOR name=" = ">
-                            <LVAR name="tmp" />
-                            <OPERATOR name="&amp;">
-                                <MEM name="prog_bus">
+                            <LVAR name="a" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                        <FOR>
+                            <FOR_START>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
+                                    <IMM32 value="0" />
+                                </OPERATOR>
+                            </FOR_START>
+                            <FOR_STOP_COND>
+                                <OPERATOR name=" &lt; ">
+                                    <LVAR name="i" />
+                                    <IMM32 value="8" />
+                                </OPERATOR>
+                            </FOR_STOP_COND>
+                            <FOR_ITERATION>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
                                     <OPERATOR name="+">
-                                        <OPERATOR name="+">
-                                            <REG name="pc" />
-                                            <LVAR name="i" />
-                                        </OPERATOR>
+                                        <LVAR name="i" />
                                         <IMM32 value="1" />
                                     </OPERATOR>
-                                </MEM>
-                                <IMM32 value="FF" />
+                                </OPERATOR>
+                            </FOR_ITERATION>
+                            <CODE>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="tmp" />
+                                    <OPERATOR name="&amp;">
+                                        <MEM name="prog_bus">
+                                            <OPERATOR name="+">
+                                                <OPERATOR name="+">
+                                                    <REG name="pc" />
+                                                    <LVAR name="i" />
+                                                </OPERATOR>
+                                                <IMM32 value="1" />
+                                            </OPERATOR>
+                                        </MEM>
+                                        <IMM32 value="FF" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="a" />
+                                    <OPERATOR name="|">
+                                        <OPERATOR name="&lt;&lt;">
+                                            <LVAR name="a" />
+                                            <IMM32 value="8" />
+                                        </OPERATOR>
+                                        <LVAR name="tmp" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </CODE>
+                        </FOR>
+                        <OPERATOR name=" = ">
+                            <REG name="sp" />
+                            <OPERATOR name="+">
+                                <REG name="sp" />
+                                <IMM32 value="1" />
                             </OPERATOR>
                         </OPERATOR>
                         <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <REG name="sp" />
+                            </REG>
                             <LVAR name="a" />
-                            <OPERATOR name="|">
-                                <OPERATOR name="&lt;&lt;">
-                                    <LVAR name="a" />
-                                    <IMM32 value="8" />
-                                </OPERATOR>
-                                <LVAR name="tmp" />
-                            </OPERATOR>
                         </OPERATOR>
                     </CODE>
                 </FOR>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="a" />
-                </OPERATOR>
+                <IF>
+                    <COND>
+                        <OPERATOR name=" != ">
+                            <OPERATOR name="&amp;">
+                                <ARG name="cnt" />
+                                <IMM32 value="7" />
+                            </OPERATOR>
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </COND>
+                    <INNER>
+                        <OPERATOR name=" = ">
+                            <LVAR name="a" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                        <FOR>
+                            <FOR_START>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
+                                    <IMM32 value="0" />
+                                </OPERATOR>
+                            </FOR_START>
+                            <FOR_STOP_COND>
+                                <OPERATOR name=" &lt; ">
+                                    <LVAR name="i" />
+                                    <OPERATOR name="&amp;">
+                                        <ARG name="cnt" />
+                                        <IMM32 value="7" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </FOR_STOP_COND>
+                            <FOR_ITERATION>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
+                                    <OPERATOR name="+">
+                                        <LVAR name="i" />
+                                        <IMM32 value="1" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </FOR_ITERATION>
+                            <CODE>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="tmp" />
+                                    <OPERATOR name="&amp;">
+                                        <MEM name="prog_bus">
+                                            <OPERATOR name="+">
+                                                <OPERATOR name="+">
+                                                    <REG name="pc" />
+                                                    <LVAR name="i" />
+                                                </OPERATOR>
+                                                <IMM32 value="1" />
+                                            </OPERATOR>
+                                        </MEM>
+                                        <IMM32 value="FF" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="a" />
+                                    <OPERATOR name="|">
+                                        <OPERATOR name="&lt;&lt;">
+                                            <LVAR name="a" />
+                                            <IMM32 value="8" />
+                                        </OPERATOR>
+                                        <LVAR name="tmp" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </CODE>
+                        </FOR>
+                        <OPERATOR name=" = ">
+                            <REG name="sp" />
+                            <OPERATOR name="+">
+                                <REG name="sp" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <REG name="sp" />
+                            </REG>
+                            <LVAR name="a" />
+                        </OPERATOR>
+                    </INNER>
+                </IF>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="j" />
+                            <OPERATOR name="+">
+                                <LVAR name="j" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="j" />
+                            <IMM32 value="4" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="j" />
+                            <OPERATOR name="+">
+                                <LVAR name="j" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <REG name="sp" />
+                            <OPERATOR name="+">
+                                <REG name="sp" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <REG name="sp" />
+                            </REG>
+                            <TYPE name="uint64">
+                                <IMM32 value="0" />
+                            </TYPE>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
                 <RETURN>
                     <IMM32 value="0" />
                 </RETURN>
@@ -2777,84 +2948,86 @@
             </ARGUMENTS>
             <LOCALVARS>
                 <i SIZE="32" />
-                <data_val SIZE="64" />
+                <j SIZE="32" />
+                <data_val SIZE="64" ARRSIZE="119" />
                 <init_shift SIZE="32" />
                 <data_tmp SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <OPERATOR name=" = ">
-                    <LVAR name="data_val" />
-                    <IMM32 value="0" />
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <LVAR name="init_shift" />
-                    <IMM32 value="0" />
-                </OPERATOR>
                 <FOR>
                     <FOR_START>
                         <OPERATOR name=" = ">
-                            <LVAR name="i" />
-                            <IMM32 value="0" />
+                            <LVAR name="j" />
+                            <IMM32 value="3" />
                         </OPERATOR>
                     </FOR_START>
                     <FOR_STOP_COND>
-                        <OPERATOR name=" &lt; ">
-                            <LVAR name="i" />
-                            <IMM32 value="20" />
+                        <OPERATOR name=" &gt;= ">
+                            <LVAR name="j" />
+                            <IMM32 value="0" />
                         </OPERATOR>
                     </FOR_STOP_COND>
                     <FOR_ITERATION>
                         <OPERATOR name=" = ">
-                            <LVAR name="i" />
-                            <OPERATOR name="+">
-                                <LVAR name="i" />
+                            <LVAR name="j" />
+                            <OPERATOR name="-">
+                                <LVAR name="j" />
                                 <IMM32 value="1" />
                             </OPERATOR>
                         </OPERATOR>
                     </FOR_ITERATION>
                     <CODE>
                         <OPERATOR name=" = ">
-                            <LVAR name="data_val" />
-                            <OPERATOR name="|">
-                                <OPERATOR name="&lt;&lt;">
-                                    <LVAR name="data_val" />
-                                    <LVAR name="init_shift" />
-                                </OPERATOR>
-                                <TYPE name="uint64">
-                                    <REG name="data_bus">
-                                        <ARG name="addr_val" />
-                                    </REG>
-                                </TYPE>
-                            </OPERATOR>
-                        </OPERATOR>
-                        <OPERATOR name=" = ">
-                            <ARG name="addr_val" />
-                            <OPERATOR name="+">
-                                <ARG name="addr_val" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </OPERATOR>
-                        <OPERATOR name=" = ">
                             <LVAR name="init_shift" />
-                            <OPERATOR name="+">
-                                <LVAR name="init_shift" />
-                                <IMM32 value="8" />
-                            </OPERATOR>
+                            <IMM32 value="0" />
                         </OPERATOR>
+                        <FOR>
+                            <FOR_START>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
+                                    <IMM32 value="0" />
+                                </OPERATOR>
+                            </FOR_START>
+                            <FOR_STOP_COND>
+                                <OPERATOR name=" &lt; ">
+                                    <LVAR name="i" />
+                                    <IMM32 value="8" />
+                                </OPERATOR>
+                            </FOR_STOP_COND>
+                            <FOR_ITERATION>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
+                                    <OPERATOR name="+">
+                                        <LVAR name="i" />
+                                        <IMM32 value="1" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </FOR_ITERATION>
+                            <CODE>
+                                <OPERATOR name=" = ">
+                                    <ARG name="addr_val" />
+                                    <OPERATOR name="+">
+                                        <ARG name="addr_val" />
+                                        <IMM32 value="1" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="init_shift" />
+                                    <OPERATOR name="+">
+                                        <LVAR name="init_shift" />
+                                        <IMM32 value="8" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </CODE>
+                        </FOR>
                     </CODE>
                 </FOR>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="+">
                         <REG name="sp" />
-                        <IMM32 value="1" />
+                        <IMM32 value="3" />
                     </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="data_val" />
                 </OPERATOR>
                 <RETURN>
                     <IMM32 value="0" />
@@ -2867,83 +3040,96 @@
             </ARGUMENTS>
             <LOCALVARS>
                 <i SIZE="32" />
-                <data_val SIZE="64" />
+                <j SIZE="32" />
+                <data_val SIZE="64" ARRSIZE="119" />
                 <init_shift SIZE="32" />
                 <data_tmp SIZE="64" />
             </LOCALVARS>
             <CODE>
                 <OPERATOR name=" = ">
-                    <LVAR name="data_val" />
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                </OPERATOR>
-                <OPERATOR name=" = ">
                     <REG name="sp" />
                     <OPERATOR name="-">
                         <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <LVAR name="init_shift" />
-                    <OPERATOR name="*">
-                        <IMM32 value="1F" />
-                        <IMM32 value="8" />
+                        <IMM32 value="3" />
                     </OPERATOR>
                 </OPERATOR>
                 <FOR>
                     <FOR_START>
                         <OPERATOR name=" = ">
-                            <LVAR name="i" />
+                            <LVAR name="j" />
                             <IMM32 value="0" />
                         </OPERATOR>
                     </FOR_START>
                     <FOR_STOP_COND>
                         <OPERATOR name=" &lt; ">
-                            <LVAR name="i" />
-                            <IMM32 value="20" />
+                            <LVAR name="j" />
+                            <IMM32 value="4" />
                         </OPERATOR>
                     </FOR_STOP_COND>
                     <FOR_ITERATION>
                         <OPERATOR name=" = ">
-                            <LVAR name="i" />
+                            <LVAR name="j" />
                             <OPERATOR name="+">
-                                <LVAR name="i" />
+                                <LVAR name="j" />
                                 <IMM32 value="1" />
                             </OPERATOR>
                         </OPERATOR>
                     </FOR_ITERATION>
                     <CODE>
                         <OPERATOR name=" = ">
-                            <LVAR name="data_tmp" />
-                            <OPERATOR name="&gt;&gt;">
-                                <LVAR name="data_val" />
-                                <LVAR name="init_shift" />
-                            </OPERATOR>
-                        </OPERATOR>
-                        <OPERATOR name=" = ">
-                            <REG name="data_bus">
-                                <ARG name="addr_val" />
-                            </REG>
-                            <TYPE name="uint8">
-                                <LVAR name="data_tmp" />
-                            </TYPE>
-                        </OPERATOR>
-                        <OPERATOR name=" = ">
-                            <ARG name="addr_val" />
-                            <OPERATOR name="+">
-                                <ARG name="addr_val" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </OPERATOR>
-                        <OPERATOR name=" = ">
                             <LVAR name="init_shift" />
-                            <OPERATOR name="-">
-                                <LVAR name="init_shift" />
+                            <OPERATOR name="*">
+                                <IMM32 value="7" />
                                 <IMM32 value="8" />
                             </OPERATOR>
                         </OPERATOR>
+                        <FOR>
+                            <FOR_START>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
+                                    <IMM32 value="0" />
+                                </OPERATOR>
+                            </FOR_START>
+                            <FOR_STOP_COND>
+                                <OPERATOR name=" &lt; ">
+                                    <LVAR name="i" />
+                                    <IMM32 value="8" />
+                                </OPERATOR>
+                            </FOR_STOP_COND>
+                            <FOR_ITERATION>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="i" />
+                                    <OPERATOR name="+">
+                                        <LVAR name="i" />
+                                        <IMM32 value="1" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </FOR_ITERATION>
+                            <CODE>
+                                <OPERATOR name=" = ">
+                                    <REG name="data_bus">
+                                        <ARG name="addr_val" />
+                                    </REG>
+                                    <TYPE name="uint8">
+                                        <LVAR name="data_tmp" />
+                                    </TYPE>
+                                </OPERATOR>
+                                <OPERATOR name=" = ">
+                                    <ARG name="addr_val" />
+                                    <OPERATOR name="+">
+                                        <ARG name="addr_val" />
+                                        <IMM32 value="1" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                                <OPERATOR name=" = ">
+                                    <LVAR name="init_shift" />
+                                    <OPERATOR name="-">
+                                        <LVAR name="init_shift" />
+                                        <IMM32 value="8" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </CODE>
+                        </FOR>
                     </CODE>
                 </FOR>
                 <IF>
@@ -2968,86 +3154,62 @@
             <ELEMS>
                 <ELEM ASM="STOP" ID="0">
                     <CODE>
-                        <CALL name="StopOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="0" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="ADD" ID="1">
                     <CODE>
-                        <CALL name="AddOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="1" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="MUL" ID="2">
                     <CODE>
-                        <CALL name="MulOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="2" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="SUB" ID="3">
                     <CODE>
-                        <CALL name="SubOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="3" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="DIV" ID="4">
                     <CODE>
-                        <CALL name="DivOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="4" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="SDIV" ID="5">
                     <CODE>
-                        <CALL name="DivOpS">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="5" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="MOD" ID="6">
                     <CODE>
-                        <CALL name="GetModule">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="6" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="SMOD" ID="7">
                     <CODE>
-                        <CALL name="GetModuleS">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="7" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="ADDMOD" ID="8">
                     <CODE>
-                        <CALL name="GetModuleAdd">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="8" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="MULMOD" ID="9">
                     <CODE>
-                        <CALL name="GetModuleMul">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="9" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="EXP" ID="10">
                     <CODE>
-                        <CALL name="GetExp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="A" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="SIGNEXTEND" ID="11">
                     <CODE>
-                        <CALL name="SignExtend">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="B" />
                     </CODE>
                 </ELEM>
             </ELEMS>
@@ -3056,79 +3218,57 @@
             <ELEMS>
                 <ELEM ASM="LT" ID="0">
                     <CODE>
-                        <CALL name="LtOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="0" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="GT" ID="1">
                     <CODE>
-                        <CALL name="GtOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="1" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="SLT" ID="2">
                     <CODE>
-                        <CALL name="LtOpS">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="2" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="SGT" ID="3">
                     <CODE>
-                        <CALL name="GtOpS">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="3" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="EQ" ID="4">
                     <CODE>
-                        <CALL name="EqOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="4" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="ISZERO" ID="5">
                     <CODE>
-                        <CALL name="IsZeroOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="5" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="AND" ID="6">
                     <CODE>
-                        <CALL name="AndOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="6" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="OR" ID="7">
                     <CODE>
-                        <CALL name="OrOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="7" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="XOR" ID="8">
                     <CODE>
-                        <CALL name="XorOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="8" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="NOT" ID="9">
                     <CODE>
-                        <CALL name="NotOp">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="9" />
                     </CODE>
                 </ELEM>
                 <ELEM ASM="BYTE" ID="10">
                     <CODE>
-                        <CALL name="ByteFromWord">
-                            <ARGS />
-                        </CALL>
+                        <IMM32 value="A" />
                     </CODE>
                 </ELEM>
             </ELEMS>
@@ -3818,7 +3958,7 @@
                                 <REG name="sp" />
                                 <OPERATOR name="-">
                                     <REG name="sp" />
-                                    <IMM32 value="1" />
+                                    <IMM32 value="3" />
                                 </OPERATOR>
                             </OPERATOR>
                         </INNER>
@@ -4105,9 +4245,15 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <LST name="ArithmOps">
-                        <ARG name="opcode" />
-                    </LST>
+                    <CALL name="DoArithm">
+                        <ARGS>
+                            <TYPE name="uint32">
+                                <LST name="ArithmOps">
+                                    <ARG name="opcode" />
+                                </LST>
+                            </TYPE>
+                        </ARGS>
+                    </CALL>
                 </CODE>
             </INSTRUCTION>
             <INSTRUCTION ASM="$opcode" SIZE="8">
@@ -4117,9 +4263,15 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <LST name="CompareLogOps">
-                        <ARG name="opcode" />
-                    </LST>
+                    <CALL name="DoCompare">
+                        <ARGS>
+                            <TYPE name="uint32">
+                                <LST name="CompareLogOps">
+                                    <ARG name="opcode" />
+                                </LST>
+                            </TYPE>
+                        </ARGS>
+                    </CALL>
                 </CODE>
             </INSTRUCTION>
             <INSTRUCTION ASM="SHA3" SIZE="8">

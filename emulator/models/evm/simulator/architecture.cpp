@@ -4,6 +4,7 @@
 #include "evm_sim.h"
 #include "sha3/Keccak.h"
 #include "bignum/v_bignum.h"
+#include "../gascost.h"
 
 #define BLOCK_SIZE 1024*512 // 512 килобайт памяти
 #define IMEM_WS 1
@@ -34,10 +35,9 @@ TDataMem* input_mem;
 void UseGas(TDevice* dev, uint64 value) {
   uint64 *gas = ((EVM*)dev)->gas_available;
   uint64 ret[4];
-  VBigDig VBIGNUM(x, 256);
-  VBigDig VBIGNUM(y, 64);
+  VBigDig VBIGNUM(x, 256), VBIGNUM(y, 64);
   char value_string[35];
-  v_bignum_set_bignum(x, v_bignum_reg_to_bignum(gas));
+  v_bignum_set_bignum(x, v_bignum_reg_to_bignum(gas, false));
   sprintf(value_string, "0x%llx", value);
   v_bignum_set_string_hex(y, value_string);
   v_bignum_sub(x, y);
@@ -45,6 +45,166 @@ void UseGas(TDevice* dev, uint64 value) {
   for (int i = 0; i < 4; i++) {
     gas[i] = ret[i];
   }
+}
+
+void DoArithm(TDevice* dev, uint32 opcode) {
+  int i, arg_count = 0;
+  int32 sp = ((EVM*)dev)->sp;
+  uint64 *arg1, *arg2, *arg3, *ret;
+  VBigDig VBIGNUM(a, 256), VBIGNUM(b, 256), VBIGNUM(c, 256), VBIGNUM(tmp, 256);
+  switch (opcode) {
+    case 1 ... 7:
+    case 10:
+    case 11:
+      arg1 = &(((EVM*)dev)->stack_arr[sp-3]);
+      arg2 = &(((EVM*)dev)->stack_arr[sp-7]);
+      v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
+      v_bignum_set_bignum(b, v_bignum_reg_to_bignum(arg2, true));
+      sp = sp - (2*4 - 1);
+      break;
+    case 8:
+    case 9:
+      arg1 = &(((EVM*)dev)->stack_arr[sp-3]);
+      arg2 = &(((EVM*)dev)->stack_arr[sp-7]);
+      arg3 = &(((EVM*)dev)->stack_arr[sp-11]);
+      v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
+      v_bignum_set_bignum(b, v_bignum_reg_to_bignum(arg2, true));
+      v_bignum_set_bignum(c, v_bignum_reg_to_bignum(arg3, true));
+      sp = sp - (3*4 - 1);
+      break;
+  }
+  ((EVM*)dev)->sp = sp; // update sp
+  ret = &(((EVM*)dev)->stack_arr[sp]); // set result pointer in stack
+    switch (opcode) {
+      case 0: // STOP
+        CheckError("@");
+        break;
+      case 1: // ADD
+        v_bignum_add(a, b);
+        break;
+      case 2: // MUL
+        v_bignum_mul(a, b);
+        break;
+      case 3: // SUB
+        v_bignum_sub(a, b);
+        break;
+      case 4: // DIV
+        v_bignum_div(a, b, tmp);
+        break;
+      case 5: // SDIV
+        v_bignum_div(a, b, tmp);
+        break;
+      case 6: // MOD
+        v_bignum_mod(a, b);
+        break;
+      case 7: // SMOD
+        // TODO
+        v_bignum_mod(a, b);
+        break;
+      case 8: // ADDMOD
+        v_bignum_add(a, b);
+        v_bignum_mod(a, c);
+        break;
+      case 9: // MULMOD
+        v_bignum_mul(a, b);
+        v_bignum_mod(a, c);
+        break;
+      case 10: // EXP
+        if (v_bignum_eq_zero(b)) {
+          v_bignum_set_one(a);
+        } else {
+          v_bignum_set_one(tmp);
+          while (!v_bignum_eq_one(b)) {
+            v_bignum_mul(a, a);
+            v_bignum_sub(b, tmp);
+          }
+        }
+        break;
+      case 11: // SIGNEXTEND
+        // TODO
+        break;
+    }
+    v_bignum_bignum_to_reg(ret, a);
+}
+
+void DoCompare(TDevice* dev, uint32 opcode) {
+  int i, arg_count = 0;
+  int32 sp = ((EVM*)dev)->sp;
+  uint64 *arg1, *arg2, *arg3, *ret;
+  VBigDig VBIGNUM(a, 256), VBIGNUM(b, 256), VBIGNUM(tmp, 256);
+  switch (opcode) {
+    case 5:
+    case 9:
+      arg1 = &(((EVM*)dev)->stack_arr[sp-3]);
+      v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
+      sp = sp - (1*4 - 1);
+      break;
+    case 0 ... 4:
+    case 6 ... 8:
+    case 10:
+      arg1 = &(((EVM*)dev)->stack_arr[sp-3]);
+      arg2 = &(((EVM*)dev)->stack_arr[sp-7]);
+      v_bignum_set_bignum(a, v_bignum_reg_to_bignum(arg1, true));
+      v_bignum_set_bignum(b, v_bignum_reg_to_bignum(arg2, true));
+      sp = sp - (2*4 - 1);
+      break;
+  }
+  ((EVM*)dev)->sp = sp; // update sp
+  ret = &(((EVM*)dev)->stack_arr[sp]); // set result pointer in stack
+    switch (opcode) {
+      case 0: // LT
+        if (v_bignum_gt(b, a))
+          v_bignum_set_one(a);
+        else
+          v_bignum_set_zero(a);
+        break;
+      case 1: // GT
+        if (v_bignum_gt(a, b))
+          v_bignum_set_one(a);
+        else
+          v_bignum_set_zero(a);
+        break;
+      case 2: // SLT
+        if (v_bignum_gt(b, a))
+          v_bignum_set_one(a);
+        else
+          v_bignum_set_zero(a);
+        break;
+      case 3: // SGT
+        if (v_bignum_gt(a, b))
+          v_bignum_set_one(a);
+        else
+          v_bignum_set_zero(a);
+        break;
+      case 4: // EQ
+        if (v_bignum_eq(a, b))
+          v_bignum_set_one(a);
+        else
+          v_bignum_set_zero(a);
+        break;
+      case 5: // ISZERO
+        if (v_bignum_eq_zero(a))
+          v_bignum_set_one(a);
+        else
+          v_bignum_set_zero(a);
+        break;
+      case 6: // AND
+        v_bignum_and(a, b);
+        break;
+      case 7: // OR
+        v_bignum_or(a, b);
+        break;
+      case 8: // XOR
+        v_bignum_xor(a, b);
+        break;
+      case 9: // NOT
+        v_bignum_not(a);
+        break;
+      case 10: // BYTE
+        // TODO
+        break;
+    }
+    v_bignum_bignum_to_reg(ret, a);
 }
 
 // KECCAK algorithm
@@ -190,13 +350,10 @@ LIB_EXPORT void CheckPostProgram()
       printf("\ngas limit error\n");
       exit(-1);
     }
-#if 1
-    int32 offs = (int32)new_evm->stack_arr[new_evm->sp--];
-    int32 size = (int32)new_evm->stack_arr[new_evm->sp--];
-#else
-    int32 offs = (int32)new_evm->Pop().to_int();
-    int32 size = (int32)new_evm->Pop().to_int();
-#endif
+    char value_string[67] = "0x", part_string[17];
+    int32 offs = (int32)new_evm->stack_arr[new_evm->sp-3];
+    int32 size = (int32)new_evm->stack_arr[new_evm->sp-7];
+    new_evm->sp -= 8;
     printf("0x");
     for (int i = 0; i < size; i++)
     {

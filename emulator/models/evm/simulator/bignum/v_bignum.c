@@ -111,16 +111,23 @@ static void bignum_free(const VBigDig *x)
 
 /* ----------------------------------------------------------------------------------------- */
 
-VBigDig * v_bignum_reg_to_bignum(uint64 *reg) {
+VBigDig * v_bignum_reg_to_bignum(uint64 *reg, bool is_stack) {
     int i;
     uint64 part;
     VBigDig *x;
     x = bignum_alloc(64);
     char digit_string[67] = "0x", block_string[17];
 
-    for (i = 0; i < BLOCK_SIZE; i++) {
-        sprintf(block_string, "%llx", reg[i]);
-        strcat(digit_string, block_string);
+    if (!is_stack) { // big-endian block reading
+        for (i = 0; i < BLOCK_SIZE; i++) {
+            sprintf(block_string, "%llx", reg[i]);
+            strcat(digit_string, block_string);
+        }
+    } else { // reversed block reading
+        for (i = BLOCK_SIZE-1; i >= 0; i--) {
+            sprintf(block_string, "%llx", reg[i]);
+            strcat(digit_string, block_string);
+        }
     }
     v_bignum_set_string_hex(x, digit_string);
     return x;
@@ -313,6 +320,45 @@ void v_bignum_print_hex_lf(const VBigDig *x)
 
 /* ----------------------------------------------------------------------------------------- */
 
+/* Computes x & y. */
+void v_bignum_and(VBigDig *x, const VBigDig *y)
+{
+    unsigned int    i, xs = *x++, ys = *y++, s, carry, t;
+
+    s = xs < ys ? xs : ys;
+    for(i = 0; i < s; i++)
+    {
+        t = x[i] & y[i];
+        x[i] = t;
+    }
+}
+
+/* Computes x | y. */
+void v_bignum_or(VBigDig *x, const VBigDig *y)
+{
+    unsigned int    i, xs = *x++, ys = *y++, s, carry, t;
+
+    s = xs < ys ? xs : ys;
+    for(i = 0; i < s; i++)
+    {
+        t = x[i] | y[i];
+        x[i] = t;
+    }
+}
+
+/* Computes x ^ y. */
+void v_bignum_xor(VBigDig *x, const VBigDig *y)
+{
+    unsigned int    i, xs = *x++, ys = *y++, s, carry, t;
+
+    s = xs < ys ? xs : ys;
+    for(i = 0; i < s; i++)
+    {
+        t = x[i] ^ y[i];
+        x[i] = t;
+    }
+}
+
 /* x = ~x. */
 void v_bignum_not(VBigDig *x)
 {
@@ -503,6 +549,42 @@ int v_bignum_eq(const VBigDig *x, const VBigDig *y)
         }
     }
     return 0;
+}
+
+/* Returns x > y. */
+int v_bignum_gt(const VBigDig *x, const VBigDig *y)
+{
+    unsigned int    xs, ys;
+    int     i, j, k;
+
+    if(x == y)
+        return 0;
+    /* Find indexes of highest-most used digit in each of the numbers. */
+    xs = *x++;
+    ys = *y++;
+    for(i = xs - 1; i >= 0; i--)
+        if(x[i] != 0)
+            break;
+    for(j = ys - 1; j >= 0; j--)
+        if(y[j] != 0)
+            break;
+    /* Both zero? */
+    if(i < 0 && j < 0)
+        return 0;
+    /* Quick answers exists for different-sized numbers. Find them. */
+    if(i < j)
+        return 0;
+    if(i > j)
+        return 1;
+    /* Compare digit by digit. */
+    for(k = i; k >= 0; k--)
+    {
+        if(x[k] < y[k])
+            return 0;
+        if(x[k] > y[k])
+            return 1;
+    }
+    return x[k] > y[k];
 }
 
 /* Returns x >= y. */

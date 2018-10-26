@@ -64,7 +64,7 @@ typedef unsigned int    VBigDigs;   /* Should hold precisely two digits. */
 /* Convert internal register representation (4 64-bit parts)
  * into bignum variable and vice versa.
 */
-extern VBigDig * v_bignum_reg_to_bignum(uint64 *reg);
+extern VBigDig * v_bignum_reg_to_bignum(uint64 *reg, bool is_stack);
 extern void      v_bignum_bignum_to_reg(uint64 *reg, VBigDig * x);
 
 /* Import/export numbers from raw bits. The number x must have been allocated
@@ -93,7 +93,6 @@ extern void v_bignum_print_hex(const VBigDig *x);
 extern void v_bignum_print_hex_lf(const VBigDig *x);
 
 /* Bit operators. */
-extern void v_bignum_not(VBigDig *x);
 extern int  v_bignum_bit_test(const VBigDig *x, unsigned int bit);
 extern void v_bignum_bit_set(VBigDig *x, unsigned int bit);
 extern int  v_bignum_bit_msb(const VBigDig *x);
@@ -106,7 +105,12 @@ extern void v_bignum_bit_shift_right(VBigDig *x, unsigned int count);
 extern int  v_bignum_eq_zero(const VBigDig *x);         /* x == 0. */
 extern int  v_bignum_eq_one(const VBigDig *x);          /* x == 1. */
 extern int  v_bignum_eq(const VBigDig *x, const VBigDig *y);    /* x == y. */
+extern int  v_bignum_gt(const VBigDig *x, const VBigDig *y);   /* x > y. */
 extern int  v_bignum_gte(const VBigDig *x, const VBigDig *y);   /* x >= y. */
+extern void v_bignum_and(VBigDig *x, const VBigDig *y); /* x & y. */
+extern void v_bignum_or(VBigDig *x, const VBigDig *y); /* x | y. */
+extern void v_bignum_xor(VBigDig *x, const VBigDig *y); /* x ^ y. */
+extern void v_bignum_not(VBigDig *x);
 
 /* Number vs single-digit arithmetic. */
 extern void v_bignum_add_digit(VBigDig *x, VBigDig y);  /* x += y. */
