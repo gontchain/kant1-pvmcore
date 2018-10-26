@@ -41,7 +41,7 @@ Device EVM
   MemSpace log_bus, 32, MAIN_TYPE_SIZE;
   MemSpace input_data, 32,MAIN_TYPE_SIZE;
   */
-  Var int8 data_bus[DATA_SIZE],"data";
+  Var int8 data_bus[DATA_SIZE],"data_bus$";
   // Reg MAIN_TYPE storage_bus[STORAGE_SIZE]; // replaced by mainStorage list
   Reg MAIN_TYPE input_data[INPUT_DATA_SIZE];
   Reg MAIN_TYPE log_bus[LOG_AREA_SIZE];

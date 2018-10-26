@@ -21,7 +21,7 @@
         <is_pc_const_changed SIZE="1" />
         <gas_available SIZE="64" ASM="gas_available" />
         <mem_size SIZE="32" />
-        <data_bus SIZE="8" ASM="data" ARRSIZE="1024" />
+        <data_bus SIZE="8" ASM="data_bus$" ARRSIZE="1024" />
         <stack_arr SIZE="64" ASM="stack_arr$" ARRSIZE="2048" />
         <CoinBase SIZE="64" ASM="CoinBase" />
         <TimeStamp SIZE="64" ASM="TimeStamp" />
