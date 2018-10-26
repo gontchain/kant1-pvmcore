@@ -28,7 +28,11 @@ const tDRegister EVM_regs[17] = {
   {reg_6,8,0,0},
   {reg_7,4,0,0},
   {var_8,4,0},
+<<<<<<< HEAD
   {var_9,8,4},
+=======
+  {var_9,8,0},
+>>>>>>> 371f82f8... init data_bus at reset
   {var_10,1,1024},
   {var_11,8,2048},
   {var_12,8,0},
@@ -2335,6 +2339,10 @@ void EVM::ResetDevice(){
   pc = 0;
   sp = (0 - 1);
   log_ptr = 0;
+ for(counter = 0;counter < 1024;counter = (counter + 1)){
+  ;
+  data_bus[counter] = 0;
+  }
   MainPipe.Reset();
   pc.ResetMutable();
   prog_bus->ResetMemMutable();

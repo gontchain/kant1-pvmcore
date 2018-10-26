@@ -98,6 +98,7 @@ public:
   uint64  Number;
   uint64  Difficulty;
   uint64  GasLimit;
+  uint32  counter;
   iMemInterface<uint32,uint32>* prog_bus;
   void CheckList_ArithmOps(int aPipeNum,int aIdx);
 void LockList_ArithmOps(int aPipeNum,int aIdx);

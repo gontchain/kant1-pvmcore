@@ -28,6 +28,7 @@
         <Number SIZE="64" ASM="Number" />
         <Difficulty SIZE="64" ASM="Difficulty" />
         <GasLimit SIZE="64" ASM="GasLimit" />
+        <counter SIZE="32" />
     </VARS>
     <FLAGS />
     <FUNCTIONS>
@@ -4317,6 +4318,37 @@
             <REG name="log_ptr" />
             <IMM32 value="0" />
         </OPERATOR>
+        <FOR>
+            <FOR_START>
+                <OPERATOR name=" = ">
+                    <REG name="counter" />
+                    <IMM32 value="0" />
+                </OPERATOR>
+            </FOR_START>
+            <FOR_STOP_COND>
+                <OPERATOR name=" &lt; ">
+                    <REG name="counter" />
+                    <IMM32 value="400" />
+                </OPERATOR>
+            </FOR_STOP_COND>
+            <FOR_ITERATION>
+                <OPERATOR name=" = ">
+                    <REG name="counter" />
+                    <OPERATOR name="+">
+                        <REG name="counter" />
+                        <IMM32 value="1" />
+                    </OPERATOR>
+                </OPERATOR>
+            </FOR_ITERATION>
+            <CODE>
+                <OPERATOR name=" = ">
+                    <REG name="data_bus">
+                        <REG name="counter" />
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+            </CODE>
+        </FOR>
     </RESET>
     <OPER>
         <OPERATOR name=" = ">
@@ -4334,6 +4366,37 @@
             <REG name="log_ptr" />
             <IMM32 value="0" />
         </OPERATOR>
+        <FOR>
+            <FOR_START>
+                <OPERATOR name=" = ">
+                    <REG name="counter" />
+                    <IMM32 value="0" />
+                </OPERATOR>
+            </FOR_START>
+            <FOR_STOP_COND>
+                <OPERATOR name=" &lt; ">
+                    <REG name="counter" />
+                    <IMM32 value="400" />
+                </OPERATOR>
+            </FOR_STOP_COND>
+            <FOR_ITERATION>
+                <OPERATOR name=" = ">
+                    <REG name="counter" />
+                    <OPERATOR name="+">
+                        <REG name="counter" />
+                        <IMM32 value="1" />
+                    </OPERATOR>
+                </OPERATOR>
+            </FOR_ITERATION>
+            <CODE>
+                <OPERATOR name=" = ">
+                    <REG name="data_bus">
+                        <REG name="counter" />
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+            </CODE>
+        </FOR>
     </OPER>
     <ERROR_MESSAGES>
         <MSG text="@" />
