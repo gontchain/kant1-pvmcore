@@ -7,8 +7,7 @@
 
 * Для компиляции эмулятора необходимо из каталога qemu/ выполнить:
 ```
-./configure --target-list=ppdl-softmmu --extra-cflags="-fPIC -D EVM" --enable-debug --disable-werror --disable-pie --disable-curses --disable-sdl --disable-vnc --disable-xen --disable-kvm
-make
+./builder-evm
 ```
 
 * Для запуска бинарных файлов из-под эмулятора необходимо из каталога qemu/ выполнить (**только после компиляции эмулятора**):
@@ -21,4 +20,10 @@ make
 -ctrace - вывод трассы выполнения
 -regtrace - вывод трассы изменения значений регистров
 -memtrace - вывод трассы обращений по адресам памяти
+```
+
+* Для использования эмулятора в виде библиотеки нужно посмотреть пример test_lib_evm:
+```
+main.c - исходный код теста so-библиотеки
+Makefile - файл для сборки теста
 ```

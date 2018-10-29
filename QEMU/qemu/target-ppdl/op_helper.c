@@ -9,7 +9,9 @@
 #include "cpu.h"
 #include "exec/helper-proto.h"
 #include "exec/cpu_ldst.h"
+#ifdef TLM
 #include "tlm.h"
+#endif
 
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wformat-zero-length"
@@ -41,12 +43,16 @@ int sigint_check_counter = 0;
 
 void HELPER(wait_for_gdb)(uint64_t time)
 {
+#ifdef TLM
     tlm_wait_for_gdb_cb(tlm_opaque, time);
+#endif
 }
 
 void HELPER(next_context)(uint64_t time_ns)
 {
-    tlm_next_context_cb(tlm_opaque, time_ns);
+#ifdef TLM
+   tlm_next_context_cb(tlm_opaque, time_ns);
+#endif
 }
 
 static void raise_exception(CPUPPDLState *env, int tt)

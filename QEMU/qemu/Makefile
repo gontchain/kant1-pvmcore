@@ -77,7 +77,7 @@ LIBS+=-lz $(LIBS_TOOLS)
 HELPERS-$(CONFIG_LINUX) = qemu-bridge-helper$(EXESUF)
 
 ifdef BUILD_DOCS
-DOCS=tlmu-doc.html qemu-doc.html qemu-tech.html qemu.1 qemu-img.1 qemu-nbd.8 qmp-commands.txt
+DOCS=qemu-doc.html qemu-tech.html qemu.1 qemu-img.1 qemu-nbd.8 qmp-commands.txt
 ifdef CONFIG_VIRTFS
 DOCS+=fsdev/virtfs-proxy-helper.1
 endif
@@ -211,9 +211,9 @@ util/module.o-cflags = -D'CONFIG_BLOCK_MODULES=$(block-modules)'
 
 qemu-img.o: qemu-img-cmds.h
 
-qemu-img$(EXESUF): qemu-img.o tlm.o $(block-obj-y) libqemuutil.a libqemustub.a
-qemu-nbd$(EXESUF): qemu-nbd.o tlm.o $(block-obj-y) libqemuutil.a libqemustub.a
-qemu-io$(EXESUF): qemu-io.o tlm.o $(block-obj-y) libqemuutil.a libqemustub.a
+qemu-img$(EXESUF): qemu-img.o $(block-obj-y) libqemuutil.a libqemustub.a
+qemu-nbd$(EXESUF): qemu-nbd.o $(block-obj-y) libqemuutil.a libqemustub.a
+qemu-io$(EXESUF): qemu-io.o $(block-obj-y) libqemuutil.a libqemustub.a
 
 qemu-bridge-helper$(EXESUF): qemu-bridge-helper.o
 
@@ -277,16 +277,17 @@ $(qga-obj-y) qemu-ga.o: $(QGALIB_GEN)
 qemu-ga$(EXESUF): $(qga-obj-y) libqemuutil.a libqemustub.a
 	$(call LINK, $^)
 
-tlmu:
-	for a in $(TARGET_DIRS); do $(MAKE) -C $$a tlmu BUILD_DIR=${BUILD_DIR}; done
+evm:
+	echo $(TARGET_DIRS)
+	for a in $(TARGET_DIRS); do $(MAKE) -C $$a evm BUILD_DIR=${BUILD_DIR}; done
 
-libtlmu.a: tlmu.o
+libevm.a: evm.o
 	$(AR) -r $@ $<
 
-install-tlmu: libtlmu.a
-	for a in $(TARGET_DIRS); do $(MAKE) -C $$a install-tlmu; done
-	$(INSTALL) -D libtlmu.a $(DESTDIR)/lib/libtlmu.a
-	$(INSTALL) -D $(SRC_PATH)/tlmu.h $(DESTDIR)/include/tlmu/tlmu.h
+install-evm: libevm.a
+	for a in $(TARGET_DIRS); do $(MAKE) -C $$a install-evm; done
+	$(INSTALL) -D libevm.a $(DESTDIR)/lib/libevm.a
+	$(INSTALL) -D $(SRC_PATH)/evm.h $(DESTDIR)/include/evm/evm.h
 
 clean:
 # avoid old build problems by removing potentially incorrect old files
@@ -321,10 +322,10 @@ distclean: clean
 	rm -f config-all-devices.mak config-all-disas.mak
 	rm -f po/*.mo
 	rm -f roms/seabios/config.mak roms/vgabios/config.mak
-	rm -f tlmu-doc.info tlmu-doc.aux tlmu-doc.cp tlmu-doc.cps tlmu-doc.dvi
-	rm -f tlmu-doc.fn tlmu-doc.fns tlmu-doc.info tlmu-doc.ky tlmu-doc.kys
-	rm -f tlmu-doc.log tlmu-doc.pdf tlmu-doc.pg tlmu-doc.toc tlmu-doc.tp
-	rm -f tlmu-doc.vr
+	rm -f evm-doc.info evm-doc.aux evm-doc.cp evm-doc.cps evm-doc.dvi
+	rm -f evm-doc.fn evm-doc.fns evm-doc.info evm-doc.ky evm-doc.kys
+	rm -f evm-doc.log evm-doc.pdf evm-doc.pg evm-doc.toc evm-doc.tp
+	rm -f evm-doc.vr
 	rm -f qemu-doc.info qemu-doc.aux qemu-doc.cp qemu-doc.cps qemu-doc.dvi
 	rm -f qemu-doc.fn qemu-doc.fns qemu-doc.info qemu-doc.ky qemu-doc.kys
 	rm -f qemu-doc.log qemu-doc.pdf qemu-doc.pg qemu-doc.toc qemu-doc.tp
@@ -367,7 +368,7 @@ endif
 
 install-doc: $(DOCS)
 	$(INSTALL_DIR) "$(DESTDIR)$(qemu_docdir)"
-	$(INSTALL_DATA) tlmu-doc.html qemu-doc.html  qemu-tech.html "$(DESTDIR)$(qemu_docdir)"
+	$(INSTALL_DATA) evm-doc.html qemu-doc.html  qemu-tech.html "$(DESTDIR)$(qemu_docdir)"
 	$(INSTALL_DATA) qmp-commands.txt "$(DESTDIR)$(qemu_docdir)"
 ifdef CONFIG_POSIX
 	$(INSTALL_DIR) "$(DESTDIR)$(mandir)/man1"
@@ -474,10 +475,10 @@ qmp-commands.txt: $(SRC_PATH)/qmp-commands.hx
 qemu-img-cmds.texi: $(SRC_PATH)/qemu-img-cmds.hx
 	$(call quiet-command,sh $(SRC_PATH)/scripts/hxtool -t < $< > $@,"  GEN   $@")
 
-tlmu.1: tlmu-doc.texi
+evm.1: evm-doc.texi
 	$(call quiet-command, \
-	  perl -Ww -- $(SRC_PATH)/scripts/texi2pod.pl $< tlmu.pod && \
-	  pod2man --section=1 --center=" " --release=" " tlmu.pod > $@, \
+	  perl -Ww -- $(SRC_PATH)/scripts/texi2pod.pl $< evm.pod && \
+	  pod2man --section=1 --center=" " --release=" " evm.pod > $@, \
 	  "  GEN   $@")
 
 qemu.1: qemu-doc.texi qemu-options.texi qemu-monitor.texi
@@ -504,10 +505,10 @@ qemu-nbd.8: qemu-nbd.texi
 	  $(POD2MAN) --section=8 --center=" " --release=" " qemu-nbd.pod > $@, \
 	  "  GEN   $@")
 
-dvi: tlmu-doc.dvi qemu-doc.dvi qemu-tech.dvi
-html: tlmu-doc.html qemu-doc.html qemu-tech.html
-info: tlmu-doc.info qemu-doc.info qemu-tech.info
-pdf: tlmu-doc.pdf qemu-doc.pdf qemu-tech.pdf
+dvi: evm-doc.dvi qemu-doc.dvi qemu-tech.dvi
+html: evm-doc.html qemu-doc.html qemu-tech.html
+info: evm-doc.info qemu-doc.info qemu-tech.info
+pdf: evm-doc.pdf qemu-doc.pdf qemu-tech.pdf
 
 qemu-doc.dvi qemu-doc.html qemu-doc.info qemu-doc.pdf: \
 	qemu-img.texi qemu-nbd.texi qemu-options.texi \

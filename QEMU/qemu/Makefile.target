@@ -20,7 +20,7 @@ QEMU_PROG_BUILD = $(QEMU_PROG)
 else
 # system emulator name
 QEMU_PROG=qemu-system-$(TARGET_NAME)$(EXESUF)
-LIB_TLMU=libtlmu-$(TARGET_NAME).so
+LIB_EVM=libevm-$(TARGET_NAME).so
 ifneq (,$(findstring -mwindows,$(libs_softmmu)))
 # Terminate program name with a 'w' because the linker builds a windows executable.
 QEMU_PROGW=qemu-system-$(TARGET_NAME)w$(EXESUF)
@@ -70,8 +70,7 @@ stap:
 endif
 
 all: $(PROGS) stap
-tlmu: all $(LIB_TLMU)
-
+evm: all $(LIB_EVM)
 # Dummy command so that make thinks it has done something
 	@true
 
@@ -84,7 +83,7 @@ obj-$(CONFIG_TCG_INTERPRETER) += disas/tci.o
 obj-y += fpu/softfloat.o
 obj-y += target-$(TARGET_BASE_ARCH)/
 obj-y += disas.o
-obj-$(CONFIG_SOFTMMU) += tlm.o hw/tlm_mach.o hw/tlm_mem.o ../hw/core/ptimer.o
+obj-$(CONFIG_SOFTMMU) += ../hw/core/ptimer.o
 obj-$(CONFIG_TCI_DIS) += tci-dis.o
 obj-$(call notempty,$(TARGET_XML_FILES)) += gdbstub-xml.o
 obj-$(call lnot,$(CONFIG_KVM)) += kvm-stub.o
@@ -171,19 +170,15 @@ all-obj-$(CONFIG_SOFTMMU) += $(block-obj-y)
 $(QEMU_PROG_BUILD): $(all-obj-y) ../libqemuutil.a ../libqemustub.a
 	$(call LINK,$^)
 
-tlm-obj-y := $(filter-out ../qapi-visit.o ../qapi-event.o ../qapi-types.o ../stubs/arch-query-cpu-def.o, $(all-obj-y))
-tlm-obj-y += ../stubs/dump.o ../stubs/pci-drive-hot-add.o
-tlm-obj-y += ../hw/mem/pc-dimm.o
-ifneq ($(TARGET_NAME), arm) # cris, ppdl
-tlm-obj-y += ../stubs/gdbstub.o ../stubs/arch-query-cpu-def.o
-endif
+evm-obj-y := $(filter-out ../qapi-visit.o ../qapi-event.o ../qapi-types.o ../stubs/arch-query-cpu-def.o, $(all-obj-y))
+evm-obj-y += ../stubs/dump.o ../stubs/pci-drive-hot-add.o
+evm-obj-y += ../hw/mem/pc-dimm.o
 ifeq ($(TARGET_NAME), ppdl)
-tlm-obj-y += ../hw/core/ptimer.o
+evm-obj-y += ../stubs/gdbstub.o ../evm.o ../hw/core/ptimer.o
 endif
 
-$(LIB_TLMU): $(tlm-obj-y) ../libqemuutil.a
-	$(CC) -shared -fPIC -Wl,-soname,$(LIB_TLMU) \
-	        -Wl,--version-script=$(SRC_PATH)/lib-tlmu.version \
+$(LIB_EVM): $(evm-obj-y) ../libqemuutil.a
+	$(CC) -shared -fPIC -Wl,-soname,$(LIB_EVM) \
 	        -Wl,--whole-archive -o $@ $^ -Wl,--no-whole-archive -pthread -lstdc++ $(LIBS)
 
 gdbstub-xml.c: $(TARGET_XML_FILES) $(SRC_PATH)/scripts/feature_to_c.sh
@@ -203,9 +198,9 @@ ifdef CONFIG_TRACE_SYSTEMTAP
 	rm -f *.stp
 endif
 
-install-tlmu: $(LIB_TLMU)
+install-evm: $(LIB_TLMU)
 	$(INSTALL) -D -m 755 $(LIB_TLMU) "$(DESTDIR)/lib/$(LIB_TLMU)"
-	$(INSTALL) -D $(SRC_PATH)/tlmu-qemuif.h "$(DESTDIR)/include/tlmu/tlmu-qemuif.h"
+	$(INSTALL) -D $(SRC_PATH)/evm-qemuif.h "$(DESTDIR)/include/evm/evm-qemuif.h"
 ifneq ($(STRIP),)
 	$(STRIP) $(DESTDIR)/lib/$(LIB_TLMU)
 endif

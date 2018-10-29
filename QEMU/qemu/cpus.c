@@ -63,7 +63,9 @@
 
 #endif /* CONFIG_LINUX */
 
+#ifdef TLM
 #include "tlm.h"
+#endif
 
 static CPUState *next_cpu;
 
@@ -143,7 +145,11 @@ static int64_t cpu_get_icount_locked(void)
 
     icount = qemu_icount;
     if (cpu) {
+#ifdef TLM
         if (!cpu_can_do_io(cpu) && !tlm_sync) {
+#else
+        if (!cpu_can_do_io(cpu)) {
+#endif
             fprintf(stderr, "Bad clock read\n");
         }
         icount -= (cpu->icount_decr.u16.low + cpu->icount_extra);
@@ -1317,7 +1323,9 @@ static void tcg_exec_all(void)
         }
     }
 
+#ifdef TLM
     if(tlm_sync) tlm_sync(tlm_opaque, qemu_clock_get_ns(QEMU_CLOCK_VIRTUAL));
+#endif
     exit_request = 0;
 }
 

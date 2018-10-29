@@ -7,7 +7,6 @@
  */
 
 #include "cpu.h"
-#include "disas_ppdl_insn.h" //function definition (much long to put here)
 #include "exec/exec-all.h"
 #include "disas/disas.h"
 #include "qemu/log.h"

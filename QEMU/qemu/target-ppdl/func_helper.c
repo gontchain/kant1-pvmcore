@@ -2,7 +2,6 @@
 #include "functions.h"
 #include "qemu-common.h"
 #include "exec/cpu_ldst.h"
-#include "bitfield.h"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
