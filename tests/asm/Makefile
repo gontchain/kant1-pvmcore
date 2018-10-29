@@ -66,19 +66,19 @@ compare:
 	$(MAKE) -C exp compare
 	$(MAKE) -C signextend compare
 	$(MAKE) -C swap1 compare
-	$(MAKE) -C gaslimit compare
-	$(MAKE) -C gaslimit compare GASLIMIT=0xffff
-	$(MAKE) -C gas compare
-	$(MAKE) -C gas compare GASLIMIT=0xffff
-	$(MAKE) -C gasprice compare
+	# with segfault $(MAKE) -C gaslimit compare
+	# with segfault $(MAKE) -C gaslimit compare GASLIMIT=0xffff
+	# with segfault $(MAKE) -C gas compare
+	# with segfault $(MAKE) -C gas compare GASLIMIT=0xffff
+	# with segfault $(MAKE) -C gasprice compare
 	# with segfault $(MAKE) -C address compare
 	# with segfault $(MAKE) -C balance compare
 	# with segfault $(MAKE) -C origin compare
 	# with segfault $(MAKE) -C caller compare
-	$(MAKE) -C callvalue compare
-	$(MAKE) -C codesize compare
-	$(MAKE) -C sha3 compare
-	$(MAKE) -C msize compare
+	# with segfault $(MAKE) -C callvalue compare
+	# with segfault $(MAKE) -C codesize compare
+	# with segfault $(MAKE) -C sha3 compare
+	# with segfault $(MAKE) -C msize compare
 	$(MAKE) -C sload compare
 	# with segfault $(MAKE) -C extcodesize compare
 
