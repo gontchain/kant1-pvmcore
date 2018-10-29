@@ -1930,19 +1930,25 @@ inline uint64 EVM::MloadInst(uint32 addr_val)
 {
   uint32 i ;
   uint32 j ;
-  uint64 data_val[119] ;
+  uint64 data_val[4] ;
   uint32 init_shift ;
   uint64 data_tmp ;
   ;
  for( j  = 3; j  >= 0; j  = ( j  - 1)){
   ;
+   data_val[ j ]  = 0;
    init_shift  = 0;
  for( i  = 0; i  < 8; i  = ( i  + 1)){
   ;
+   data_val[ j ]  = (pd_lsh( data_val[ j ] , init_shift ) |  (uint64)(data_bus[SARG(addr_val)]));
   SARG(addr_val) = (SARG(addr_val) + 1);
    init_shift  = ( init_shift  + 8);
   }
   }
+  stack_arr[sp] =  data_val[0] ;
+  stack_arr[(sp + 1)] =  data_val[1] ;
+  stack_arr[(sp + 2)] =  data_val[2] ;
+  stack_arr[(sp + 3)] =  data_val[3] ;
   sp = (sp + 3);
     return 0;
   return 0;
@@ -1953,16 +1959,21 @@ inline uint64 EVM::MStoreInst(uint32 addr_val)
 {
   uint32 i ;
   uint32 j ;
-  uint64 data_val[119] ;
+  uint64 data_val[4] ;
   uint32 init_shift ;
   uint64 data_tmp ;
   ;
-  sp = (sp - 3);
+   data_val[3]  = stack_arr[sp];
+   data_val[2]  = stack_arr[(sp - 1)];
+   data_val[1]  = stack_arr[(sp - 2)];
+   data_val[0]  = stack_arr[(sp - 3)];
+  sp = (sp - 4);
  for( j  = 0; j  < 4; j  = ( j  + 1)){
   ;
    init_shift  = (7 * 8);
  for( i  = 0; i  < 8; i  = ( i  + 1)){
   ;
+   data_tmp  = pd_rsh( data_val[ j ] , init_shift );
   data_bus[SARG(addr_val)] =  (uint8)( data_tmp );
   SARG(addr_val) = (SARG(addr_val) + 1);
    init_shift  = ( init_shift  - 8);
@@ -2159,7 +2170,7 @@ inline int EVM::Main_decode(uint32 ocode){
   {
   ;
    addr_val  =  (uint32)(stack_arr[sp]);
-  sp = (sp - 3);
+  sp = (sp - 4);
   }
   switch( (uint32)(Get_MemOps(SARG(opcode))))
   {
@@ -2181,8 +2192,8 @@ inline int EVM::Main_decode(uint32 ocode){
     case 3:
   ;
  UseGas((TDevice*)this,3);
-   data_val  = stack_arr[sp];
-  sp = (sp - 1);
+   data_val  = stack_arr[(sp - 3)];
+  sp = (sp - 4);
   data_bus[ addr_val ] =  (uint8)( data_val );
   if( addr_val  > mem_size)
   {

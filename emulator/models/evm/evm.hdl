@@ -750,19 +750,19 @@ Device EVM
     int32 init_shift;
     MAIN_TYPE data_tmp;
     for(j = 3; j >= 0; j=j-1) {
-      // data_val[j] = 0;
+      data_val[j] = 0;
       init_shift = 0; // most significant byte is first
       for(i = 0; i < 8; i=i+1)
       {
-        // data_val[j] = (data_val[j] << init_shift) | ((MAIN_TYPE)data_bus[addr_val]);
+        data_val[j] = (data_val[j] << init_shift) | ((MAIN_TYPE)data_bus[addr_val]);
         addr_val = addr_val + 1;
         init_shift = init_shift + 8;
       }
     }
-    // stack_arr[sp] = data_val[0];
-    // stack_arr[sp+1] = data_val[1];
-    // stack_arr[sp+2] = data_val[2];
-    // stack_arr[sp+3] = data_val[3];
+    stack_arr[sp] = data_val[0];
+    stack_arr[sp+1] = data_val[1];
+    stack_arr[sp+2] = data_val[2];
+    stack_arr[sp+3] = data_val[3];
     sp = sp + 3;
     return 0;
   }
@@ -774,16 +774,16 @@ Device EVM
     MAIN_TYPE data_val[4];
     int32 init_shift;
     MAIN_TYPE data_tmp;
-    // data_val[3] = stack_arr[sp];
-    // data_val[2] = stack_arr[sp-1];
-    // data_val[1] = stack_arr[sp-2];
-    // data_val[0] = stack_arr[sp-3];
-    sp = sp - 3;
+    data_val[3] = stack_arr[sp];
+    data_val[2] = stack_arr[sp-1];
+    data_val[1] = stack_arr[sp-2];
+    data_val[0] = stack_arr[sp-3];
+    sp = sp - 4;
     for(j = 0; j < 4; j=j+1) {
       init_shift = 7 * 8; // most significant byte is first
       for(i = 0; i < 8; i=i+1)
       {
-        // data_tmp = (data_val[j] >> init_shift);
+        data_tmp = (data_val[j] >> init_shift);
         data_bus[addr_val] = (int8)(data_tmp);
         addr_val = addr_val + 1;
         init_shift = init_shift - 8;
@@ -895,7 +895,7 @@ Device EVM
 
       if(opcode < 8) {
         addr_val = (int32)stack_arr[sp];
-        sp = sp - 3;
+        sp = sp - 4;
       }
       switch((int32)opcode)
       {
@@ -916,8 +916,8 @@ Device EVM
 
         case 3: // MSTORE8
           USEGAS(STEPGAS2);
-          data_val = stack_arr[sp];
-          sp = sp - 1;
+          data_val = stack_arr[sp-3];
+          sp = sp - 4;
           data_bus[addr_val] = (int8)(data_val);
           if (addr_val > mem_size)
             mem_size = addr_val;
