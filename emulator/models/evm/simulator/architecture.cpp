@@ -101,36 +101,46 @@ void DoArithm(TDevice* dev, uint32 opcode) {
         CheckError("@");
         break;
       case 1: // ADD
+        UseGas(dev, STEPGAS2);
         v_bignum_add(a, b);
         break;
       case 2: // MUL
+        UseGas(dev, STEPGAS3);
         v_bignum_mul(a, b);
         break;
       case 3: // SUB
+        UseGas(dev, STEPGAS2);
         v_bignum_sub(a, b);
         break;
       case 4: // DIV
+        UseGas(dev, STEPGAS3);
         v_bignum_div(a, b, tmp);
         break;
       case 5: // SDIV
+        UseGas(dev, STEPGAS3);
         v_bignum_div(a, b, tmp);
         break;
       case 6: // MOD
+        UseGas(dev, STEPGAS3);
         v_bignum_mod(a, b);
         break;
       case 7: // SMOD
         // TODO
+        UseGas(dev, STEPGAS3);
         v_bignum_mod(a, b);
         break;
       case 8: // ADDMOD
+        UseGas(dev, STEPGAS4);
         v_bignum_add(a, b);
         v_bignum_mod(a, c);
         break;
       case 9: // MULMOD
+        UseGas(dev, STEPGAS4);
         v_bignum_mul(a, b);
         v_bignum_mod(a, c);
         break;
       case 10: // EXP
+        UseGas(dev, STEPGAS5);
         if (v_bignum_eq_zero(b)) {
           v_bignum_set_one(a);
         } else {
@@ -142,6 +152,7 @@ void DoArithm(TDevice* dev, uint32 opcode) {
         }
         break;
       case 11: // SIGNEXTEND
+        UseGas(dev, STEPGAS3);
         // TODO
         break;
     }
@@ -188,54 +199,65 @@ void DoCompare(TDevice* dev, uint32 opcode) {
   ((EVM*)dev)->sp = sp + 3; // update sp
     switch (opcode) {
       case 0: // LT
+        UseGas(dev, STEPGAS2);
         if (v_bignum_gt(b, a))
           v_bignum_set_one(a);
         else
           v_bignum_set_zero(a);
         break;
       case 1: // GT
+        UseGas(dev, STEPGAS2);
         if (v_bignum_gt(a, b))
           v_bignum_set_one(a);
         else
           v_bignum_set_zero(a);
         break;
       case 2: // SLT
+        UseGas(dev, STEPGAS2);
         if (v_bignum_gt(b, a))
           v_bignum_set_one(a);
         else
           v_bignum_set_zero(a);
         break;
       case 3: // SGT
+        UseGas(dev, STEPGAS2);
         if (v_bignum_gt(a, b))
           v_bignum_set_one(a);
         else
           v_bignum_set_zero(a);
         break;
       case 4: // EQ
+        UseGas(dev, STEPGAS2);
         if (v_bignum_eq(a, b))
           v_bignum_set_one(a);
         else
           v_bignum_set_zero(a);
         break;
       case 5: // ISZERO
+        UseGas(dev, STEPGAS2);
         if (v_bignum_eq_zero(a))
           v_bignum_set_one(a);
         else
           v_bignum_set_zero(a);
         break;
       case 6: // AND
+        UseGas(dev, STEPGAS2);
         v_bignum_and(a, b);
         break;
       case 7: // OR
+        UseGas(dev, STEPGAS2);
         v_bignum_or(a, b);
         break;
       case 8: // XOR
+        UseGas(dev, STEPGAS2);
         v_bignum_xor(a, b);
         break;
       case 9: // NOT
+        UseGas(dev, STEPGAS2);
         v_bignum_not(a);
         break;
       case 10: // BYTE
+        UseGas(dev, STEPGAS2);
         v_bignum_set_bignum_part(a, b, 255-((*arg1 >> 8*7) & 0xff)*8, 8);
         break;
     }
