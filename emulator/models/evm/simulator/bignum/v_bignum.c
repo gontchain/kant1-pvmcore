@@ -386,6 +386,18 @@ void v_bignum_bit_set(VBigDig *x, unsigned int bit)
     x[1 + slot] |= m;
 }
 
+/* Compute x &= ~(1 << bit). */
+void v_bignum_bit_clear(VBigDig *x, unsigned int bit)
+{
+    unsigned int    slot, m;
+
+    if(bit >= (*x * (CHAR_BIT * sizeof *x)))
+        return;
+    slot = bit / (CHAR_BIT * sizeof *x);
+    m    = 1 << (bit % (CHAR_BIT * sizeof *x));
+    x[1 + slot] &= ~m;
+}
+
 /* Returns index of most signifant '1' bit of x, or -1 if x == 0. */
 int v_bignum_bit_msb(const VBigDig *x)
 {

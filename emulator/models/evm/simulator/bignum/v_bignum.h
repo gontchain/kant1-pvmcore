@@ -95,6 +95,7 @@ extern void v_bignum_print_hex_lf(const VBigDig *x);
 /* Bit operators. */
 extern int  v_bignum_bit_test(const VBigDig *x, unsigned int bit);
 extern void v_bignum_bit_set(VBigDig *x, unsigned int bit);
+extern void v_bignum_bit_clear(VBigDig *x, unsigned int bit);
 extern int  v_bignum_bit_msb(const VBigDig *x);
 extern int  v_bignum_bit_size(const VBigDig *x);
 extern void v_bignum_bit_shift_left(VBigDig *x, unsigned int count);

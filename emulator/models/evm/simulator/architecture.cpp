@@ -154,7 +154,18 @@ void DoArithm(TDevice* dev, uint32 opcode) {
         break;
       case 11: // SIGNEXTEND
         UseGas(dev, STEPGAS3);
-        // TODO
+        v_bignum_set_bignum(tmp, b);
+        uint8 byte = arg1[0] >> 7*8 & 0xFF;
+        if (byte < 31) {
+          uint8 t = 8*byte + 7;
+          for (i = t+1; i < 256; i++) {
+            if (v_bignum_bit_test(b, t))
+              v_bignum_bit_set(tmp, i);
+            else
+              v_bignum_bit_clear(tmp, i);
+          }
+        }
+        v_bignum_set_bignum(a, tmp);
         break;
     }
     v_bignum_bignum_to_reg(ret, a);
