@@ -56,7 +56,7 @@ void DoArithm(TDevice* dev, uint32 opcode) {
   int i, arg_count = 0;
   int32 sp = ((EVM*)dev)->sp;
   uint64 *arg1, *arg2, *arg3, *ret;
-  VBigDig VBIGNUM(a, 256), VBIGNUM(b, 256), VBIGNUM(c, 256), VBIGNUM(tmp, 256);
+  VBigDig VBIGNUM(a, 256), VBIGNUM(b, 256), VBIGNUM(c, 256), VBIGNUM(tmp, 256), VBIGNUM(tmp2, 256);
   // printf("opcode: %x\n", opcode);
   // printf("stack: \n");
   // for (i = sp; i >=0; i--) {
@@ -145,8 +145,9 @@ void DoArithm(TDevice* dev, uint32 opcode) {
           v_bignum_set_one(a);
         } else {
           v_bignum_set_one(tmp);
+          v_bignum_set_bignum(tmp2, a);
           while (!v_bignum_eq_one(b)) {
-            v_bignum_mul(a, a);
+            v_bignum_mul(a, tmp2);
             v_bignum_sub(b, tmp);
           }
         }
