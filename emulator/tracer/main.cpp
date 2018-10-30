@@ -84,12 +84,8 @@ TGetDevCore       GetDevCore;
 // config file name
 char*  ConfigFileName;
 // GAS limit
-#if 0
 uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
-#else
-uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
-#endif
-uint64 GasLimitValue = GasMaxLimitValue;
+uint64 GasLimitValue = 10000000000;
 char*  ProfileFileName;
 int    default_config_file;
 // second device file name
