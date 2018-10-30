@@ -39,6 +39,7 @@ all:
 	$(MAKE) -C sha3
 	$(MAKE) -C msize
 	$(MAKE) -C sload
+	$(MAKE) -C mload
 	$(MAKE) -C swap1
 
 compare:
@@ -79,6 +80,7 @@ compare:
 	# with segfault $(MAKE) -C codesize compare
 	# with segfault $(MAKE) -C sha3 compare
 	# with segfault $(MAKE) -C msize compare
+	$(MAKE) -C mload compare
 	$(MAKE) -C sload compare
 	# with segfault $(MAKE) -C extcodesize compare
 
@@ -134,6 +136,7 @@ run-evm:
 	$(MAKE) -C sha3 run-evm
 	$(MAKE) -C msize run-evm
 	$(MAKE) -C sload run-evm
+	$(MAKE) -C mload run-evm
 	$(MAKE) -C swap1 run-evm
 
 run-cemu:
@@ -174,6 +177,7 @@ run-cemu:
 	$(MAKE) -C sha3 run-cemu
 	$(MAKE) -C msize run-cemu
 	$(MAKE) -C sload run-cemu
+	$(MAKE) -C mload run-cemu
 	$(MAKE) -C swap1 run-cemu
 
 clean:
@@ -212,4 +216,5 @@ clean:
 	$(MAKE) -C sha3 clean
 	$(MAKE) -C msize clean
 	$(MAKE) -C sload clean
+	$(MAKE) -C mload clean
 	$(MAKE) -C swap1 clean
