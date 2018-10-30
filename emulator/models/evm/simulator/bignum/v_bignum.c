@@ -111,40 +111,37 @@ static void bignum_free(const VBigDig *x)
 
 /* ----------------------------------------------------------------------------------------- */
 
-VBigDig * v_bignum_reg_to_bignum(uint64 *reg, bool is_stack) {
-    int i;
-    uint64 part;
+VBigDig * v_bignum_reg_to_bignum(uint64 *reg) {
+    int i, j;
     VBigDig *x;
     x = bignum_alloc(64);
-    char digit_string[67] = "0x", block_string[17];
+    char digit_string[67] = "0x", block_string[17], byte_string[4];
 
-    if (!is_stack) { // big-endian block reading
-        for (i = 0; i < BLOCK_SIZE; i++) {
-            sprintf(block_string, "%llx", reg[i]);
-            strcat(digit_string, block_string);
+    for (i = BLOCK_SIZE-1; i >= 0; i--) {
+        strcpy(block_string, "");
+        for (j = 0; j < 8; j++) {
+            sprintf(byte_string, "%02x", (reg[i] >> (8*j)) & 0xff);
+            strcat(block_string, byte_string);
         }
-    } else { // reversed block reading
-        for (i = BLOCK_SIZE-1; i >= 0; i--) {
-            sprintf(block_string, "%llx", reg[i]);
-            strcat(digit_string, block_string);
-        }
+        strcat(digit_string, block_string);
     }
     v_bignum_set_string_hex(x, digit_string);
     return x;
 }
 
 void v_bignum_bignum_to_reg(uint64 *reg, VBigDig * x) {
-    int i;
-    VBigDig VBIGNUM(part, 256), VBIGNUM(part1, 64);
-    char part_string[17];
+    int i, j;
+    VBigDig VBIGNUM(part, 256);
+    char digit_string[67] = "0x", byte_string[4] = "", part_string[65] = "";
 
+    v_bignum_sprint_hex(digit_string, x);
     for (i = 0; i < BLOCK_SIZE; i++) {
-        v_bignum_set_bignum(part, x);
-        v_bignum_bit_shift_left(part, 64*i);
-        v_bignum_bit_shift_right(part, 256-64);
-        v_bignum_set_bignum(part1, part);
-        strcpy(part_string,"");
-        v_bignum_sprint_hex(part_string, part1);
+        strcpy(part_string, "");
+        for (j = 0; j < 16; j+=2) {
+            strncpy(byte_string, &digit_string[64-(16*i)-j], 2);
+            byte_string[3] = '\0';
+            strcat(part_string, byte_string);
+        }
         reg[i] = strtoull(part_string, NULL, 16);
     }
 }

@@ -64,7 +64,7 @@ typedef unsigned int    VBigDigs;   /* Should hold precisely two digits. */
 /* Convert internal register representation (4 64-bit parts)
  * into bignum variable and vice versa.
 */
-extern VBigDig * v_bignum_reg_to_bignum(uint64 *reg, bool is_stack);
+extern VBigDig * v_bignum_reg_to_bignum(uint64 *reg);
 extern void      v_bignum_bignum_to_reg(uint64 *reg, VBigDig * x);
 
 /* Import/export numbers from raw bits. The number x must have been allocated

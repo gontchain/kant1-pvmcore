@@ -1879,17 +1879,19 @@ inline uint64 EVM::PushInst(uint32 cnt)
   uint32 j ;
   uint64 a  = 0;
   uint64 tmp ;
+  uint64 block_cnt  = 0;
   ;
+  sp = (sp + 4);
  for( j  = 0; j  < (SARG(cnt) / 8); j  = ( j  + 1)){
   ;
    a  = 0;
  for( i  = 0; i  < 8; i  = ( i  + 1)){
   ;
-   tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
-   a  = (pd_lsh( a ,8) |  tmp );
+   tmp  = ((*prog_bus)[(pc + (SARG(cnt) -  i ))] & 255);
+   a  = ( a  | pd_lsh( tmp ,(8 * (7 -  i ))));
   }
-  sp = (sp + 1);
-  stack_arr[sp] =  a ;
+  stack_arr[((sp - 3) +  block_cnt )] =  a ;
+   block_cnt  = ( block_cnt  + 1);
   }
   if((SARG(cnt) & 7) != 0)
   {
@@ -1897,16 +1899,16 @@ inline uint64 EVM::PushInst(uint32 cnt)
    a  = 0;
  for( i  = 0; i  < (SARG(cnt) & 7); i  = ( i  + 1)){
   ;
-   tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
-   a  = (pd_lsh( a ,8) |  tmp );
+   tmp  = ((*prog_bus)[(pc + ((SARG(cnt) & 7) -  i ))] & 255);
+   tmp  = pd_lsh( tmp ,(8 * (7 -  i )));
+   a  = ( a  |  tmp );
   }
-  sp = (sp + 1);
-  stack_arr[sp] =  a ;
+  stack_arr[((sp - 3) +  block_cnt )] =  a ;
+   block_cnt  = ( block_cnt  + 1);
   }
  for( j  = ( j  + 1); j  < 4; j  = ( j  + 1)){
   ;
-  sp = (sp + 1);
-  stack_arr[sp] =  (uint64)(0);
+  stack_arr[((sp - 3) +  j )] =  (uint64)(0);
   }
     return 0;
   return 0;
@@ -1934,49 +1936,47 @@ inline uint64 EVM::MloadInst(uint32 addr_val)
   uint32 init_shift ;
   uint64 data_tmp ;
   ;
- for( j  = 3; j  >= 0; j  = ( j  - 1)){
+ for( j  = 3; ((int32)( j )) >= 0; j  = ( j  - 1)){
   ;
    data_val[ j ]  = 0;
-   init_shift  = 0;
  for( i  = 0; i  < 8; i  = ( i  + 1)){
   ;
-   data_val[ j ]  = (pd_lsh( data_val[ j ] , init_shift ) |  (uint64)(data_bus[SARG(addr_val)]));
+   data_tmp  = pd_lsh( (uint64)(data_bus[SARG(addr_val)]),(8 *  i ));
+   data_val[ j ]  = ( data_val[ j ]  |  data_tmp );
   SARG(addr_val) = (SARG(addr_val) + 1);
-   init_shift  = ( init_shift  + 8);
   }
   }
-  stack_arr[sp] =  data_val[0] ;
-  stack_arr[(sp + 1)] =  data_val[1] ;
-  stack_arr[(sp + 2)] =  data_val[2] ;
-  stack_arr[(sp + 3)] =  data_val[3] ;
-  sp = (sp + 3);
+  stack_arr[(sp + 1)] =  data_val[0] ;
+  stack_arr[(sp + 2)] =  data_val[1] ;
+  stack_arr[(sp + 3)] =  data_val[2] ;
+  stack_arr[(sp + 4)] =  data_val[3] ;
+  sp = (sp + 4);
     return 0;
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint64 EVM::MStoreInst(uint32 addr_val)
+inline uint64 EVM::MStoreInst(uint64 addr_val)
 {
   uint32 i ;
   uint32 j ;
   uint64 data_val[4] ;
-  uint32 init_shift ;
   uint64 data_tmp ;
+  uint64 msb  = 0;
+  uint1 msb_reached  = 0;
   ;
    data_val[3]  = stack_arr[sp];
    data_val[2]  = stack_arr[(sp - 1)];
    data_val[1]  = stack_arr[(sp - 2)];
    data_val[0]  = stack_arr[(sp - 3)];
   sp = (sp - 4);
- for( j  = 0; j  < 4; j  = ( j  + 1)){
+ for( j  = 3; ((int32)( j )) >= 0; j  = ( j  - 1)){
   ;
-   init_shift  = (7 * 8);
  for( i  = 0; i  < 8; i  = ( i  + 1)){
   ;
-   data_tmp  = pd_rsh( data_val[ j ] , init_shift );
+   data_tmp  = (pd_rsh( data_val[ j ] ,(8 *  i )) & 255);
   data_bus[SARG(addr_val)] =  (uint8)( data_tmp );
   SARG(addr_val) = (SARG(addr_val) + 1);
-   init_shift  = ( init_shift  - 8);
   }
   }
   if(SARG(addr_val) > mem_size)
@@ -2160,7 +2160,8 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint32 i ;
   uint32 dec_cnt ;
-  uint32 addr_val ;
+  uint64 addr_val  = 0;
+  uint64 addr_tmp ;
   uint32 init_shift ;
   uint64 data_val ;
   uint64 pc_val ;
@@ -2169,7 +2170,11 @@ inline int EVM::Main_decode(uint32 ocode){
   if(Get_MemOps(SARG(opcode)) < 8)
   {
   ;
-   addr_val  =  (uint32)(stack_arr[sp]);
+   addr_tmp  = stack_arr[(sp - 3)];
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   addr_val  = ( addr_val  | pd_lsh((pd_rsh( addr_tmp ,(8 * (7 -  i ))) & 255), i ));
+  }
   sp = (sp - 4);
   }
   switch( (uint32)(Get_MemOps(SARG(opcode))))
@@ -2194,7 +2199,7 @@ inline int EVM::Main_decode(uint32 ocode){
  UseGas((TDevice*)this,3);
    data_val  = stack_arr[(sp - 3)];
   sp = (sp - 4);
-  data_bus[ addr_val ] =  (uint8)( data_val );
+  data_bus[ addr_val ] =  (uint8)((pd_rsh( data_val ,(7 * 8)) & 255));
   if( addr_val  > mem_size)
   {
   mem_size =  addr_val ;

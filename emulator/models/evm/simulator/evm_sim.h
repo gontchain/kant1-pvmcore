@@ -205,7 +205,7 @@ inline uint64 DelegateCall();
 inline uint64 PushInst(uint32 cnt);
 inline uint64 LogInst(uint32 count,uint32 log_ptr);
 inline uint64 MloadInst(uint32 addr_val);
-inline uint64 MStoreInst(uint32 addr_val);
+inline uint64 MStoreInst(uint64 addr_val);
   inline int Main_decode(uint32 ocode);
   inline int EVM_Main_GetInstNum(uint32 ocode);
   void update();
