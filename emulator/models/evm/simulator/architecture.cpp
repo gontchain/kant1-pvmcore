@@ -125,9 +125,17 @@ void DoArithm(TDevice* dev, uint32 opcode) {
         v_bignum_mod(a, b);
         break;
       case 7: // SMOD
-        // TODO
         UseGas(dev, STEPGAS3);
+        v_bignum_set_zero(tmp);
+        // set signum multiplier
+        if (v_bignum_bit_test(a, 255)) {
+          v_bignum_set_one(tmp2);
+          v_bignum_sub(tmp, tmp2);
+        } else {
+          v_bignum_set_one(tmp);
+        }
         v_bignum_mod(a, b);
+        v_bignum_mul(a, tmp); // apply signum
         break;
       case 8: // ADDMOD
         UseGas(dev, STEPGAS4);
