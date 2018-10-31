@@ -3471,6 +3471,122 @@
                 </OPERATOR>
             </CODE>
         </MSizeOp>
+        <PcOp RETSIZE="64">
+            <LOCALVARS>
+                <i SIZE="32" />
+                <data_tmp SIZE="64">
+                    <INITAL_EXP>
+                        <TYPE name="uint64">
+                            <REG name="pc" />
+                        </TYPE>
+                    </INITAL_EXP>
+                </data_tmp>
+                <data_val SIZE="64">
+                    <INITAL_EXP>
+                        <IMM32 value="0" />
+                    </INITAL_EXP>
+                </data_val>
+            </LOCALVARS>
+            <CODE>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="8" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="data_val" />
+                            <OPERATOR name="|">
+                                <LVAR name="data_val" />
+                                <OPERATOR name="&lt;&lt;">
+                                    <OPERATOR name="&amp;">
+                                        <OPERATOR name="&gt;&gt;">
+                                            <LVAR name="data_tmp" />
+                                            <OPERATOR name="*">
+                                                <IMM32 value="8" />
+                                                <LVAR name="i" />
+                                            </OPERATOR>
+                                        </OPERATOR>
+                                        <IMM32 value="FF" />
+                                    </OPERATOR>
+                                    <OPERATOR name="*">
+                                        <IMM32 value="8" />
+                                        <OPERATOR name="-">
+                                            <IMM32 value="7" />
+                                            <LVAR name="i" />
+                                        </OPERATOR>
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </OPERATOR>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="1" />
+                    </OPERATOR>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <REG name="sp" />
+                    </REG>
+                    <LVAR name="data_val" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <OPERATOR name="+">
+                            <REG name="sp" />
+                            <IMM32 value="1" />
+                        </OPERATOR>
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <OPERATOR name="+">
+                            <REG name="sp" />
+                            <IMM32 value="2" />
+                        </OPERATOR>
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <OPERATOR name="+">
+                            <REG name="sp" />
+                            <IMM32 value="3" />
+                        </OPERATOR>
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="3" />
+                    </OPERATOR>
+                </OPERATOR>
+            </CODE>
+        </PcOp>
     </FUNCTIONS>
     <ARGLISTS>
         <ArithmOps NUM_ELEMS="12" RETURN_SIZE="64">
@@ -4265,11 +4381,19 @@
                 <CODE>
                     <IF>
                         <COND>
-                            <OPERATOR name=" &lt; ">
-                                <LST name="MemOps">
-                                    <ARG name="opcode" />
-                                </LST>
-                                <IMM32 value="8" />
+                            <OPERATOR name="&amp;">
+                                <OPERATOR name=" &lt; ">
+                                    <LST name="MemOps">
+                                        <ARG name="opcode" />
+                                    </LST>
+                                    <IMM32 value="8" />
+                                </OPERATOR>
+                                <OPERATOR name=" != ">
+                                    <LST name="MemOps">
+                                        <ARG name="opcode" />
+                                    </LST>
+                                    <IMM32 value="0" />
+                                </OPERATOR>
                             </OPERATOR>
                         </COND>
                         <INNER>
@@ -4293,9 +4417,13 @@
                                     <IMM32 value="2" />
                                 </ARGS>
                             </CALL>
-                            <CALL name="Pop">
-                                <ARGS />
-                            </CALL>
+                            <OPERATOR name=" = ">
+                                <REG name="sp" />
+                                <OPERATOR name="-">
+                                    <REG name="sp" />
+                                    <IMM32 value="4" />
+                                </OPERATOR>
+                            </OPERATOR>
                         </CASE>
                         <CASE index="1">
                             <CALL name="UseGas">
@@ -4486,25 +4614,9 @@
                                     <IMM32 value="2" />
                                 </ARGS>
                             </CALL>
-                            <OPERATOR name=" = ">
-                                <LVAR name="data_val" />
-                                <TYPE name="uint64">
-                                    <REG name="pc" />
-                                </TYPE>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="sp" />
-                                <OPERATOR name="+">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <LVAR name="data_val" />
-                            </OPERATOR>
+                            <CALL name="PcOp">
+                                <ARGS />
+                            </CALL>
                         </CASE>
                         <CASE index="9">
                             <CALL name="UseGas">

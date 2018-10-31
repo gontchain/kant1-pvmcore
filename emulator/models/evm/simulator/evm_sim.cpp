@@ -2020,6 +2020,26 @@ inline uint64 EVM::MSizeOp()
   return 0;
 };
 #undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::PcOp()
+{
+  uint32 i ;
+  uint64 data_tmp  =  (uint64)(pc);
+  uint64 data_val  = 0;
+  ;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh( data_tmp ,(8 *  i )) & 255),(8 * (7 -  i ))));
+  }
+  sp = (sp + 1);
+  stack_arr[sp] =  data_val ;
+  stack_arr[(sp + 1)] = 0;
+  stack_arr[(sp + 2)] = 0;
+  stack_arr[(sp + 3)] = 0;
+  sp = (sp + 3);
+  return 0;
+};
+#undef SARG
 inline int EVM::Main_decode(uint32 ocode){
   TMainInst* cur_inst;
   RUN_PIPE(MainPipe,0);
@@ -2200,7 +2220,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint64 pc_val ;
   uint64 data_tmp ;
   ;
-  if(Get_MemOps(SARG(opcode)) < 8)
+  if((Get_MemOps(SARG(opcode)) < 8) & (Get_MemOps(SARG(opcode)) != 0))
   {
   ;
    addr_val  = GetAddrVal();
@@ -2210,7 +2230,7 @@ inline int EVM::Main_decode(uint32 ocode){
     case 0:
   ;
  UseGas((TDevice*)this,2);
-  Pop();
+  sp = (sp - 4);
     break;
     case 1:
   ;
@@ -2267,9 +2287,7 @@ inline int EVM::Main_decode(uint32 ocode){
     case 8:
   ;
  UseGas((TDevice*)this,2);
-   data_val  =  (uint64)(pc);
-  sp = (sp + 1);
-  stack_arr[sp] =  data_val ;
+  PcOp();
     break;
     case 9:
   ;
