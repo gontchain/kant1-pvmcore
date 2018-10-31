@@ -217,6 +217,7 @@ inline uint64 SwapOp(uint32 count);
 inline uint64 PcOp();
 inline uint64 SaveToStorageStub(uint64 addr);
 inline uint64 LoadFromStorageStub(uint64 addr);
+inline uint64 KeccakAlgStub();
   inline int Main_decode(uint32 ocode);
   inline int EVM_Main_GetInstNum(uint32 ocode);
   void update();

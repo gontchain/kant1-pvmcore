@@ -280,34 +280,36 @@ void DoCompare(TDevice* dev, uint32 opcode) {
 }
 
 // KECCAK algorithm
-#if 1
-uint64 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
-{
-  return 0;
-}
-#else
-uint256 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
+void KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
 {
   EVM* my_evm = (EVM*)dev;
-  char buf[255], ret[259] = "0x", tmp[3] = "";
+  int32 sp = my_evm->sp;
+  uint64 *ret = &(my_evm->stack_arr[sp+1]);
   uint8 *start = my_evm->data_bus + offs;
+  uint64 res_reg[4] = {0,0,0,0};
+  unsigned char buf[255] = "";
   unsigned int hashSize = 256;
 
-  memcpy(buf, my_evm->data_bus + offs, size);
-
-  // Keccak
+  // read memory
+  memcpy(buf, start, size);
+  // compute Keccak hash
   keccakState *st = keccakCreate(hashSize);
   keccakUpdate((uint8_t*)buf, 0, size, st);
   unsigned char *op = keccakDigest(st);
-
-  for (unsigned int i = 0; i != (hashSize / 8); i++)
-  {
-    sprintf(tmp, "%.2x", *(op++));
-    strcat(ret, tmp);
+  // construct numbers blocks
+  for (unsigned int i = 0; i != (hashSize / 8); i++) {
+    uint32 block_idx = i == 0 ? 0 : i/8,
+           shift     = i == 0 ? 0 : 8*(i%8);
+    uint64 byte = *(op++);
+    byte <<= shift;
+    res_reg[block_idx] |= byte;
   }
-  return uint256(ret);
+  // write to stack
+  for (int i = 0; i < 4; i++) {
+    ret[i] = res_reg[3-i];
+  }
+  my_evm->sp = sp + 4; // update sp
 }
-#endif
 
 uint64 GetElfSize(TDevice* dev)
 {

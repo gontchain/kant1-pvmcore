@@ -53,7 +53,7 @@ Device EVM
   
   PCOUNT pc;
 
-  extern MAIN_TYPE KeccakAlg(int32 offs,int32 size);
+  extern void      KeccakAlg(int32 offs,int32 size);
   extern MAIN_TYPE GetElfSize();
   extern void      SaveToStorage(int32 offs);
   extern void      LoadFromStorage(int32 offs);
@@ -889,6 +889,13 @@ Device EVM
     LoadFromStorage(addr);
   }
 
+  Func KeccakAlgStub()
+  {
+    int32 a = GetSingleBlockFromStack();
+    int32 b = GetSingleBlockFromStack();
+    KeccakAlg(a, b);
+  }
+
   //  instruction set;
   ISET Main
   {
@@ -1081,11 +1088,7 @@ Device EVM
     {
       USEGAS(SHA3GAS);
       // compute Keccak-256 hash
-      MAIN_TYPE res = 0xdeadbeef;
-      // TODO Keccak does not support 64-bit hash. Add 256-bit support, delete argument passing and uncomment
-      // KeccakAlg((int32)a,(int32)b);
-      // sp = sp - 1;
-      stack_arr[sp] = res;
+      KeccakAlgStub();
     }
 
   }// end of ISET

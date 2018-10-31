@@ -3796,6 +3796,28 @@
                 </CALL>
             </CODE>
         </LoadFromStorageStub>
+        <KeccakAlgStub RETSIZE="64">
+            <LOCALVARS>
+                <a SIZE="32">
+                    <INITAL_EXP>
+                        <CALL name="GetSingleBlockFromStack" />
+                    </INITAL_EXP>
+                </a>
+                <b SIZE="32">
+                    <INITAL_EXP>
+                        <CALL name="GetSingleBlockFromStack" />
+                    </INITAL_EXP>
+                </b>
+            </LOCALVARS>
+            <CODE>
+                <CALL name="KeccakAlg">
+                    <ARGS>
+                        <LVAR name="a" />
+                        <LVAR name="b" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </KeccakAlgStub>
     </FUNCTIONS>
     <ARGLISTS>
         <ArithmOps NUM_ELEMS="12" RETURN_SIZE="64">
@@ -4885,29 +4907,15 @@
                 <OPCODE>
                     <ARG SIZE="8" VAL="32" />
                 </OPCODE>
-                <LOCALVARS>
-                    <a SIZE="32">
-                        <INITAL_EXP>
-                            <CALL name="GetSingleBlockFromStack" />
-                        </INITAL_EXP>
-                    </a>
-                    <b SIZE="32">
-                        <INITAL_EXP>
-                            <CALL name="GetSingleBlockFromStack" />
-                        </INITAL_EXP>
-                    </b>
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
                     <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="1E" />
                         </ARGS>
                     </CALL>
-                    <CALL name="KeccakAlg">
-                        <ARGS>
-                            <LVAR name="a" />
-                            <LVAR name="b" />
-                        </ARGS>
+                    <CALL name="KeccakAlgStub">
+                        <ARGS />
                     </CALL>
                 </CODE>
             </INSTRUCTION>

@@ -2113,6 +2113,16 @@ inline uint64 EVM::LoadFromStorageStub(uint64 addr)
   return 0;
 };
 #undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::KeccakAlgStub()
+{
+  uint32 a  = GetSingleBlockFromStack();
+  uint32 b  = GetSingleBlockFromStack();
+  ;
+ KeccakAlg((TDevice*)this, a , b );
+  return 0;
+};
+#undef SARG
 inline int EVM::Main_decode(uint32 ocode){
   TMainInst* cur_inst;
   RUN_PIPE(MainPipe,0);
@@ -2411,11 +2421,9 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 14;
   #define SARG(aidx) cur_inst->inst14.aidx
       {
-  uint32 a  = GetSingleBlockFromStack();
-  uint32 b  = GetSingleBlockFromStack();
   ;
   USEGAS(30);
- KeccakAlg((TDevice*)this, a , b );
+  KeccakAlgStub();
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
