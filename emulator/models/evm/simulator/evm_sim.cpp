@@ -1916,7 +1916,7 @@ inline uint64 EVM::PushInst(uint32 cnt)
   uint64 tmp ;
   uint64 block_cnt  = 0;
   ;
-  sp = (sp + 4);
+  sp = (sp + 1);
  for( j  = 0; j  < (SARG(cnt) / 8); j  = ( j  + 1)){
   ;
    a  = 0;
@@ -1925,7 +1925,7 @@ inline uint64 EVM::PushInst(uint32 cnt)
    tmp  = ((*prog_bus)[(pc + ((SARG(cnt) -  i ) - (8 *  j )))] & 255);
    a  = ( a  | pd_lsh( tmp ,(8 * (7 -  i ))));
   }
-  stack_arr[((sp - 3) +  block_cnt )] =  a ;
+  stack_arr[(sp +  block_cnt )] =  a ;
    block_cnt  = ( block_cnt  + 1);
   }
   if((SARG(cnt) & 7) != 0)
@@ -1938,13 +1938,14 @@ inline uint64 EVM::PushInst(uint32 cnt)
    tmp  = pd_lsh( tmp ,(8 * (7 -  i )));
    a  = ( a  |  tmp );
   }
-  stack_arr[((sp - 3) +  block_cnt )] =  a ;
+  stack_arr[(sp +  block_cnt )] =  a ;
    block_cnt  = ( block_cnt  + 1);
   }
  for( j  = ( j  + 1); j  < 4; j  = ( j  + 1)){
   ;
-  stack_arr[((sp - 3) +  j )] =  (uint64)(0);
+  stack_arr[(sp +  j )] =  (uint64)(0);
   }
+  sp = (sp + 3);
     return 0;
   return 0;
 };
@@ -2194,11 +2195,21 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 9;
   #define SARG(aidx) cur_inst->inst9.aidx
       {
-  uint64 first_el  = stack_arr[sp];
+  uint32 i ;
+  uint32 offs ;
+  uint64 first_el[4] ;
   ;
  UseGas((TDevice*)this,3);
-  stack_arr[sp] = stack_arr[(sp - (SARG(count) + 1))];
-  stack_arr[(sp - (SARG(count) + 1))] =  first_el ;
+   first_el[3]  = stack_arr[(sp - 3)];
+   first_el[2]  = stack_arr[(sp - 3)];
+   first_el[1]  = stack_arr[(sp - 1)];
+   first_el[0]  = stack_arr[sp];
+ for( i  = 0; i  < 4; i  = ( i  + 1)){
+  ;
+   offs  = (sp - ((4 * (SARG(count) + 1)) +  i ));
+  stack_arr[(sp -  i )] = stack_arr[ offs ];
+  stack_arr[ offs ] =  first_el[ i ] ;
+  }
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)

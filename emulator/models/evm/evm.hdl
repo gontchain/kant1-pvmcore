@@ -730,7 +730,7 @@ Device EVM
     MAIN_TYPE a = 0;
     MAIN_TYPE tmp;
     MAIN_TYPE block_cnt = 0;
-    sp = sp + 4;
+    sp = sp + 1;
     for(j = 0; j < (cnt/8); j=j+1) {
       a = 0;
       for(i = 0; i < 8; i=i+1)
@@ -738,7 +738,7 @@ Device EVM
         tmp = prog_bus[pc + (cnt-i-8*j)] & 0xFF;
         a = a | (tmp << (8*(7-i)));
       }
-      stack_arr[sp-3+block_cnt] = a;
+      stack_arr[sp+block_cnt] = a;
       block_cnt = block_cnt + 1;
     }
     if ((cnt&7) != 0) {
@@ -749,12 +749,13 @@ Device EVM
         tmp = tmp << 8*(7-i);
         a = a | tmp;
       }
-      stack_arr[sp-3+block_cnt] = a;
+      stack_arr[sp+block_cnt] = a;
       block_cnt = block_cnt + 1;
     }
     for(j=j+1; j < 4; j=j+1) {
-      stack_arr[sp-3+j] = (MAIN_TYPE)0;
+      stack_arr[sp+j] = (MAIN_TYPE)0;
     }
+    sp = sp + 3;
     return 0;
   }
 
@@ -920,10 +921,20 @@ Device EVM
 
     INST "SWAP$count", (8,int4 count,int4 0x9)
     {
+      int32 i;
+      int32 offs;
+      MAIN_TYPE first_el[4];
+
       USEGAS(STEPGAS2);
-      MAIN_TYPE first_el = stack_arr[sp];
-      stack_arr[sp] = stack_arr[sp - (count + 1)];
-      stack_arr[sp - (count + 1)] = first_el;
+      first_el[3] = stack_arr[sp-3];
+      first_el[2] = stack_arr[sp-3];
+      first_el[1] = stack_arr[sp-1];
+      first_el[0] = stack_arr[sp];
+      for (i=0; i<4; i=i+1) {
+        offs = sp - ((4*(count + 1)) + i);
+        stack_arr[sp-i] = stack_arr[offs];
+        stack_arr[offs] = first_el[i];
+      }
     }
 
     INST "LOG$count", (8, int3 count,int1 0,int4 0xa)
