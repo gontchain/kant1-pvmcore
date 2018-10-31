@@ -2187,11 +2187,18 @@
                 </RETURN>
             </CODE>
         </GetInputData>
+        <GetElfSizeStub RETSIZE="64">
+            <CODE>
+                <RETURN>
+                    <CALL name="GetElfSize" />
+                </RETURN>
+            </CODE>
+        </GetElfSizeStub>
         <GetCodeSize RETSIZE="64">
             <LOCALVARS>
                 <elf_size SIZE="64">
                     <INITAL_EXP>
-                        <CALL name="GetElfSize" />
+                        <CALL name="GetElfSizeStub" />
                     </INITAL_EXP>
                 </elf_size>
             </LOCALVARS>
@@ -3765,6 +3772,30 @@
                 </OPERATOR>
             </CODE>
         </PcOp>
+        <SaveToStorageStub RETSIZE="64">
+            <ARGUMENTS>
+                <addr SIZE="64" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="SaveToStorage">
+                    <ARGS>
+                        <ARG name="addr" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </SaveToStorageStub>
+        <LoadFromStorageStub RETSIZE="64">
+            <ARGUMENTS>
+                <addr SIZE="64" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="LoadFromStorage">
+                    <ARGS>
+                        <ARG name="addr" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </LoadFromStorageStub>
     </FUNCTIONS>
     <ARGLISTS>
         <ArithmOps NUM_ELEMS="12" RETURN_SIZE="64">
@@ -4653,7 +4684,7 @@
                                     <IMM32 value="32" />
                                 </ARGS>
                             </CALL>
-                            <CALL name="LoadFromStorage">
+                            <CALL name="LoadFromStorageStub">
                                 <ARGS>
                                     <LVAR name="addr_val" />
                                 </ARGS>
@@ -4665,7 +4696,7 @@
                                     <IMM32 value="0" />
                                 </ARGS>
                             </CALL>
-                            <CALL name="SaveToStorage">
+                            <CALL name="SaveToStorageStub">
                                 <ARGS>
                                     <LVAR name="addr_val" />
                                 </ARGS>

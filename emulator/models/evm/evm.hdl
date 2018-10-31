@@ -547,10 +547,15 @@ Device EVM
    return (MAIN_TYPE)0;
   }
 
+  MAIN_TYPE GetElfSizeStub()
+  {
+    return GetElfSize();
+  }
+
   MAIN_TYPE GetCodeSize()
   {
    USEGAS(STEPGAS1);
-   MAIN_TYPE elf_size = GetElfSize();
+   MAIN_TYPE elf_size = GetElfSizeStub();
    PushSingleBlockToStack(elf_size);
    return (MAIN_TYPE)0;
   }
@@ -874,6 +879,16 @@ Device EVM
     sp = sp + 3;
   }
 
+  Func SaveToStorageStub(MAIN_TYPE addr)
+  {
+    SaveToStorage(addr);
+  }
+
+  Func LoadFromStorageStub(MAIN_TYPE addr)
+  {
+    LoadFromStorage(addr);
+  }
+
   //  instruction set;
   ISET Main
   {
@@ -1002,12 +1017,12 @@ Device EVM
 
         case 4: // SLOAD
           USEGAS(SLOADGAS);
-          LoadFromStorage(addr_val);
+          LoadFromStorageStub(addr_val);
           break;
 
         case 5: // SSTORE
           USEGAS(STEPGAS0);
-          SaveToStorage(addr_val);
+          SaveToStorageStub(addr_val);
           break;
 
         case 6: // JUMP 

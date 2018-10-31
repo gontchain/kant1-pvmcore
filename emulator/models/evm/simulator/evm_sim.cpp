@@ -1735,9 +1735,17 @@ inline uint64 EVM::GetInputData()
 };
 #undef SARG
 #define SARG(aidx) aidx
+inline uint64 EVM::GetElfSizeStub()
+{
+  ;
+    return GetElfSize((TDevice*)this);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
 inline uint64 EVM::GetCodeSize()
 {
-  uint64 elf_size  = GetElfSize((TDevice*)this);
+  uint64 elf_size  = GetElfSizeStub();
   ;
   USEGAS(2);
   PushSingleBlockToStack( elf_size );
@@ -2089,6 +2097,22 @@ inline uint64 EVM::PcOp()
   return 0;
 };
 #undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::SaveToStorageStub(uint64 addr)
+{
+  ;
+ SaveToStorage((TDevice*)this,SARG(addr));
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::LoadFromStorageStub(uint64 addr)
+{
+  ;
+ LoadFromStorage((TDevice*)this,SARG(addr));
+  return 0;
+};
+#undef SARG
 inline int EVM::Main_decode(uint32 ocode){
   TMainInst* cur_inst;
   RUN_PIPE(MainPipe,0);
@@ -2302,12 +2326,12 @@ inline int EVM::Main_decode(uint32 ocode){
     case 4:
   ;
   USEGAS(50);
- LoadFromStorage((TDevice*)this, addr_val );
+  LoadFromStorageStub( addr_val );
     break;
     case 5:
   ;
   USEGAS(0);
- SaveToStorage((TDevice*)this, addr_val );
+  SaveToStorageStub( addr_val );
     break;
     case 6:
   ;
