@@ -32,7 +32,7 @@
     </VARS>
     <FLAGS />
     <FUNCTIONS>
-        <KeccakAlg RETSIZE="64" EXTERN="1">
+        <KeccakAlg RETSIZE="0" EXTERN="1">
             <ARGUMENTS>
                 <offs SIZE="32" />
                 <size SIZE="32" />
@@ -72,6 +72,18 @@
             </ARGUMENTS>
             <CODE />
         </DoCompare>
+        <USEGAS RETSIZE="64">
+            <ARGUMENTS>
+                <value SIZE="64" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <ARG name="value" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </USEGAS>
         <GetSingleBlockFromStack RETSIZE="64">
             <LOCALVARS>
                 <i SIZE="32" />
@@ -295,7 +307,7 @@
                 </res>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="A" />
                     </ARGS>
@@ -420,7 +432,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="5" />
                     </ARGS>
@@ -577,7 +589,7 @@
                 </end_bit>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -630,7 +642,7 @@
                 <div SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="5" />
                     </ARGS>
@@ -735,7 +747,7 @@
                 <div SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="8" />
                     </ARGS>
@@ -840,7 +852,7 @@
                 <div SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="8" />
                     </ARGS>
@@ -938,7 +950,7 @@
                 </is_signed>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="5" />
                     </ARGS>
@@ -1026,7 +1038,7 @@
         </GetModuleS>
         <StopOp RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="0" />
                     </ARGS>
@@ -1060,7 +1072,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1109,7 +1121,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1158,7 +1170,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="5" />
                     </ARGS>
@@ -1207,7 +1219,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="5" />
                     </ARGS>
@@ -1278,7 +1290,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="5" />
                     </ARGS>
@@ -1353,7 +1365,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1402,7 +1414,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1455,7 +1467,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1504,7 +1516,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1557,7 +1569,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1596,7 +1608,7 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1638,7 +1650,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1687,7 +1699,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1736,7 +1748,7 @@
                 </b>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1775,7 +1787,7 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1797,7 +1809,7 @@
         </NotOp>
         <CallValue RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -1855,7 +1867,7 @@
                 </c>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1876,7 +1888,7 @@
         </CallDataCopy>
         <CallDataSize RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -1924,7 +1936,7 @@
                 </c>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -1945,7 +1957,7 @@
         </CodeCopy>
         <ExtCodeSize RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
@@ -2003,7 +2015,7 @@
                 </d>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
@@ -2031,7 +2043,7 @@
                 </ca>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2061,7 +2073,7 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
@@ -2090,7 +2102,7 @@
                 </oa>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2118,7 +2130,7 @@
                 </ca>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2157,7 +2169,7 @@
                 </inp_data>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -2184,7 +2196,7 @@
                 </elf_size>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2210,7 +2222,7 @@
                 </gp>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2240,7 +2252,7 @@
                 </a>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
@@ -2281,7 +2293,7 @@
         </BlockChainHash>
         <GetCoinBase RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2295,7 +2307,7 @@
         </GetCoinBase>
         <GetTimeStamp RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2309,7 +2321,7 @@
         </GetTimeStamp>
         <GetNumber RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2323,7 +2335,7 @@
         </GetNumber>
         <GetDifficulty RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2337,7 +2349,7 @@
         </GetDifficulty>
         <GetGasLimit RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2381,7 +2393,7 @@
                 <account SIZE="64" />
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="7D00" />
                     </ARGS>
@@ -2486,7 +2498,7 @@
                 </call_res>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="28" />
                     </ARGS>
@@ -2587,7 +2599,7 @@
                 </call_res>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="28" />
                     </ARGS>
@@ -2614,7 +2626,7 @@
         </MakeCallCode>
         <Return RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="0" />
                     </ARGS>
@@ -2695,7 +2707,7 @@
                 </call_res>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="28" />
                     </ARGS>
@@ -3529,7 +3541,7 @@
                 <first_el SIZE="64" ARRSIZE="4" />
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
@@ -4211,7 +4223,7 @@
                     </call_res>
                 </LOCALVARS>
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="28" />
                         </ARGS>
@@ -4255,7 +4267,7 @@
                     </b>
                 </LOCALVARS>
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="0" />
                         </ARGS>
@@ -4286,7 +4298,7 @@
                     </a>
                 </LOCALVARS>
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="0" />
                         </ARGS>
@@ -4334,7 +4346,7 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="3" />
                         </ARGS>
@@ -4372,7 +4384,7 @@
                     <a SIZE="64" />
                 </LOCALVARS>
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="3" />
                         </ARGS>
@@ -4459,7 +4471,7 @@
                     </m_size>
                 </LOCALVARS>
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <OPERATOR name="+">
                                 <IMM32 value="177" />
@@ -4544,7 +4556,7 @@
                             </TYPE>
                         </EXPRESSION>
                         <CASE index="0">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
@@ -4558,7 +4570,7 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="1">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="3" />
                                 </ARGS>
@@ -4570,7 +4582,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="2">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="3" />
                                 </ARGS>
@@ -4582,7 +4594,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="3">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="3" />
                                 </ARGS>
@@ -4636,7 +4648,7 @@
                             </IF>
                         </CASE>
                         <CASE index="4">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="32" />
                                 </ARGS>
@@ -4648,7 +4660,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="5">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="0" />
                                 </ARGS>
@@ -4660,7 +4672,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="6">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="8" />
                                 </ARGS>
@@ -4675,7 +4687,7 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="7">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="A" />
                                 </ARGS>
@@ -4711,7 +4723,7 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="8">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
@@ -4721,7 +4733,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="9">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
@@ -4731,7 +4743,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="10">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
@@ -4793,7 +4805,7 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="11">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="1" />
                                 </ARGS>
@@ -4843,24 +4855,29 @@
                     <ARG SIZE="8" VAL="32" />
                 </OPCODE>
                 <LOCALVARS>
-                    <res SIZE="64">
+                    <a SIZE="32">
                         <INITAL_EXP>
-                            <IMM32 value="DEADBEEF" />
+                            <CALL name="GetSingleBlockFromStack" />
                         </INITAL_EXP>
-                    </res>
+                    </a>
+                    <b SIZE="32">
+                        <INITAL_EXP>
+                            <CALL name="GetSingleBlockFromStack" />
+                        </INITAL_EXP>
+                    </b>
                 </LOCALVARS>
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="1E" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                        <LVAR name="res" />
-                    </OPERATOR>
+                    <CALL name="KeccakAlg">
+                        <ARGS>
+                            <LVAR name="a" />
+                            <LVAR name="b" />
+                        </ARGS>
+                    </CALL>
                 </CODE>
             </INSTRUCTION>
         </Main>

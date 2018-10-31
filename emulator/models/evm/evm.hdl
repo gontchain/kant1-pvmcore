@@ -62,6 +62,11 @@ Device EVM
   extern void      DoArithm(int32 opcode);
   extern void      DoCompare(int32 opcode);
 
+  Func USEGAS(MAIN_TYPE value)
+  {
+    UseGas(value);
+  }
+
   // used to get stack value if it fits in single block (uint64)
   MAIN_TYPE GetSingleBlockFromStack()
   {

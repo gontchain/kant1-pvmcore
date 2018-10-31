@@ -1144,6 +1144,14 @@ int EVM::GetCellSize(int busnum,int addr){
   return 0;
 };
 #define SARG(aidx) aidx
+inline uint64 EVM::USEGAS(uint64 value)
+{
+  ;
+ UseGas((TDevice*)this,SARG(value));
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
 inline uint64 EVM::GetSingleBlockFromStack()
 {
   uint32 i ;
@@ -1194,7 +1202,7 @@ inline uint64 EVM::GetExp()
   uint64 i ;
   uint64 res  = 1;
   ;
- UseGas((TDevice*)this,10);
+  USEGAS(10);
  for( i  = 0; i  <  pow ; i  = ( i  + 1)){
   ;
    res  = ( res  *  base );
@@ -1234,7 +1242,7 @@ inline uint64 EVM::SignExtend()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,5);
+  USEGAS(5);
   sp = (sp - 1);
   if( a  < 31)
   {
@@ -1266,7 +1274,7 @@ inline uint64 EVM::ByteFromWord()
   uint32 start_bit  =  (uint32)(((31 -  a ) * 8));
   uint32 end_bit  = ( start_bit  + 7);
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] =  TBitVE< uint64 >( b , end_bit , start_bit );
     return  (uint64)(0);
@@ -1280,7 +1288,7 @@ inline uint64 EVM::GetModule()
   uint64 mod  = stack_arr[(sp - 1)];
   uint64 div ;
   ;
- UseGas((TDevice*)this,5);
+  USEGAS(5);
   sp = (sp - 1);
   if( mod  == 0)
   {
@@ -1307,7 +1315,7 @@ inline uint64 EVM::GetModuleAdd()
   uint64 mod  = stack_arr[(sp - 2)];
   uint64 div ;
   ;
- UseGas((TDevice*)this,8);
+  USEGAS(8);
   sp = (sp - 2);
   if( mod  == 0)
   {
@@ -1334,7 +1342,7 @@ inline uint64 EVM::GetModuleMul()
   uint64 mod  = stack_arr[(sp - 2)];
   uint64 div ;
   ;
- UseGas((TDevice*)this,8);
+  USEGAS(8);
   sp = (sp - 2);
   if( mod  == 0)
   {
@@ -1361,7 +1369,7 @@ inline uint64 EVM::GetModuleS()
   uint64 sign ;
   uint1 is_signed  = ( ((int64)( a )) < 0);
   ;
- UseGas((TDevice*)this,5);
+  USEGAS(5);
   sp = (sp - 1);
    sign  =  ( ( is_signed  != 0) ? ( (uint64)((0 - 1))) : ( (uint64)(1)) );
   if( mod  == 0)
@@ -1384,7 +1392,7 @@ inline uint64 EVM::GetModuleS()
 inline uint64 EVM::StopOp()
 {
   ;
- UseGas((TDevice*)this,0);
+  USEGAS(0);
   CheckError("@");
     return  (uint64)(0);
   return 0;
@@ -1396,7 +1404,7 @@ inline uint64 EVM::AddOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  +  b );
     return  (uint64)(0);
@@ -1409,7 +1417,7 @@ inline uint64 EVM::SubOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  -  b );
     return  (uint64)(0);
@@ -1422,7 +1430,7 @@ inline uint64 EVM::MulOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,5);
+  USEGAS(5);
   sp = (sp - 1);
   stack_arr[sp] = ( a  *  b );
     return  (uint64)(0);
@@ -1435,7 +1443,7 @@ inline uint64 EVM::DivOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,5);
+  USEGAS(5);
   sp = (sp - 1);
   if( b  == 0)
   {
@@ -1457,7 +1465,7 @@ inline uint64 EVM::DivOpS()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,5);
+  USEGAS(5);
   sp = (sp - 1);
   if( b  == 0)
   {
@@ -1479,7 +1487,7 @@ inline uint64 EVM::LtOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  <  b );
     return  (uint64)(0);
@@ -1492,7 +1500,7 @@ inline uint64 EVM::LtOpS()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] =  ((int64)(( a  <  ((int64)( b )))));
     return  (uint64)(0);
@@ -1505,7 +1513,7 @@ inline uint64 EVM::GtOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  >  b );
     return  (uint64)(0);
@@ -1518,7 +1526,7 @@ inline uint64 EVM::GtOpS()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] =  ((int64)(( a  >  ((int64)( b )))));
     return  (uint64)(0);
@@ -1531,7 +1539,7 @@ inline uint64 EVM::EqOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  ==  b );
     return  (uint64)(0);
@@ -1543,7 +1551,7 @@ inline uint64 EVM::IsZeroOp()
 {
   uint64 a  = stack_arr[sp];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   stack_arr[sp] = ( a  == 0);
     return  (uint64)(0);
   return 0;
@@ -1555,7 +1563,7 @@ inline uint64 EVM::AndOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  &  b );
     return  (uint64)(0);
@@ -1568,7 +1576,7 @@ inline uint64 EVM::OrOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  |  b );
     return  (uint64)(0);
@@ -1581,7 +1589,7 @@ inline uint64 EVM::XorOp()
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 1);
   stack_arr[sp] = ( a  ^  b );
     return  (uint64)(0);
@@ -1593,7 +1601,7 @@ inline uint64 EVM::NotOp()
 {
   uint64 a  = stack_arr[sp];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   stack_arr[sp] = (~ a );
     return  (uint64)(0);
   return 0;
@@ -1603,7 +1611,7 @@ inline uint64 EVM::NotOp()
 inline uint64 EVM::CallValue()
 {
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   sp = (sp + 1);
   stack_arr[sp] =  (uint64)(0);
     return  (uint64)(0);
@@ -1617,7 +1625,7 @@ inline uint64 EVM::CallDataCopy()
   uint64 b  = stack_arr[(sp - 1)];
   uint64 c  = stack_arr[(sp - 2)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 3);
     return  (uint64)(0);
   return 0;
@@ -1627,7 +1635,7 @@ inline uint64 EVM::CallDataCopy()
 inline uint64 EVM::CallDataSize()
 {
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack(inp_data_size);
     return  (uint64)(0);
   return 0;
@@ -1640,7 +1648,7 @@ inline uint64 EVM::CodeCopy()
   uint64 b  = stack_arr[(sp - 1)];
   uint64 c  = stack_arr[(sp - 2)];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   sp = (sp - 3);
     return  (uint64)(0);
   return 0;
@@ -1650,7 +1658,7 @@ inline uint64 EVM::CodeCopy()
 inline uint64 EVM::ExtCodeSize()
 {
   ;
- UseGas((TDevice*)this,20);
+  USEGAS(20);
   PushSingleBlockToStack(ext_code_size);
     return  (uint64)(0);
   return 0;
@@ -1664,7 +1672,7 @@ inline uint64 EVM::ExtCodeCopy()
   uint64 c  = stack_arr[(sp - 2)];
   uint64 d  = stack_arr[(sp - 3)];
   ;
- UseGas((TDevice*)this,20);
+  USEGAS(20);
   sp = (sp - 4);
     return  (uint64)(0);
   return 0;
@@ -1675,7 +1683,7 @@ inline uint64 EVM::GetAddress()
 {
   uint64 ca  = cur_addr;
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack( (uint64)( ca ));
     return  (uint64)(0);
   return 0;
@@ -1686,7 +1694,7 @@ inline uint64 EVM::GetBalance()
 {
   uint64 a  = stack_arr[sp];
   ;
- UseGas((TDevice*)this,20);
+  USEGAS(20);
   stack_arr[sp] =  (uint64)(0);
     return  (uint64)(0);
   return 0;
@@ -1697,7 +1705,7 @@ inline uint64 EVM::GetOrigin()
 {
   uint64 oa  = origin_addr;
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack( (uint64)( oa ));
     return  (uint64)(0);
   return 0;
@@ -1708,7 +1716,7 @@ inline uint64 EVM::GetCaller()
 {
   uint64 ca  = caller_addr;
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack( (uint64)( ca ));
     return  (uint64)(0);
   return 0;
@@ -1720,7 +1728,7 @@ inline uint64 EVM::GetInputData()
   uint32 addr_val  =  (uint32)(stack_arr[sp]);
   uint64 inp_data  = input_data[ addr_val ];
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   stack_arr[sp] =  inp_data ;
     return  (uint64)(0);
   return 0;
@@ -1731,7 +1739,7 @@ inline uint64 EVM::GetCodeSize()
 {
   uint64 elf_size  = GetElfSize((TDevice*)this);
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack( elf_size );
     return  (uint64)(0);
   return 0;
@@ -1742,7 +1750,7 @@ inline uint64 EVM::GetGasPrice()
 {
   uint64 gp  = gas_price;
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack( (uint64)( gp ));
     return  (uint64)(0);
   return 0;
@@ -1753,7 +1761,7 @@ inline uint64 EVM::BlockChainHash()
 {
   uint64 a  = stack_arr[sp];
   ;
- UseGas((TDevice*)this,20);
+  USEGAS(20);
   CoinBase = 16;
   TimeStamp = 4096;
   Number = 0x1234543234LL;
@@ -1768,7 +1776,7 @@ inline uint64 EVM::BlockChainHash()
 inline uint64 EVM::GetCoinBase()
 {
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack(CoinBase);
   return 0;
 };
@@ -1777,7 +1785,7 @@ inline uint64 EVM::GetCoinBase()
 inline uint64 EVM::GetTimeStamp()
 {
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack(TimeStamp);
   return 0;
 };
@@ -1786,7 +1794,7 @@ inline uint64 EVM::GetTimeStamp()
 inline uint64 EVM::GetNumber()
 {
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack(Number);
   return 0;
 };
@@ -1795,7 +1803,7 @@ inline uint64 EVM::GetNumber()
 inline uint64 EVM::GetDifficulty()
 {
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack(Difficulty);
   return 0;
 };
@@ -1804,7 +1812,7 @@ inline uint64 EVM::GetDifficulty()
 inline uint64 EVM::GetGasLimit()
 {
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PushSingleBlockToStack(GasLimit);
   return 0;
 };
@@ -1817,7 +1825,7 @@ inline uint64 EVM::CreateAccount()
   uint64 initSize  = stack_arr[(sp - 2)];
   uint64 account ;
   ;
- UseGas((TDevice*)this,32000);
+  USEGAS(32000);
    account  = 1193046;
   sp = (sp - 2);
   stack_arr[sp] =  account ;
@@ -1837,7 +1845,7 @@ inline uint64 EVM::MakeCall()
   uint64 outSize  = stack_arr[(sp - 6)];
   uint64 call_res  = 0;
   ;
- UseGas((TDevice*)this,40);
+  USEGAS(40);
   sp = (sp - 6);
   stack_arr[sp] =  call_res ;
     return  (uint64)(0);
@@ -1856,7 +1864,7 @@ inline uint64 EVM::MakeCallCode()
   uint64 outSize  = stack_arr[(sp - 6)];
   uint64 call_res  = 0;
   ;
- UseGas((TDevice*)this,40);
+  USEGAS(40);
   sp = (sp - 6);
   stack_arr[sp] =  call_res ;
     return  (uint64)(0);
@@ -1867,7 +1875,7 @@ inline uint64 EVM::MakeCallCode()
 inline uint64 EVM::Return()
 {
   ;
- UseGas((TDevice*)this,0);
+  USEGAS(0);
   StopExec();
     return  (uint64)(0);
   return 0;
@@ -1884,7 +1892,7 @@ inline uint64 EVM::DelegateCall()
   uint64 outSize  = stack_arr[(sp - 5)];
   uint64 call_res  = 0;
   ;
- UseGas((TDevice*)this,40);
+  USEGAS(40);
   sp = (sp - 5);
   stack_arr[sp] =  call_res ;
     return  (uint64)(0);
@@ -2047,7 +2055,7 @@ inline uint64 EVM::SwapOp(uint32 count)
   uint32 offs ;
   uint64 first_el[4] ;
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
    first_el[3]  = stack_arr[(sp - 3)];
    first_el[2]  = stack_arr[(sp - 3)];
    first_el[1]  = stack_arr[(sp - 1)];
@@ -2112,7 +2120,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint64 outSize  = stack_arr[(sp - 5)];
   uint64 call_res  = 0;
   ;
- UseGas((TDevice*)this,40);
+  USEGAS(40);
   sp = (sp - 5);
   stack_arr[sp] =  call_res ;
       }
@@ -2128,7 +2136,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint64 a  = stack_arr[sp];
   uint64 b  = stack_arr[(sp - 1)];
   ;
- UseGas((TDevice*)this,0);
+  USEGAS(0);
   sp = (sp - 2);
   StopExec();
       }
@@ -2143,7 +2151,7 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint64 a  = stack_arr[sp];
   ;
- UseGas((TDevice*)this,0);
+  USEGAS(0);
   sp = (sp - 1);
   StopExec();
       }
@@ -2184,7 +2192,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst7.aidx
       {
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   PushInst(SARG(count) + 1);
   is_pc_const_changed = 1;
   pc = ((pc + SARG(count)) + 2);
@@ -2201,7 +2209,7 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint64 a ;
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
    a  = stack_arr[(sp - (SARG(count) + 1))];
   sp = (sp + 1);
   stack_arr[sp] =  a ;
@@ -2235,7 +2243,7 @@ inline int EVM::Main_decode(uint32 ocode){
   uint32 m_ptr  =  (uint32)( l1_data );
   uint32 m_size  =  (uint32)( l2_data );
   ;
- UseGas((TDevice*)this,375 + (SARG(count) * 375));
+  USEGAS(375 + (SARG(count) * 375));
   LogInst(SARG(count), m_ptr );
   log_ptr = (SARG(count) + 2);
   sp = (sp - 2);
@@ -2267,22 +2275,22 @@ inline int EVM::Main_decode(uint32 ocode){
   {
     case 0:
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   sp = (sp - 4);
     break;
     case 1:
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   MloadInst( addr_val );
     break;
     case 2:
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
   MStoreInst( addr_val );
     break;
     case 3:
   ;
- UseGas((TDevice*)this,3);
+  USEGAS(3);
    data_val  = stack_arr[(sp - 3)];
   sp = (sp - 4);
   data_bus[ addr_val ] =  (uint8)((pd_rsh( data_val ,(7 * 8)) & 255));
@@ -2293,23 +2301,23 @@ inline int EVM::Main_decode(uint32 ocode){
     break;
     case 4:
   ;
- UseGas((TDevice*)this,50);
+  USEGAS(50);
  LoadFromStorage((TDevice*)this, addr_val );
     break;
     case 5:
   ;
- UseGas((TDevice*)this,0);
+  USEGAS(0);
  SaveToStorage((TDevice*)this, addr_val );
     break;
     case 6:
   ;
- UseGas((TDevice*)this,8);
+  USEGAS(8);
   pc =  addr_val ;
   is_pc_within_inst = 1;
     break;
     case 7:
   ;
- UseGas((TDevice*)this,10);
+  USEGAS(10);
   if(stack_arr[sp] != 0)
   {
   ;
@@ -2320,17 +2328,17 @@ inline int EVM::Main_decode(uint32 ocode){
     break;
     case 8:
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   PcOp();
     break;
     case 9:
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   MSizeOp();
     break;
     case 10:
   ;
- UseGas((TDevice*)this,2);
+  USEGAS(2);
   sp = (sp + 1);
   stack_arr[sp] = gas_available[0];
   stack_arr[(sp + 1)] = gas_available[1];
@@ -2340,7 +2348,7 @@ inline int EVM::Main_decode(uint32 ocode){
     break;
     case 11:
   ;
- UseGas((TDevice*)this,1);
+  USEGAS(1);
     break;
   }
       }
@@ -2379,10 +2387,11 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 14;
   #define SARG(aidx) cur_inst->inst14.aidx
       {
-  uint64 res  = -559038737;
+  uint32 a  = GetSingleBlockFromStack();
+  uint32 b  = GetSingleBlockFromStack();
   ;
- UseGas((TDevice*)this,30);
-  stack_arr[sp] =  res ;
+  USEGAS(30);
+ KeccakAlg((TDevice*)this, a , b );
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)

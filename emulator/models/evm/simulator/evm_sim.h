@@ -3,7 +3,7 @@
 
 #include <device.h>
 
-extern uint64 KeccakAlg(TDevice* dev,uint32 offs,uint32 size);
+extern void KeccakAlg(TDevice* dev,uint32 offs,uint32 size);
 extern uint64 GetElfSize(TDevice* dev);
 extern void SaveToStorage(TDevice* dev,uint32 offs);
 extern void LoadFromStorage(TDevice* dev,uint32 offs);
@@ -152,6 +152,7 @@ inline int CheckNull_SystemOps(uint32 aIdx);
   int IsMemInRange(int addr,int size,int busnum);
   int FillMem(uint32 aVal,int busnum,int addr,int size);
   int GetCellSize(int busnum,int addr);
+inline uint64 USEGAS(uint64 value);
 inline uint64 GetSingleBlockFromStack();
 inline uint64 PushSingleBlockToStack(uint64 data_tmp);
 inline uint64 StopExec();
