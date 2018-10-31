@@ -1195,425 +1195,10 @@ inline uint64 EVM::StopExec()
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint64 EVM::GetExp()
-{
-  uint64 base  = stack_arr[sp];
-  uint64 pow  = stack_arr[(sp - 1)];
-  uint64 i ;
-  uint64 res  = 1;
-  ;
-  USEGAS(10);
- for( i  = 0; i  <  pow ; i  = ( i  + 1)){
-  ;
-   res  = ( res  *  base );
-  }
-  sp = (sp - 1);
-  stack_arr[sp] =  res ;
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::Pop()
-{
-  uint64 ret ;
-  ;
-   ret  = stack_arr[sp];
-  sp = (sp - 1);
-    return  ret ;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline void EVM::Push(uint64 val)
-{
-  ;
-  sp = (sp + 1);
-  stack_arr[sp] = SARG(val);
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::SignExtend()
-{
-  uint32 testBit ;
-  uint32 end_bit ;
-  uint64 number ;
-  uint64 mask ;
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(5);
-  sp = (sp - 1);
-  if( a  < 31)
-  {
-  ;
-   testBit  = ( (uint32)(( a  * 8)) + 7);
-   end_bit  = ( testBit  + 1);
-   mask  = (pd_lsh( (uint64)(1), testBit ) - 1);
-  if( TBitVE< uint64 >( b , end_bit , testBit ) == 1)
-  {
-   number  = ( b  | (~ mask ));
-  }
-  else
-  {
-   number  = ( b  &  mask );
-  }
-  stack_arr[sp] =  number ;
-    return  (uint64)(0);
-  }
-  stack_arr[sp] =  (uint64)(0);
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::ByteFromWord()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  uint32 start_bit  =  (uint32)(((31 -  a ) * 8));
-  uint32 end_bit  = ( start_bit  + 7);
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] =  TBitVE< uint64 >( b , end_bit , start_bit );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::GetModule()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 mod  = stack_arr[(sp - 1)];
-  uint64 div ;
-  ;
-  USEGAS(5);
-  sp = (sp - 1);
-  if( mod  == 0)
-  {
-  ;
-  stack_arr[sp] =  (uint64)(0);
-    return  (uint64)(0);
-  }
-  else
-  {
-  ;
-   div  = ( a  /  mod );
-  stack_arr[sp] = ( a  - ( div  *  mod ));
-    return  (uint64)(0);
-  }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::GetModuleAdd()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  uint64 base  = ( a  +  b );
-  uint64 mod  = stack_arr[(sp - 2)];
-  uint64 div ;
-  ;
-  USEGAS(8);
-  sp = (sp - 2);
-  if( mod  == 0)
-  {
-  ;
-  stack_arr[sp] =  (uint64)(0);
-    return  (uint64)(0);
-  }
-  else
-  {
-  ;
-   div  = ( base  /  mod );
-  stack_arr[sp] = ( base  - ( div  *  mod ));
-    return  (uint64)(0);
-  }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::GetModuleMul()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  uint64 base  = ( a  *  b );
-  uint64 mod  = stack_arr[(sp - 2)];
-  uint64 div ;
-  ;
-  USEGAS(8);
-  sp = (sp - 2);
-  if( mod  == 0)
-  {
-  ;
-  stack_arr[sp] =  (uint64)(0);
-    return  (uint64)(0);
-  }
-  else
-  {
-  ;
-   div  = ( base  /  mod );
-  stack_arr[sp] = ( base  - ( div  *  mod ));
-    return  (uint64)(0);
-  }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::GetModuleS()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 mod  = stack_arr[(sp - 1)];
-  uint64 div ;
-  uint64 sign ;
-  uint1 is_signed  = ( ((int64)( a )) < 0);
-  ;
-  USEGAS(5);
-  sp = (sp - 1);
-   sign  =  ( ( is_signed  != 0) ? ( (uint64)((0 - 1))) : ( (uint64)(1)) );
-  if( mod  == 0)
-  {
-  ;
-  stack_arr[sp] =  (uint64)(0);
-    return  (uint64)(0);
-  }
-  else
-  {
-  ;
-   div  = ( a  /  mod );
-  stack_arr[sp] = ( sign  * ( a  - ( div  *  mod )));
-    return  (uint64)(0);
-  }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::StopOp()
-{
-  ;
-  USEGAS(0);
-  CheckError("@");
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::AddOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  +  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::SubOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  -  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::MulOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(5);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  *  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::DivOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(5);
-  sp = (sp - 1);
-  if( b  == 0)
-  {
-  ;
-  stack_arr[sp] =  (uint64)(0);
-  }
-  else
-  {
-  ;
-  stack_arr[sp] = ( a  /  b );
-  }
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::DivOpS()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(5);
-  sp = (sp - 1);
-  if( b  == 0)
-  {
-  ;
-  stack_arr[sp] =  (uint64)(0);
-  }
-  else
-  {
-  ;
-  stack_arr[sp] =  ((int64)(( a  /  ((int64)( b )))));
-  }
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::LtOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  <  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::LtOpS()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] =  ((int64)(( a  <  ((int64)( b )))));
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::GtOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  >  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::GtOpS()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] =  ((int64)(( a  >  ((int64)( b )))));
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::EqOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  ==  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::IsZeroOp()
-{
-  uint64 a  = stack_arr[sp];
-  ;
-  USEGAS(3);
-  stack_arr[sp] = ( a  == 0);
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::AndOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  &  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::OrOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  |  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::XorOp()
-{
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  ;
-  USEGAS(3);
-  sp = (sp - 1);
-  stack_arr[sp] = ( a  ^  b );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::NotOp()
-{
-  uint64 a  = stack_arr[sp];
-  ;
-  USEGAS(3);
-  stack_arr[sp] = (~ a );
-    return  (uint64)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
 inline uint64 EVM::CallValue()
 {
   ;
   USEGAS(2);
-  sp = (sp + 1);
-  stack_arr[sp] =  (uint64)(0);
     return  (uint64)(0);
   return 0;
 };
@@ -1621,12 +1206,8 @@ inline uint64 EVM::CallValue()
 #define SARG(aidx) aidx
 inline uint64 EVM::CallDataCopy()
 {
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  uint64 c  = stack_arr[(sp - 2)];
   ;
   USEGAS(3);
-  sp = (sp - 3);
     return  (uint64)(0);
   return 0;
 };
@@ -1644,12 +1225,8 @@ inline uint64 EVM::CallDataSize()
 #define SARG(aidx) aidx
 inline uint64 EVM::CodeCopy()
 {
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  uint64 c  = stack_arr[(sp - 2)];
   ;
   USEGAS(3);
-  sp = (sp - 3);
     return  (uint64)(0);
   return 0;
 };
@@ -1667,13 +1244,8 @@ inline uint64 EVM::ExtCodeSize()
 #define SARG(aidx) aidx
 inline uint64 EVM::ExtCodeCopy()
 {
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
-  uint64 c  = stack_arr[(sp - 2)];
-  uint64 d  = stack_arr[(sp - 3)];
   ;
   USEGAS(20);
-  sp = (sp - 4);
     return  (uint64)(0);
   return 0;
 };
@@ -1692,10 +1264,8 @@ inline uint64 EVM::GetAddress()
 #define SARG(aidx) aidx
 inline uint64 EVM::GetBalance()
 {
-  uint64 a  = stack_arr[sp];
   ;
   USEGAS(20);
-  stack_arr[sp] =  (uint64)(0);
     return  (uint64)(0);
   return 0;
 };
@@ -1725,11 +1295,8 @@ inline uint64 EVM::GetCaller()
 #define SARG(aidx) aidx
 inline uint64 EVM::GetInputData()
 {
-  uint32 addr_val  =  (uint32)(stack_arr[sp]);
-  uint64 inp_data  = input_data[ addr_val ];
   ;
   USEGAS(3);
-  stack_arr[sp] =  inp_data ;
     return  (uint64)(0);
   return 0;
 };
@@ -1767,14 +1334,8 @@ inline uint64 EVM::GetGasPrice()
 #define SARG(aidx) aidx
 inline uint64 EVM::BlockChainHash()
 {
-  uint64 a  = stack_arr[sp];
   ;
   USEGAS(20);
-  CoinBase = 16;
-  TimeStamp = 4096;
-  Number = 0x1234543234LL;
-  Difficulty = 4326179;
-  GasLimit = 4096;
   PushSingleBlockToStack( (uint64)(0));
     return  (uint64)(0);
   return 0;
@@ -1828,15 +1389,8 @@ inline uint64 EVM::GetGasLimit()
 #define SARG(aidx) aidx
 inline uint64 EVM::CreateAccount()
 {
-  uint64 endowment  = stack_arr[sp];
-  uint64 initOff  = stack_arr[(sp - 1)];
-  uint64 initSize  = stack_arr[(sp - 2)];
-  uint64 account ;
   ;
   USEGAS(32000);
-   account  = 1193046;
-  sp = (sp - 2);
-  stack_arr[sp] =  account ;
     return  (uint64)(0);
   return 0;
 };
@@ -1844,18 +1398,8 @@ inline uint64 EVM::CreateAccount()
 #define SARG(aidx) aidx
 inline uint64 EVM::MakeCall()
 {
-  uint64 callGas  = stack_arr[sp];
-  uint64 address  = stack_arr[(sp - 1)];
-  uint64 value  = stack_arr[(sp - 2)];
-  uint64 inOff  = stack_arr[(sp - 3)];
-  uint64 inSize  = stack_arr[(sp - 4)];
-  uint64 outOff  = stack_arr[(sp - 5)];
-  uint64 outSize  = stack_arr[(sp - 6)];
-  uint64 call_res  = 0;
   ;
   USEGAS(40);
-  sp = (sp - 6);
-  stack_arr[sp] =  call_res ;
     return  (uint64)(0);
   return 0;
 };
@@ -1863,18 +1407,8 @@ inline uint64 EVM::MakeCall()
 #define SARG(aidx) aidx
 inline uint64 EVM::MakeCallCode()
 {
-  uint64 callGas  = stack_arr[sp];
-  uint64 address  = stack_arr[(sp - 1)];
-  uint64 value  = stack_arr[(sp - 2)];
-  uint64 inOff  = stack_arr[(sp - 3)];
-  uint64 inSize  = stack_arr[(sp - 4)];
-  uint64 outOff  = stack_arr[(sp - 5)];
-  uint64 outSize  = stack_arr[(sp - 6)];
-  uint64 call_res  = 0;
   ;
   USEGAS(40);
-  sp = (sp - 6);
-  stack_arr[sp] =  call_res ;
     return  (uint64)(0);
   return 0;
 };
@@ -1892,17 +1426,8 @@ inline uint64 EVM::Return()
 #define SARG(aidx) aidx
 inline uint64 EVM::DelegateCall()
 {
-  uint64 callGas  = stack_arr[sp];
-  uint64 address  = stack_arr[(sp - 1)];
-  uint64 inOff  = stack_arr[(sp - 2)];
-  uint64 inSize  = stack_arr[(sp - 3)];
-  uint64 outOff  = stack_arr[(sp - 4)];
-  uint64 outSize  = stack_arr[(sp - 5)];
-  uint64 call_res  = 0;
   ;
   USEGAS(40);
-  sp = (sp - 5);
-  stack_arr[sp] =  call_res ;
     return  (uint64)(0);
   return 0;
 };
@@ -2145,18 +1670,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 2;
   #define SARG(aidx) cur_inst->inst2.aidx
       {
-  uint64 callGas  = stack_arr[sp];
-  uint64 address  = stack_arr[(sp - 1)];
-  uint64 value  = 0;
-  uint64 inOff  = stack_arr[(sp - 2)];
-  uint64 inSize  = stack_arr[(sp - 3)];
-  uint64 outOff  = stack_arr[(sp - 4)];
-  uint64 outSize  = stack_arr[(sp - 5)];
-  uint64 call_res  = 0;
   ;
   USEGAS(40);
-  sp = (sp - 5);
-  stack_arr[sp] =  call_res ;
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2167,11 +1682,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 3;
   #define SARG(aidx) cur_inst->inst3.aidx
       {
-  uint64 a  = stack_arr[sp];
-  uint64 b  = stack_arr[(sp - 1)];
   ;
   USEGAS(0);
-  sp = (sp - 2);
   StopExec();
       }
   #undef SARG
@@ -2183,10 +1695,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 4;
   #define SARG(aidx) cur_inst->inst4.aidx
       {
-  uint64 a  = stack_arr[sp];
   ;
   USEGAS(0);
-  sp = (sp - 1);
   StopExec();
       }
   #undef SARG
@@ -2241,12 +1751,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 8;
   #define SARG(aidx) cur_inst->inst8.aidx
       {
-  uint64 a ;
   ;
   USEGAS(3);
-   a  = stack_arr[(sp - (SARG(count) + 1))];
-  sp = (sp + 1);
-  stack_arr[sp] =  a ;
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2271,16 +1777,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 10;
   #define SARG(aidx) cur_inst->inst10.aidx
       {
-  uint32 i ;
-  uint64 l1_data  = stack_arr[sp];
-  uint64 l2_data  = stack_arr[(sp - 1)];
-  uint32 m_ptr  =  (uint32)( l1_data );
-  uint32 m_size  =  (uint32)( l2_data );
   ;
   USEGAS(375 + (SARG(count) * 375));
-  LogInst(SARG(count), m_ptr );
-  log_ptr = (SARG(count) + 2);
-  sp = (sp - 2);
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2352,13 +1850,6 @@ inline int EVM::Main_decode(uint32 ocode){
     case 7:
   ;
   USEGAS(10);
-  if(stack_arr[sp] != 0)
-  {
-  ;
-  pc =  (uint32)( addr_val );
-  is_pc_within_inst = 1;
-  }
-  sp = (sp - 1);
     break;
     case 8:
   ;
