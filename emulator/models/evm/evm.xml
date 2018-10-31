@@ -2832,8 +2832,14 @@
                                             <OPERATOR name="+">
                                                 <REG name="pc" />
                                                 <OPERATOR name="-">
-                                                    <ARG name="cnt" />
-                                                    <LVAR name="i" />
+                                                    <OPERATOR name="-">
+                                                        <ARG name="cnt" />
+                                                        <LVAR name="i" />
+                                                    </OPERATOR>
+                                                    <OPERATOR name="*">
+                                                        <IMM32 value="8" />
+                                                        <LVAR name="j" />
+                                                    </OPERATOR>
                                                 </OPERATOR>
                                             </OPERATOR>
                                         </MEM>

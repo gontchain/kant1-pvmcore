@@ -1922,7 +1922,7 @@ inline uint64 EVM::PushInst(uint32 cnt)
    a  = 0;
  for( i  = 0; i  < 8; i  = ( i  + 1)){
   ;
-   tmp  = ((*prog_bus)[(pc + (SARG(cnt) -  i ))] & 255);
+   tmp  = ((*prog_bus)[(pc + ((SARG(cnt) -  i ) - (8 *  j )))] & 255);
    a  = ( a  | pd_lsh( tmp ,(8 * (7 -  i ))));
   }
   stack_arr[((sp - 3) +  block_cnt )] =  a ;
