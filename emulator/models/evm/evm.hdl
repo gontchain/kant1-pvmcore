@@ -62,6 +62,36 @@ Device EVM
   extern void      DoArithm(int32 opcode);
   extern void      DoCompare(int32 opcode);
 
+  // used to get stack value if it fits in single block (uint64)
+  MAIN_TYPE GetSingleBlockFromStack()
+  {
+    int32 i;
+    MAIN_TYPE data_val = 0;
+    MAIN_TYPE data_tmp = stack_arr[sp-3];
+    sp = sp - 4;
+    for (i = 0; i < 8; i=i+1) {
+      data_val = data_val | (((data_tmp >> 8*(7-i)) & 0xFF) << i);
+    }
+    return data_val;
+  }
+
+  // used to push value to stack if it fits in single block (uint64)
+  Func PushSingleBlockToStack(MAIN_TYPE data_tmp)
+  {
+    int32 i;
+    MAIN_TYPE data_val = 0;
+
+    for (i = 0; i < 8; i=i+1) {
+      data_val = data_val | (((data_tmp >> 8*i) & 0xFF) << 8*(7-i));
+    }
+    sp = sp + 1;
+    stack_arr[sp]   = data_val;
+    stack_arr[sp+1] = 0;
+    stack_arr[sp+2] = 0;
+    stack_arr[sp+3] = 0;
+    sp = sp + 3;
+  }
+
   MAIN_TYPE StopExec()
   {
     dbg_msg "@";
@@ -435,8 +465,7 @@ Device EVM
   MAIN_TYPE CallDataSize()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = inp_data_size;
+    PushSingleBlockToStack(inp_data_size);
     return (MAIN_TYPE)0;
   }
 
@@ -454,8 +483,7 @@ Device EVM
   MAIN_TYPE ExtCodeSize()
   {
     USEGAS(STEPGAS6);
-    sp = sp + 1;
-    stack_arr[sp] = ext_code_size;
+    PushSingleBlockToStack(ext_code_size);
     return (MAIN_TYPE)0;
   }
 
@@ -476,8 +504,7 @@ Device EVM
   {
    USEGAS(STEPGAS1);
    EVM_ADDR_TYPE ca = cur_addr;
-   sp = sp + 1;
-   stack_arr[sp] = (MAIN_TYPE)ca;
+   PushSingleBlockToStack((MAIN_TYPE)ca);
    return (MAIN_TYPE)0;
   }
 
@@ -494,8 +521,7 @@ Device EVM
   {
    USEGAS(STEPGAS1);
    EVM_ADDR_TYPE oa = origin_addr;
-   sp = sp + 1;
-   stack_arr[sp] = (MAIN_TYPE)oa;
+   PushSingleBlockToStack((MAIN_TYPE)oa);
    return (MAIN_TYPE)0;
   }
 
@@ -503,8 +529,7 @@ Device EVM
   {
    EVM_ADDR_TYPE ca = caller_addr;
    USEGAS(STEPGAS1);
-   sp = sp + 1;
-   stack_arr[sp] = (MAIN_TYPE)ca;
+   PushSingleBlockToStack((MAIN_TYPE)ca);
    return (MAIN_TYPE)0;
   }
 
@@ -520,8 +545,8 @@ Device EVM
   MAIN_TYPE GetCodeSize()
   {
    USEGAS(STEPGAS1);
-   sp = sp + 1;
-   stack_arr[sp] = GetElfSize();
+   MAIN_TYPE elf_size = GetElfSize();
+   PushSingleBlockToStack(elf_size);
    return (MAIN_TYPE)0;
   }
 
@@ -529,8 +554,7 @@ Device EVM
    {
      USEGAS(STEPGAS1);
      EVM_BALANCE_TYPE gp = gas_price;
-     sp = sp + 1;
-     stack_arr[sp] = (MAIN_TYPE)gp;
+     PushSingleBlockToStack((MAIN_TYPE)gp);
      return (MAIN_TYPE)0;
    }
 
@@ -565,48 +589,39 @@ Device EVM
     Number = 0x1234543234;
     Difficulty = 0x420323;
     GasLimit = 0x1000;
-    stack_arr[sp] = (MAIN_TYPE)0;
+    // TODO
+    PushSingleBlockToStack((MAIN_TYPE)0);
     return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE GetCoinBase()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = CoinBase;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(CoinBase);
   }
 
   MAIN_TYPE GetTimeStamp()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = TimeStamp;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(TimeStamp);
   }
 
   MAIN_TYPE GetNumber()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = Number;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(Number);
   }
 
   MAIN_TYPE GetDifficulty()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = Difficulty;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(Difficulty);
   }
 
   MAIN_TYPE GetGasLimit()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = GasLimit;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(GasLimit);
   }
 
   ArgList MAIN_TYPE BlockChain(),
@@ -802,18 +817,6 @@ Device EVM
       mem_size = addr_val;
   }
 
-  MAIN_TYPE GetAddrVal()
-  {
-    int32 i;
-    MAIN_TYPE addr_val = 0;
-    MAIN_TYPE addr_tmp = stack_arr[sp-3];
-    sp = sp - 4;
-    for (i = 0; i < 8; i=i+1) {
-      addr_val = addr_val | (((addr_tmp >> 8*(7-i)) & 0xFF) << i);
-    }
-    return addr_val;
-  }
-
   Func MSizeOp()
   {
     int32 i;
@@ -948,7 +951,7 @@ Device EVM
       MAIN_TYPE data_tmp;
 
       if((opcode < 8) & (opcode != 0)) {
-        addr_val = GetAddrVal();
+        addr_val = GetSingleBlockFromStack();
       }
       switch((int32)opcode)
       {

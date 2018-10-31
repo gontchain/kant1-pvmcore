@@ -73,6 +73,197 @@
             </ARGUMENTS>
             <CODE />
         </DoCompare>
+        <GetSingleBlockFromStack RETSIZE="64">
+            <LOCALVARS>
+                <i SIZE="32" />
+                <data_val SIZE="64">
+                    <INITAL_EXP>
+                        <IMM32 value="0" />
+                    </INITAL_EXP>
+                </data_val>
+                <data_tmp SIZE="64">
+                    <INITAL_EXP>
+                        <REG name="stack_arr">
+                            <OPERATOR name="-">
+                                <REG name="sp" />
+                                <IMM32 value="3" />
+                            </OPERATOR>
+                        </REG>
+                    </INITAL_EXP>
+                </data_tmp>
+            </LOCALVARS>
+            <CODE>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="-">
+                        <REG name="sp" />
+                        <IMM32 value="4" />
+                    </OPERATOR>
+                </OPERATOR>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="8" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="data_val" />
+                            <OPERATOR name="|">
+                                <LVAR name="data_val" />
+                                <OPERATOR name="&lt;&lt;">
+                                    <OPERATOR name="&amp;">
+                                        <OPERATOR name="&gt;&gt;">
+                                            <LVAR name="data_tmp" />
+                                            <OPERATOR name="*">
+                                                <IMM32 value="8" />
+                                                <OPERATOR name="-">
+                                                    <IMM32 value="7" />
+                                                    <LVAR name="i" />
+                                                </OPERATOR>
+                                            </OPERATOR>
+                                        </OPERATOR>
+                                        <IMM32 value="FF" />
+                                    </OPERATOR>
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </OPERATOR>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <RETURN>
+                    <LVAR name="data_val" />
+                </RETURN>
+            </CODE>
+        </GetSingleBlockFromStack>
+        <PushSingleBlockToStack RETSIZE="64">
+            <ARGUMENTS>
+                <data_tmp SIZE="64" />
+            </ARGUMENTS>
+            <LOCALVARS>
+                <i SIZE="32" />
+                <data_val SIZE="64">
+                    <INITAL_EXP>
+                        <IMM32 value="0" />
+                    </INITAL_EXP>
+                </data_val>
+            </LOCALVARS>
+            <CODE>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="8" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="data_val" />
+                            <OPERATOR name="|">
+                                <LVAR name="data_val" />
+                                <OPERATOR name="&lt;&lt;">
+                                    <OPERATOR name="&amp;">
+                                        <OPERATOR name="&gt;&gt;">
+                                            <ARG name="data_tmp" />
+                                            <OPERATOR name="*">
+                                                <IMM32 value="8" />
+                                                <LVAR name="i" />
+                                            </OPERATOR>
+                                        </OPERATOR>
+                                        <IMM32 value="FF" />
+                                    </OPERATOR>
+                                    <OPERATOR name="*">
+                                        <IMM32 value="8" />
+                                        <OPERATOR name="-">
+                                            <IMM32 value="7" />
+                                            <LVAR name="i" />
+                                        </OPERATOR>
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </OPERATOR>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="1" />
+                    </OPERATOR>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <REG name="sp" />
+                    </REG>
+                    <LVAR name="data_val" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <OPERATOR name="+">
+                            <REG name="sp" />
+                            <IMM32 value="1" />
+                        </OPERATOR>
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <OPERATOR name="+">
+                            <REG name="sp" />
+                            <IMM32 value="2" />
+                        </OPERATOR>
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="stack_arr">
+                        <OPERATOR name="+">
+                            <REG name="sp" />
+                            <IMM32 value="3" />
+                        </OPERATOR>
+                    </REG>
+                    <IMM32 value="0" />
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="3" />
+                    </OPERATOR>
+                </OPERATOR>
+            </CODE>
+        </PushSingleBlockToStack>
         <StopExec RETSIZE="64">
             <CODE>
                 <PRINT_ERROR message="1" />
@@ -1691,19 +1882,11 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <REG name="inp_data_size" />
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <REG name="inp_data_size" />
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -1768,19 +1951,11 @@
                         <IMM32 value="14" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <REG name="ext_code_size" />
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <REG name="ext_code_size" />
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -1862,21 +2037,13 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <LVAR name="ca" />
-                    </TYPE>
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <TYPE name="uint64">
+                            <LVAR name="ca" />
+                        </TYPE>
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -1929,21 +2096,13 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <LVAR name="oa" />
-                    </TYPE>
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <TYPE name="uint64">
+                            <LVAR name="oa" />
+                        </TYPE>
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -1965,21 +2124,13 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <LVAR name="ca" />
-                    </TYPE>
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <TYPE name="uint64">
+                            <LVAR name="ca" />
+                        </TYPE>
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2026,25 +2177,24 @@
             </CODE>
         </GetInputData>
         <GetCodeSize RETSIZE="64">
+            <LOCALVARS>
+                <elf_size SIZE="64">
+                    <INITAL_EXP>
+                        <CALL name="GetElfSize" />
+                    </INITAL_EXP>
+                </elf_size>
+            </LOCALVARS>
             <CODE>
                 <CALL name="UseGas">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <CALL name="GetElfSize" />
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <LVAR name="elf_size" />
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2066,21 +2216,13 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <LVAR name="gp" />
-                    </TYPE>
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <TYPE name="uint64">
+                            <LVAR name="gp" />
+                        </TYPE>
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2124,14 +2266,13 @@
                     <REG name="GasLimit" />
                     <IMM32 value="1000" />
                 </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </OPERATOR>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <TYPE name="uint64">
+                            <IMM32 value="0" />
+                        </TYPE>
+                    </ARGS>
+                </CALL>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2146,24 +2287,11 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <REG name="CoinBase" />
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <REG name="CoinBase" />
+                    </ARGS>
+                </CALL>
             </CODE>
         </GetCoinBase>
         <GetTimeStamp RETSIZE="64">
@@ -2173,24 +2301,11 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <REG name="TimeStamp" />
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <REG name="TimeStamp" />
+                    </ARGS>
+                </CALL>
             </CODE>
         </GetTimeStamp>
         <GetNumber RETSIZE="64">
@@ -2200,24 +2315,11 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <REG name="Number" />
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <REG name="Number" />
+                    </ARGS>
+                </CALL>
             </CODE>
         </GetNumber>
         <GetDifficulty RETSIZE="64">
@@ -2227,24 +2329,11 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <REG name="Difficulty" />
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <REG name="Difficulty" />
+                    </ARGS>
+                </CALL>
             </CODE>
         </GetDifficulty>
         <GetGasLimit RETSIZE="64">
@@ -2254,24 +2343,11 @@
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <REG name="GasLimit" />
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
+                <CALL name="PushSingleBlockToStack">
+                    <ARGS>
+                        <REG name="GasLimit" />
+                    </ARGS>
+                </CALL>
             </CODE>
         </GetGasLimit>
         <CreateAccount RETSIZE="64">
@@ -3300,85 +3376,6 @@
                 </IF>
             </CODE>
         </MStoreInst>
-        <GetAddrVal RETSIZE="64">
-            <LOCALVARS>
-                <i SIZE="32" />
-                <addr_val SIZE="64">
-                    <INITAL_EXP>
-                        <IMM32 value="0" />
-                    </INITAL_EXP>
-                </addr_val>
-                <addr_tmp SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </addr_tmp>
-            </LOCALVARS>
-            <CODE>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="4" />
-                    </OPERATOR>
-                </OPERATOR>
-                <FOR>
-                    <FOR_START>
-                        <OPERATOR name=" = ">
-                            <LVAR name="i" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </FOR_START>
-                    <FOR_STOP_COND>
-                        <OPERATOR name=" &lt; ">
-                            <LVAR name="i" />
-                            <IMM32 value="8" />
-                        </OPERATOR>
-                    </FOR_STOP_COND>
-                    <FOR_ITERATION>
-                        <OPERATOR name=" = ">
-                            <LVAR name="i" />
-                            <OPERATOR name="+">
-                                <LVAR name="i" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </OPERATOR>
-                    </FOR_ITERATION>
-                    <CODE>
-                        <OPERATOR name=" = ">
-                            <LVAR name="addr_val" />
-                            <OPERATOR name="|">
-                                <LVAR name="addr_val" />
-                                <OPERATOR name="&lt;&lt;">
-                                    <OPERATOR name="&amp;">
-                                        <OPERATOR name="&gt;&gt;">
-                                            <LVAR name="addr_tmp" />
-                                            <OPERATOR name="*">
-                                                <IMM32 value="8" />
-                                                <OPERATOR name="-">
-                                                    <IMM32 value="7" />
-                                                    <LVAR name="i" />
-                                                </OPERATOR>
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                        <IMM32 value="FF" />
-                                    </OPERATOR>
-                                    <LVAR name="i" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </OPERATOR>
-                    </CODE>
-                </FOR>
-                <RETURN>
-                    <LVAR name="addr_val" />
-                </RETURN>
-            </CODE>
-        </GetAddrVal>
         <MSizeOp RETSIZE="64">
             <LOCALVARS>
                 <i SIZE="32" />
@@ -4423,7 +4420,7 @@
                         <INNER>
                             <OPERATOR name=" = ">
                                 <LVAR name="addr_val" />
-                                <CALL name="GetAddrVal" />
+                                <CALL name="GetSingleBlockFromStack" />
                             </OPERATOR>
                         </INNER>
                     </IF>

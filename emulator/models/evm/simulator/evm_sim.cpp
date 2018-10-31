@@ -1144,6 +1144,41 @@ int EVM::GetCellSize(int busnum,int addr){
   return 0;
 };
 #define SARG(aidx) aidx
+inline uint64 EVM::GetSingleBlockFromStack()
+{
+  uint32 i ;
+  uint64 data_val  = 0;
+  uint64 data_tmp  = stack_arr[(sp - 3)];
+  ;
+  sp = (sp - 4);
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh( data_tmp ,(8 * (7 -  i ))) & 255), i ));
+  }
+    return  data_val ;
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::PushSingleBlockToStack(uint64 data_tmp)
+{
+  uint32 i ;
+  uint64 data_val  = 0;
+  ;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh(SARG(data_tmp),(8 *  i )) & 255),(8 * (7 -  i ))));
+  }
+  sp = (sp + 1);
+  stack_arr[sp] =  data_val ;
+  stack_arr[(sp + 1)] = 0;
+  stack_arr[(sp + 2)] = 0;
+  stack_arr[(sp + 3)] = 0;
+  sp = (sp + 3);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
 inline uint64 EVM::StopExec()
 {
   ;
@@ -1593,8 +1628,7 @@ inline uint64 EVM::CallDataSize()
 {
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] = inp_data_size;
+  PushSingleBlockToStack(inp_data_size);
     return  (uint64)(0);
   return 0;
 };
@@ -1617,8 +1651,7 @@ inline uint64 EVM::ExtCodeSize()
 {
   ;
  UseGas((TDevice*)this,20);
-  sp = (sp + 1);
-  stack_arr[sp] = ext_code_size;
+  PushSingleBlockToStack(ext_code_size);
     return  (uint64)(0);
   return 0;
 };
@@ -1643,8 +1676,7 @@ inline uint64 EVM::GetAddress()
   uint64 ca  = cur_addr;
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] =  (uint64)( ca );
+  PushSingleBlockToStack( (uint64)( ca ));
     return  (uint64)(0);
   return 0;
 };
@@ -1666,8 +1698,7 @@ inline uint64 EVM::GetOrigin()
   uint64 oa  = origin_addr;
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] =  (uint64)( oa );
+  PushSingleBlockToStack( (uint64)( oa ));
     return  (uint64)(0);
   return 0;
 };
@@ -1678,8 +1709,7 @@ inline uint64 EVM::GetCaller()
   uint64 ca  = caller_addr;
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] =  (uint64)( ca );
+  PushSingleBlockToStack( (uint64)( ca ));
     return  (uint64)(0);
   return 0;
 };
@@ -1699,10 +1729,10 @@ inline uint64 EVM::GetInputData()
 #define SARG(aidx) aidx
 inline uint64 EVM::GetCodeSize()
 {
+  uint64 elf_size  = GetElfSize((TDevice*)this);
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] = GetElfSize((TDevice*)this);
+  PushSingleBlockToStack( elf_size );
     return  (uint64)(0);
   return 0;
 };
@@ -1713,8 +1743,7 @@ inline uint64 EVM::GetGasPrice()
   uint64 gp  = gas_price;
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] =  (uint64)( gp );
+  PushSingleBlockToStack( (uint64)( gp ));
     return  (uint64)(0);
   return 0;
 };
@@ -1730,7 +1759,7 @@ inline uint64 EVM::BlockChainHash()
   Number = 0x1234543234LL;
   Difficulty = 4326179;
   GasLimit = 4096;
-  stack_arr[sp] =  (uint64)(0);
+  PushSingleBlockToStack( (uint64)(0));
     return  (uint64)(0);
   return 0;
 };
@@ -1740,9 +1769,7 @@ inline uint64 EVM::GetCoinBase()
 {
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] = CoinBase;
-    return  (uint64)(0);
+  PushSingleBlockToStack(CoinBase);
   return 0;
 };
 #undef SARG
@@ -1751,9 +1778,7 @@ inline uint64 EVM::GetTimeStamp()
 {
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] = TimeStamp;
-    return  (uint64)(0);
+  PushSingleBlockToStack(TimeStamp);
   return 0;
 };
 #undef SARG
@@ -1762,9 +1787,7 @@ inline uint64 EVM::GetNumber()
 {
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] = Number;
-    return  (uint64)(0);
+  PushSingleBlockToStack(Number);
   return 0;
 };
 #undef SARG
@@ -1773,9 +1796,7 @@ inline uint64 EVM::GetDifficulty()
 {
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] = Difficulty;
-    return  (uint64)(0);
+  PushSingleBlockToStack(Difficulty);
   return 0;
 };
 #undef SARG
@@ -1784,9 +1805,7 @@ inline uint64 EVM::GetGasLimit()
 {
   ;
  UseGas((TDevice*)this,2);
-  sp = (sp + 1);
-  stack_arr[sp] = GasLimit;
-    return  (uint64)(0);
+  PushSingleBlockToStack(GasLimit);
   return 0;
 };
 #undef SARG
@@ -1997,22 +2016,6 @@ inline uint64 EVM::MStoreInst(uint64 addr_val)
   {
   mem_size = SARG(addr_val);
   }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint64 EVM::GetAddrVal()
-{
-  uint32 i ;
-  uint64 addr_val  = 0;
-  uint64 addr_tmp  = stack_arr[(sp - 3)];
-  ;
-  sp = (sp - 4);
- for( i  = 0; i  < 8; i  = ( i  + 1)){
-  ;
-   addr_val  = ( addr_val  | pd_lsh((pd_rsh( addr_tmp ,(8 * (7 -  i ))) & 255), i ));
-  }
-    return  addr_val ;
   return 0;
 };
 #undef SARG
@@ -2239,7 +2242,7 @@ inline int EVM::Main_decode(uint32 ocode){
   if((Get_MemOps(SARG(opcode)) < 8) & (Get_MemOps(SARG(opcode)) != 0))
   {
   ;
-   addr_val  = GetAddrVal();
+   addr_val  = GetSingleBlockFromStack();
   }
   switch( (uint32)(Get_MemOps(SARG(opcode))))
   {
