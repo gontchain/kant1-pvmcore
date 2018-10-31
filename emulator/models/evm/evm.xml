@@ -2645,6 +2645,30 @@
                 </RETURN>
             </CODE>
         </DelegateCall>
+        <ArithmStub RETSIZE="64">
+            <ARGUMENTS>
+                <opcode SIZE="32" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="DoArithm">
+                    <ARGS>
+                        <ARG name="opcode" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </ArithmStub>
+        <CompareStub RETSIZE="64">
+            <ARGUMENTS>
+                <opcode SIZE="32" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="DoCompare">
+                    <ARGS>
+                        <ARG name="opcode" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </CompareStub>
         <PushInst RETSIZE="64">
             <ARGUMENTS>
                 <cnt SIZE="32" />
@@ -4707,7 +4731,7 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <CALL name="DoArithm">
+                    <CALL name="ArithmStub">
                         <ARGS>
                             <TYPE name="uint32">
                                 <LST name="ArithmOps">
@@ -4725,7 +4749,7 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <CALL name="DoCompare">
+                    <CALL name="CompareStub">
                         <ARGS>
                             <TYPE name="uint32">
                                 <LST name="CompareLogOps">

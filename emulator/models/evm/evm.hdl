@@ -697,6 +697,16 @@ Device EVM
   {
     CreateAccount(), MakeCall(), MakeCallCode(), Return(), DelegateCall()
   };
+
+  Func ArithmStub(int32 opcode)
+  {
+    DoArithm(opcode);
+  }
+
+  Func CompareStub(int32 opcode)
+  {
+    DoCompare(opcode);
+  }
    
   Func PushInst(int32 cnt)
   {
@@ -1024,12 +1034,12 @@ Device EVM
 
     INST "$opcode",(8,int4 opcode = ArithmOps,int4 0x0)
     {
-      DoArithm((int32)opcode);
+      ArithmStub((int32)opcode);
     }
 
     INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
     {
-      DoCompare((int32)opcode);
+      CompareStub((int32)opcode);
     }
 
     INST "SHA3", (8,int8 0x20)

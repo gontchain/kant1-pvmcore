@@ -1873,6 +1873,22 @@ inline uint64 EVM::DelegateCall()
 };
 #undef SARG
 #define SARG(aidx) aidx
+inline uint64 EVM::ArithmStub(uint32 opcode)
+{
+  ;
+ DoArithm((TDevice*)this,SARG(opcode));
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::CompareStub(uint32 opcode)
+{
+  ;
+ DoCompare((TDevice*)this,SARG(opcode));
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
 inline uint64 EVM::PushInst(uint32 cnt)
 {
   uint32 i ;
@@ -2321,7 +2337,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst12.aidx
       {
   ;
- DoArithm((TDevice*)this, (uint32)(Get_ArithmOps(SARG(opcode))));
+  ArithmStub( (uint32)(Get_ArithmOps(SARG(opcode))));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2334,7 +2350,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst13.aidx
       {
   ;
- DoCompare((TDevice*)this, (uint32)(Get_CompareLogOps(SARG(opcode))));
+  CompareStub( (uint32)(Get_CompareLogOps(SARG(opcode))));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)

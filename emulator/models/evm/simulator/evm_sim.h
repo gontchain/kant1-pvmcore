@@ -202,6 +202,8 @@ inline uint64 MakeCall();
 inline uint64 MakeCallCode();
 inline uint64 Return();
 inline uint64 DelegateCall();
+inline uint64 ArithmStub(uint32 opcode);
+inline uint64 CompareStub(uint32 opcode);
 inline uint64 PushInst(uint32 cnt);
 inline uint64 LogInst(uint32 count,uint32 log_ptr);
 inline uint64 MloadInst(uint32 addr_val);
