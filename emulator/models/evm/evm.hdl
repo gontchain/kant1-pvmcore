@@ -55,8 +55,8 @@ Device EVM
 
   extern MAIN_TYPE KeccakAlg(int32 offs,int32 size);
   extern MAIN_TYPE GetElfSize();
-  extern void      SaveToStorage(int32 offs, MAIN_TYPE value);
-  extern MAIN_TYPE LoadFromStorage(int32 offs);
+  extern void      SaveToStorage(int32 offs);
+  extern void      LoadFromStorage(int32 offs);
   extern void      UseGas(MAIN_TYPE value);
 
   extern void      DoArithm(int32 opcode);
@@ -992,16 +992,12 @@ Device EVM
 
         case 4: // SLOAD
           USEGAS(SLOADGAS);
-          data_val = LoadFromStorage(addr_val);
-          sp = sp + 1;
-          stack_arr[sp] = data_val;
+          LoadFromStorage(addr_val);
           break;
 
         case 5: // SSTORE
           USEGAS(STEPGAS0);
-          data_val = stack_arr[sp];
-          sp = sp - 1;
-          SaveToStorage(addr_val, data_val);
+          SaveToStorage(addr_val);
           break;
 
         case 6: // JUMP 

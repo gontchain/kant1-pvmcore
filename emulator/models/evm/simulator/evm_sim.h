@@ -5,8 +5,8 @@
 
 extern uint64 KeccakAlg(TDevice* dev,uint32 offs,uint32 size);
 extern uint64 GetElfSize(TDevice* dev);
-extern void SaveToStorage(TDevice* dev,uint32 offs,uint64 value);
-extern uint64 LoadFromStorage(TDevice* dev,uint32 offs);
+extern void SaveToStorage(TDevice* dev,uint32 offs);
+extern void LoadFromStorage(TDevice* dev,uint32 offs);
 extern void UseGas(TDevice* dev,uint64 value);
 extern void DoArithm(TDevice* dev,uint32 opcode);
 extern void DoCompare(TDevice* dev,uint32 opcode);

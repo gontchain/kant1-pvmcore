@@ -2286,16 +2286,12 @@ inline int EVM::Main_decode(uint32 ocode){
     case 4:
   ;
  UseGas((TDevice*)this,50);
-   data_val  = LoadFromStorage((TDevice*)this, addr_val );
-  sp = (sp + 1);
-  stack_arr[sp] =  data_val ;
+ LoadFromStorage((TDevice*)this, addr_val );
     break;
     case 5:
   ;
  UseGas((TDevice*)this,0);
-   data_val  = stack_arr[sp];
-  sp = (sp - 1);
- SaveToStorage((TDevice*)this, addr_val , data_val );
+ SaveToStorage((TDevice*)this, addr_val );
     break;
     case 6:
   ;

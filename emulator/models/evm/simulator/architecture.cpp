@@ -11,11 +11,7 @@
 
 struct Storage {
   uint32 key;
-#if 1
-  uint64 value;
-#else
-  uint256 value;
-#endif
+  uint64 value[4];
   Storage* next;
 };
 
@@ -313,24 +309,29 @@ uint256 KeccakAlg(TDevice* dev, uint32 offs, uint32 size)
 }
 #endif
 
-#if 1
 uint64 GetElfSize(TDevice* dev)
-#else
-uint256 GetElfSize(TDevice* dev)
-#endif
 {
   return dev->elfSize;
 }
 
-#if 1
-void SaveToStorage(TDevice* dev, uint32 offs, uint64 value)
-#else
-void SaveToStorage(TDevice* dev, uint32 offs, uint256 value)
-#endif
+void SaveToStorage(TDevice* dev, uint32 offs)
 {
   Storage* node = mainStorage;
   Storage* tail;
   bool isFound = false;
+  int i, j;
+  int32 sp = ((EVM*)dev)->sp;
+  uint64 *data_val = &(((EVM*)dev)->stack_arr[sp-3]);
+  uint64 data_tmp[4], byte;
+
+  for (j = 0; j < 4; j++) {
+    data_tmp[j] = 0;
+    for (i = 0; i < 8; i++) {
+      byte = ((data_val[3-j] >> (8*i)) & 0xFF) << (8*(7-i));
+      data_tmp[j] |= byte;
+    }
+  }
+  ((EVM*)dev)->sp = sp - 4; // update sp
   while (node != NULL) {
     if (node->key == -1 | node->key == offs) { // if entry is empty or address is found
       isFound = true;
@@ -341,34 +342,46 @@ void SaveToStorage(TDevice* dev, uint32 offs, uint256 value)
   }
   if (isFound) { // overwrite
     node->key = offs;
-    node->value = value;
+    for (i = 0; i < 4; i++) {
+      node->value[i] = data_tmp[i];
+    }
   } else { // create new entry
-  tail->next = new Storage;
+    tail->next = new Storage;
     tail->next->key = offs;
-  tail->next->value = value;
-  tail->next->next = NULL;
+    for (i = 0; i < 4; i++) {
+      tail->next->value[i] = data_tmp[i];
+    }
+    tail->next->next = NULL;
   }
 }
 
 
-#if 1
-uint64 LoadFromStorage(TDevice* dev, uint32 offs)
-#else
-uint256 LoadFromStorage(TDevice* dev, uint32 offs)
-#endif
+
+void LoadFromStorage(TDevice* dev, uint32 offs)
 {
   Storage* node = mainStorage;
+  int i, j;
+  int32 sp = ((EVM*)dev)->sp;
+  uint64 *ret = &(((EVM*)dev)->stack_arr[sp+1]);
+  uint64 data_tmp[4], byte;
+
   while (node != NULL) {
     if (node->key == offs) {
-      return node->value;
+      for (i = 0; i < 4; i++)
+        data_tmp[i] = node->value[i];
+      break;
     }
     node = node->next;
   }
-  #if 1
-  return uint64(0x0); // return 0x0 if nothing was found
-  #else
-  return uint256(0x0); // return 0x0 if nothing was found
-  #endif
+
+  for (j = 0; j < 4; j++) {
+    ret[j] = 0;
+    for (i = 0; i < 8; i++) {
+      byte = ((data_tmp[3-j] >> (8*i)) & 0xFF) << (8*(7-i));
+      ret[j] |= byte;
+    }
+  }
+  ((EVM*)dev)->sp = sp + 4; // update sp
 }
 
 void* Init(void* mParams)
@@ -410,7 +423,8 @@ void* Init(void* mParams)
   // init EVM storage
   mainStorage = new Storage;
   mainStorage->key = -1;
-  mainStorage->value = 0x0;
+  for (int i = 0; i < 4; i++)
+    mainStorage->value[i] = 0x0;
   mainStorage->next = NULL;
   return (void*)new_evm;
 }
