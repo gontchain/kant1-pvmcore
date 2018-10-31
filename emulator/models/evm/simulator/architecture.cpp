@@ -113,9 +113,6 @@ void DoArithm(TDevice* dev, uint32 opcode) {
         v_bignum_sub(a, b);
         break;
       case 4: // DIV
-        UseGas(dev, STEPGAS3);
-        v_bignum_div(a, b, tmp);
-        break;
       case 5: // SDIV
         UseGas(dev, STEPGAS3);
         v_bignum_div(a, b, tmp);
@@ -130,9 +127,9 @@ void DoArithm(TDevice* dev, uint32 opcode) {
         // set signum multiplier
         if (v_bignum_bit_test(a, 255)) {
           v_bignum_set_one(tmp2);
-          v_bignum_sub(tmp, tmp2);
+          v_bignum_sub(tmp, tmp2); // -1
         } else {
-          v_bignum_set_one(tmp);
+          v_bignum_set_one(tmp); // 1
         }
         v_bignum_mod(a, b);
         v_bignum_mul(a, tmp); // apply signum
