@@ -211,6 +211,7 @@ inline uint64 LogInst(uint32 count,uint32 log_ptr);
 inline uint64 MloadInst(uint32 addr_val);
 inline uint64 MStoreInst(uint64 addr_val);
 inline uint64 MSizeOp();
+inline uint64 SwapOp(uint32 count);
 inline uint64 PcOp();
   inline int Main_decode(uint32 ocode);
   inline int EVM_Main_GetInstNum(uint32 ocode);

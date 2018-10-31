@@ -834,6 +834,24 @@ Device EVM
     sp = sp + 3;
   }
 
+  Func SwapOp(int32 count)
+  {
+    int32 i;
+    int32 offs;
+    MAIN_TYPE first_el[4];
+
+    USEGAS(STEPGAS2);
+    first_el[3] = stack_arr[sp-3];
+    first_el[2] = stack_arr[sp-3];
+    first_el[1] = stack_arr[sp-1];
+    first_el[0] = stack_arr[sp];
+    for (i=0; i<4; i=i+1) {
+      offs = sp - ((4*(count + 1)) + i);
+      stack_arr[sp-i] = stack_arr[offs];
+      stack_arr[offs] = first_el[i];
+    }
+  }
+
   Func PcOp()
   {
     int32 i;
@@ -921,20 +939,7 @@ Device EVM
 
     INST "SWAP$count", (8,int4 count,int4 0x9)
     {
-      int32 i;
-      int32 offs;
-      MAIN_TYPE first_el[4];
-
-      USEGAS(STEPGAS2);
-      first_el[3] = stack_arr[sp-3];
-      first_el[2] = stack_arr[sp-3];
-      first_el[1] = stack_arr[sp-1];
-      first_el[0] = stack_arr[sp];
-      for (i=0; i<4; i=i+1) {
-        offs = sp - ((4*(count + 1)) + i);
-        stack_arr[sp-i] = stack_arr[offs];
-        stack_arr[offs] = first_el[i];
-      }
+      SwapOp(count);
     }
 
     INST "LOG$count", (8, int3 count,int1 0,int4 0xa)

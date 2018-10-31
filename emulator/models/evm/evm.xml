@@ -32,41 +32,41 @@
     </VARS>
     <FLAGS />
     <FUNCTIONS>
-        <KeccakAlg RETSIZE="64" EXTERN="1">
+        <KeccakAlg RETSIZE="64">
             <ARGUMENTS>
                 <offs SIZE="32" />
                 <size SIZE="32" />
             </ARGUMENTS>
             <CODE />
         </KeccakAlg>
-        <GetElfSize RETSIZE="64" EXTERN="1">
+        <GetElfSize RETSIZE="64">
             <CODE />
         </GetElfSize>
-        <SaveToStorage RETSIZE="0" EXTERN="1">
+        <SaveToStorage RETSIZE="0">
             <ARGUMENTS>
                 <offs SIZE="32" />
             </ARGUMENTS>
             <CODE />
         </SaveToStorage>
-        <LoadFromStorage RETSIZE="64" EXTERN="1">
+        <LoadFromStorage RETSIZE="0">
             <ARGUMENTS>
                 <offs SIZE="32" />
             </ARGUMENTS>
             <CODE />
         </LoadFromStorage>
-        <UseGas RETSIZE="0" EXTERN="1">
+        <UseGas RETSIZE="0">
             <ARGUMENTS>
                 <value SIZE="64" />
             </ARGUMENTS>
             <CODE />
         </UseGas>
-        <DoArithm RETSIZE="0" EXTERN="1">
+        <DoArithm RETSIZE="0">
             <ARGUMENTS>
                 <opcode SIZE="32" />
             </ARGUMENTS>
             <CODE />
         </DoArithm>
-        <DoCompare RETSIZE="0" EXTERN="1">
+        <DoCompare RETSIZE="0">
             <ARGUMENTS>
                 <opcode SIZE="32" />
             </ARGUMENTS>
@@ -3126,9 +3126,7 @@
                     </FOR_ITERATION>
                     <CODE>
                         <OPERATOR name=" = ">
-                            <LVAR name="data_val">
-                                <LVAR name="j" />
-                            </LVAR>
+                            <LVAR name="data_val" />
                             <IMM32 value="0" />
                         </OPERATOR>
                         <FOR>
@@ -3169,13 +3167,9 @@
                                     </OPERATOR>
                                 </OPERATOR>
                                 <OPERATOR name=" = ">
-                                    <LVAR name="data_val">
-                                        <LVAR name="j" />
-                                    </LVAR>
+                                    <LVAR name="data_val" />
                                     <OPERATOR name="|">
-                                        <LVAR name="data_val">
-                                            <LVAR name="j" />
-                                        </LVAR>
+                                        <LVAR name="data_val" />
                                         <LVAR name="data_tmp" />
                                     </OPERATOR>
                                 </OPERATOR>
@@ -3197,9 +3191,7 @@
                             <IMM32 value="1" />
                         </OPERATOR>
                     </REG>
-                    <LVAR name="data_val">
-                        <IMM32 value="0" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                 </OPERATOR>
                 <OPERATOR name=" = ">
                     <REG name="stack_arr">
@@ -3208,9 +3200,7 @@
                             <IMM32 value="2" />
                         </OPERATOR>
                     </REG>
-                    <LVAR name="data_val">
-                        <IMM32 value="1" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                 </OPERATOR>
                 <OPERATOR name=" = ">
                     <REG name="stack_arr">
@@ -3219,9 +3209,7 @@
                             <IMM32 value="3" />
                         </OPERATOR>
                     </REG>
-                    <LVAR name="data_val">
-                        <IMM32 value="2" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                 </OPERATOR>
                 <OPERATOR name=" = ">
                     <REG name="stack_arr">
@@ -3230,9 +3218,7 @@
                             <IMM32 value="4" />
                         </OPERATOR>
                     </REG>
-                    <LVAR name="data_val">
-                        <IMM32 value="3" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                 </OPERATOR>
                 <OPERATOR name=" = ">
                     <REG name="sp" />
@@ -3258,17 +3244,13 @@
             </LOCALVARS>
             <CODE>
                 <OPERATOR name=" = ">
-                    <LVAR name="data_val">
-                        <IMM32 value="3" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                     <REG name="stack_arr">
                         <REG name="sp" />
                     </REG>
                 </OPERATOR>
                 <OPERATOR name=" = ">
-                    <LVAR name="data_val">
-                        <IMM32 value="2" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                     <REG name="stack_arr">
                         <OPERATOR name="-">
                             <REG name="sp" />
@@ -3277,9 +3259,7 @@
                     </REG>
                 </OPERATOR>
                 <OPERATOR name=" = ">
-                    <LVAR name="data_val">
-                        <IMM32 value="1" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                     <REG name="stack_arr">
                         <OPERATOR name="-">
                             <REG name="sp" />
@@ -3288,9 +3268,7 @@
                     </REG>
                 </OPERATOR>
                 <OPERATOR name=" = ">
-                    <LVAR name="data_val">
-                        <IMM32 value="0" />
-                    </LVAR>
+                    <LVAR name="data_val" />
                     <REG name="stack_arr">
                         <OPERATOR name="-">
                             <REG name="sp" />
@@ -3357,9 +3335,7 @@
                                     <LVAR name="data_tmp" />
                                     <OPERATOR name="&amp;">
                                         <OPERATOR name="&gt;&gt;">
-                                            <LVAR name="data_val">
-                                                <LVAR name="j" />
-                                            </LVAR>
+                                            <LVAR name="data_val" />
                                             <OPERATOR name="*">
                                                 <IMM32 value="8" />
                                                 <LVAR name="i" />
@@ -3519,6 +3495,114 @@
                 </OPERATOR>
             </CODE>
         </MSizeOp>
+        <SwapOp RETSIZE="64">
+            <ARGUMENTS>
+                <count SIZE="32" />
+            </ARGUMENTS>
+            <LOCALVARS>
+                <i SIZE="32" />
+                <offs SIZE="32" />
+                <first_el SIZE="64" ARRSIZE="4" />
+            </LOCALVARS>
+            <CODE>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el" />
+                    <REG name="stack_arr">
+                        <OPERATOR name="-">
+                            <REG name="sp" />
+                            <IMM32 value="3" />
+                        </OPERATOR>
+                    </REG>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el" />
+                    <REG name="stack_arr">
+                        <OPERATOR name="-">
+                            <REG name="sp" />
+                            <IMM32 value="3" />
+                        </OPERATOR>
+                    </REG>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el" />
+                    <REG name="stack_arr">
+                        <OPERATOR name="-">
+                            <REG name="sp" />
+                            <IMM32 value="1" />
+                        </OPERATOR>
+                    </REG>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el" />
+                    <REG name="stack_arr">
+                        <REG name="sp" />
+                    </REG>
+                </OPERATOR>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="4" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="offs" />
+                            <OPERATOR name="-">
+                                <REG name="sp" />
+                                <OPERATOR name="+">
+                                    <OPERATOR name="*">
+                                        <IMM32 value="4" />
+                                        <OPERATOR name="+">
+                                            <ARG name="count" />
+                                            <IMM32 value="1" />
+                                        </OPERATOR>
+                                    </OPERATOR>
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </OPERATOR>
+                        </OPERATOR>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <OPERATOR name="-">
+                                    <REG name="sp" />
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </REG>
+                            <REG name="stack_arr">
+                                <LVAR name="offs" />
+                            </REG>
+                        </OPERATOR>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <LVAR name="offs" />
+                            </REG>
+                            <LVAR name="first_el" />
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+            </CODE>
+        </SwapOp>
         <PcOp RETSIZE="64">
             <LOCALVARS>
                 <i SIZE="32" />
@@ -4291,118 +4375,13 @@
                     <ARG SIZE="4" name="count" />
                     <ARG SIZE="4" VAL="9" />
                 </OPCODE>
-                <LOCALVARS>
-                    <i SIZE="32" />
-                    <offs SIZE="32" />
-                    <first_el SIZE="64" ARRSIZE="4" />
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="SwapOp">
                         <ARGS>
-                            <IMM32 value="3" />
+                            <ARG name="count" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="3" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="2" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="1" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="0" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </OPERATOR>
-                    <FOR>
-                        <FOR_START>
-                            <OPERATOR name=" = ">
-                                <LVAR name="i" />
-                                <IMM32 value="0" />
-                            </OPERATOR>
-                        </FOR_START>
-                        <FOR_STOP_COND>
-                            <OPERATOR name=" &lt; ">
-                                <LVAR name="i" />
-                                <IMM32 value="4" />
-                            </OPERATOR>
-                        </FOR_STOP_COND>
-                        <FOR_ITERATION>
-                            <OPERATOR name=" = ">
-                                <LVAR name="i" />
-                                <OPERATOR name="+">
-                                    <LVAR name="i" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </FOR_ITERATION>
-                        <CODE>
-                            <OPERATOR name=" = ">
-                                <LVAR name="offs" />
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <OPERATOR name="+">
-                                        <OPERATOR name="*">
-                                            <IMM32 value="4" />
-                                            <OPERATOR name="+">
-                                                <ARG name="count" />
-                                                <IMM32 value="1" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                        <LVAR name="i" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <OPERATOR name="-">
-                                        <REG name="sp" />
-                                        <LVAR name="i" />
-                                    </OPERATOR>
-                                </REG>
-                                <REG name="stack_arr">
-                                    <LVAR name="offs" />
-                                </REG>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <LVAR name="offs" />
-                                </REG>
-                                <LVAR name="first_el">
-                                    <LVAR name="i" />
-                                </LVAR>
-                            </OPERATOR>
-                        </CODE>
-                    </FOR>
                 </CODE>
             </INSTRUCTION>
             <INSTRUCTION ASM="LOG$count" SIZE="8">

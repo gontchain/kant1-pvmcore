@@ -2041,6 +2041,27 @@ inline uint64 EVM::MSizeOp()
 };
 #undef SARG
 #define SARG(aidx) aidx
+inline uint64 EVM::SwapOp(uint32 count)
+{
+  uint32 i ;
+  uint32 offs ;
+  uint64 first_el[4] ;
+  ;
+ UseGas((TDevice*)this,3);
+   first_el[3]  = stack_arr[(sp - 3)];
+   first_el[2]  = stack_arr[(sp - 3)];
+   first_el[1]  = stack_arr[(sp - 1)];
+   first_el[0]  = stack_arr[sp];
+ for( i  = 0; i  < 4; i  = ( i  + 1)){
+  ;
+   offs  = (sp - ((4 * (SARG(count) + 1)) +  i ));
+  stack_arr[(sp -  i )] = stack_arr[ offs ];
+  stack_arr[ offs ] =  first_el[ i ] ;
+  }
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
 inline uint64 EVM::PcOp()
 {
   uint32 i ;
@@ -2195,21 +2216,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 9;
   #define SARG(aidx) cur_inst->inst9.aidx
       {
-  uint32 i ;
-  uint32 offs ;
-  uint64 first_el[4] ;
   ;
- UseGas((TDevice*)this,3);
-   first_el[3]  = stack_arr[(sp - 3)];
-   first_el[2]  = stack_arr[(sp - 3)];
-   first_el[1]  = stack_arr[(sp - 1)];
-   first_el[0]  = stack_arr[sp];
- for( i  = 0; i  < 4; i  = ( i  + 1)){
-  ;
-   offs  = (sp - ((4 * (SARG(count) + 1)) +  i ));
-  stack_arr[(sp -  i )] = stack_arr[ offs ];
-  stack_arr[ offs ] =  first_el[ i ] ;
-  }
+  SwapOp(SARG(count));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
