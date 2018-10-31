@@ -61,6 +61,7 @@ compare:
 	$(MAKE) -C sub compare
 	$(MAKE) -C mul compare
 	$(MAKE) -C div compare
+	$(MAKE) -C sdiv compare
 	$(MAKE) -C mod compare
 	$(MAKE) -C smod compare
 	$(MAKE) -C addmod compare
