@@ -82,7 +82,7 @@ compare:
 	# with segfault $(MAKE) -C callvalue compare
 	$(MAKE) -C codesize compare
 	$(MAKE) -C extcodesize compare
-	# $(MAKE) -C sha3 compare
+	$(MAKE) -C sha3 compare
 	$(MAKE) -C msize compare
 	$(MAKE) -C mload compare
 	$(MAKE) -C sload compare
