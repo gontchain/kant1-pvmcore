@@ -1962,8 +1962,6 @@ inline uint64 EVM::MStoreInst(uint64 addr_val)
   uint32 j ;
   uint64 data_val[4] ;
   uint64 data_tmp ;
-  uint64 msb  = 0;
-  uint1 msb_reached  = 0;
   ;
    data_val[3]  = stack_arr[sp];
    data_val[2]  = stack_arr[(sp - 1)];
@@ -1983,6 +1981,22 @@ inline uint64 EVM::MStoreInst(uint64 addr_val)
   {
   mem_size = SARG(addr_val);
   }
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::GetAddrVal()
+{
+  uint32 i ;
+  uint64 addr_val  = 0;
+  uint64 addr_tmp  = stack_arr[(sp - 3)];
+  ;
+  sp = (sp - 4);
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   addr_val  = ( addr_val  | pd_lsh((pd_rsh( addr_tmp ,(8 * (7 -  i ))) & 255), i ));
+  }
+    return  addr_val ;
   return 0;
 };
 #undef SARG
@@ -2161,7 +2175,6 @@ inline int EVM::Main_decode(uint32 ocode){
   uint32 i ;
   uint32 dec_cnt ;
   uint64 addr_val  = 0;
-  uint64 addr_tmp ;
   uint32 init_shift ;
   uint64 data_val ;
   uint64 pc_val ;
@@ -2170,12 +2183,7 @@ inline int EVM::Main_decode(uint32 ocode){
   if(Get_MemOps(SARG(opcode)) < 8)
   {
   ;
-   addr_tmp  = stack_arr[(sp - 3)];
- for( i  = 0; i  < 8; i  = ( i  + 1)){
-  ;
-   addr_val  = ( addr_val  | pd_lsh((pd_rsh( addr_tmp ,(8 * (7 -  i ))) & 255), i ));
-  }
-  sp = (sp - 4);
+   addr_val  = GetAddrVal();
   }
   switch( (uint32)(Get_MemOps(SARG(opcode))))
   {

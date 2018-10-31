@@ -792,6 +792,18 @@ Device EVM
       mem_size = addr_val;
   }
 
+  MAIN_TYPE GetAddrVal()
+  {
+    int32 i;
+    MAIN_TYPE addr_val = 0;
+    MAIN_TYPE addr_tmp = stack_arr[sp-3];
+    sp = sp - 4;
+    for (i = 0; i < 8; i=i+1) {
+      addr_val = addr_val | (((addr_tmp >> 8*(7-i)) & 0xFF) << i);
+    }
+    return addr_val;
+  }
+
   //  instruction set;
   ISET Main
   {
@@ -887,18 +899,13 @@ Device EVM
       int32 i;
       int32 dec_cnt;
       MAIN_TYPE addr_val = 0;
-      MAIN_TYPE addr_tmp;
       int32 init_shift;
       MAIN_TYPE data_val;
       MAIN_TYPE pc_val;
       MAIN_TYPE data_tmp;
 
       if(opcode < 8) {
-        addr_tmp = stack_arr[sp-3];
-        for (i = 0; i < 8; i=i+1) {
-          addr_val = addr_val | (((addr_tmp >> 8*(7-i)) & 0xFF) << i);
-        }
-        sp = sp - 4;
+        addr_val = GetAddrVal();
       }
       switch((int32)opcode)
       {

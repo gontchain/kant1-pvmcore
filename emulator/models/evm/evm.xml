@@ -3138,16 +3138,6 @@
                 <j SIZE="32" />
                 <data_val SIZE="64" ARRSIZE="4" />
                 <data_tmp SIZE="64" />
-                <msb SIZE="64">
-                    <INITAL_EXP>
-                        <IMM32 value="0" />
-                    </INITAL_EXP>
-                </msb>
-                <msb_reached SIZE="1">
-                    <INITAL_EXP>
-                        <IMM32 value="0" />
-                    </INITAL_EXP>
-                </msb_reached>
             </LOCALVARS>
             <CODE>
                 <OPERATOR name=" = ">
@@ -3286,6 +3276,85 @@
                 </IF>
             </CODE>
         </MStoreInst>
+        <GetAddrVal RETSIZE="64">
+            <LOCALVARS>
+                <i SIZE="32" />
+                <addr_val SIZE="64">
+                    <INITAL_EXP>
+                        <IMM32 value="0" />
+                    </INITAL_EXP>
+                </addr_val>
+                <addr_tmp SIZE="64">
+                    <INITAL_EXP>
+                        <REG name="stack_arr">
+                            <OPERATOR name="-">
+                                <REG name="sp" />
+                                <IMM32 value="3" />
+                            </OPERATOR>
+                        </REG>
+                    </INITAL_EXP>
+                </addr_tmp>
+            </LOCALVARS>
+            <CODE>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="-">
+                        <REG name="sp" />
+                        <IMM32 value="4" />
+                    </OPERATOR>
+                </OPERATOR>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="8" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="addr_val" />
+                            <OPERATOR name="|">
+                                <LVAR name="addr_val" />
+                                <OPERATOR name="&lt;&lt;">
+                                    <OPERATOR name="&amp;">
+                                        <OPERATOR name="&gt;&gt;">
+                                            <LVAR name="addr_tmp" />
+                                            <OPERATOR name="*">
+                                                <IMM32 value="8" />
+                                                <OPERATOR name="-">
+                                                    <IMM32 value="7" />
+                                                    <LVAR name="i" />
+                                                </OPERATOR>
+                                            </OPERATOR>
+                                        </OPERATOR>
+                                        <IMM32 value="FF" />
+                                    </OPERATOR>
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </OPERATOR>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <RETURN>
+                    <LVAR name="addr_val" />
+                </RETURN>
+            </CODE>
+        </GetAddrVal>
     </FUNCTIONS>
     <ARGLISTS>
         <ArithmOps NUM_ELEMS="12" RETURN_SIZE="64">
@@ -4072,7 +4141,6 @@
                             <IMM32 value="0" />
                         </INITAL_EXP>
                     </addr_val>
-                    <addr_tmp SIZE="64" />
                     <init_shift SIZE="32" />
                     <data_val SIZE="64" />
                     <pc_val SIZE="64" />
@@ -4090,67 +4158,8 @@
                         </COND>
                         <INNER>
                             <OPERATOR name=" = ">
-                                <LVAR name="addr_tmp" />
-                                <REG name="stack_arr">
-                                    <OPERATOR name="-">
-                                        <REG name="sp" />
-                                        <IMM32 value="3" />
-                                    </OPERATOR>
-                                </REG>
-                            </OPERATOR>
-                            <FOR>
-                                <FOR_START>
-                                    <OPERATOR name=" = ">
-                                        <LVAR name="i" />
-                                        <IMM32 value="0" />
-                                    </OPERATOR>
-                                </FOR_START>
-                                <FOR_STOP_COND>
-                                    <OPERATOR name=" &lt; ">
-                                        <LVAR name="i" />
-                                        <IMM32 value="8" />
-                                    </OPERATOR>
-                                </FOR_STOP_COND>
-                                <FOR_ITERATION>
-                                    <OPERATOR name=" = ">
-                                        <LVAR name="i" />
-                                        <OPERATOR name="+">
-                                            <LVAR name="i" />
-                                            <IMM32 value="1" />
-                                        </OPERATOR>
-                                    </OPERATOR>
-                                </FOR_ITERATION>
-                                <CODE>
-                                    <OPERATOR name=" = ">
-                                        <LVAR name="addr_val" />
-                                        <OPERATOR name="|">
-                                            <LVAR name="addr_val" />
-                                            <OPERATOR name="&lt;&lt;">
-                                                <OPERATOR name="&amp;">
-                                                    <OPERATOR name="&gt;&gt;">
-                                                        <LVAR name="addr_tmp" />
-                                                        <OPERATOR name="*">
-                                                            <IMM32 value="8" />
-                                                            <OPERATOR name="-">
-                                                                <IMM32 value="7" />
-                                                                <LVAR name="i" />
-                                                            </OPERATOR>
-                                                        </OPERATOR>
-                                                    </OPERATOR>
-                                                    <IMM32 value="FF" />
-                                                </OPERATOR>
-                                                <LVAR name="i" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                    </OPERATOR>
-                                </CODE>
-                            </FOR>
-                            <OPERATOR name=" = ">
-                                <REG name="sp" />
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="4" />
-                                </OPERATOR>
+                                <LVAR name="addr_val" />
+                                <CALL name="GetAddrVal" />
                             </OPERATOR>
                         </INNER>
                     </IF>
