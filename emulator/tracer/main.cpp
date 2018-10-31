@@ -84,11 +84,7 @@ TGetDevCore       GetDevCore;
 // config file name
 char*  ConfigFileName;
 // GAS limit
-#if 1
 uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
-#else
-uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
-#endif
 uint64 GasLimitValue = 10000000000;
 char*  ProfileFileName;
 int    default_config_file;
@@ -456,7 +452,11 @@ int CheckRegs(char* regnames)
 				int t = cfg->regs[i].type;
         reg[0] = 0;
         Device->GetReg(i, 0, (char*)&reg);		  
+<<<<<<< HEAD
 				if (t == 8){//64 bit
+=======
+				if (t >= 8){//64 bit
+>>>>>>> 83120b909ffb5490ad91c1b3b8460a37eff69b16
 					if ((RegVal[i][0] != reg[0]) || RegVal[i][1] != reg[1]){
 						RegVal[i][0] = reg[0];
 						RegVal[i][1] = reg[1];

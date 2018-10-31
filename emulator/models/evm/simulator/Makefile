@@ -2,14 +2,12 @@
 include ../../../headers/make.inc
 
 PROGNAME = ./evm.so
-OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/evm_sim.o $(DIR_OBJECTS)/sha3/Keccak.o
+OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/evm_sim.o $(DIR_OBJECTS)/sha3/Keccak.o $(DIR_OBJECTS)/bignum/v_bignum.o
 INCLUDE = -I./include -I./../../../headers -I./../../../dbg_interface -I./../../../peripheral -I../../../../$(SYSTEMC_INC)
 LIB_DIR = ../../../libs/linux
 SC_DIR = $(PWD)/../systemc/lib
 
 LIBRARIES = $(LIB_DIR)/simlib.a $(LIB_DIR)/libelf.a $(LIB_DIR)/libdwarf.a $(SC_DIR)/libsystemc.a
-		
-	      
 
 $(PROGNAME): $(OBJ_FILES) $(LIBRARIES)
 	$(CC) $(FLAG_O_LIB) $(OBJ_FILES) $(LIBRARIES) -o $(PROGNAME) 
@@ -33,8 +31,9 @@ $(DIR_OBJECTS)/evm_sim.o:
 $(DIR_OBJECTS)/sha3/Keccak.o:
 	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -I./sha3 -c ./sha3/Keccak.cpp -o $@
 
-	
-	
+$(DIR_OBJECTS)/bignum/v_bignum.o:
+	$(CC) $(FLAGS) $(FLAG_C) $(INCLUDE) -I./bignum -c ./bignum/v_bignum.c -o $@
+
 clean:
-	rm -f $(DIR_OBJECTS)/*.o $(DIR_OBJECTS)/sha3/*.o
+	rm -f $(DIR_OBJECTS)/*.o $(DIR_OBJECTS)/sha3/*.o $(DIR_OBJECTS)/bignum/*.o
 	rm -f $(PROGNAME)

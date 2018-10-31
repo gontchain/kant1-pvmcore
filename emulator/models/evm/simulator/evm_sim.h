@@ -7,6 +7,9 @@ extern uint64 KeccakAlg(TDevice* dev,uint32 offs,uint32 size);
 extern uint64 GetElfSize(TDevice* dev);
 extern void SaveToStorage(TDevice* dev,uint32 offs,uint64 value);
 extern uint64 LoadFromStorage(TDevice* dev,uint32 offs);
+extern void UseGas(TDevice* dev,uint64 value);
+extern void DoArithm(TDevice* dev,uint32 opcode);
+extern void DoCompare(TDevice* dev,uint32 opcode);
 // class EVM
 class EVM: public TDevice
 {
@@ -86,7 +89,7 @@ public:
   uint32  sp;
   uint1  is_pc_within_inst;
   uint1  is_pc_const_changed;
-  uint64  gas_available;
+  uint64  gas_available[4];
   uint32  mem_size;
   uint8  data_bus[1024];
   uint64  stack_arr[2048];
@@ -149,6 +152,8 @@ inline int CheckNull_SystemOps(uint32 aIdx);
   int IsMemInRange(int addr,int size,int busnum);
   int FillMem(uint32 aVal,int busnum,int addr,int size);
   int GetCellSize(int busnum,int addr);
+inline uint64 GetSingleBlockFromStack();
+inline uint64 PushSingleBlockToStack(uint64 data_tmp);
 inline uint64 StopExec();
 inline uint64 GetExp();
 inline uint64 Pop();
@@ -199,10 +204,14 @@ inline uint64 MakeCall();
 inline uint64 MakeCallCode();
 inline uint64 Return();
 inline uint64 DelegateCall();
+inline uint64 ArithmStub(uint32 opcode);
+inline uint64 CompareStub(uint32 opcode);
 inline uint64 PushInst(uint32 cnt);
 inline uint64 LogInst(uint32 count,uint32 log_ptr);
 inline uint64 MloadInst(uint32 addr_val);
-inline uint64 MStoreInst(uint32 addr_val);
+inline uint64 MStoreInst(uint64 addr_val);
+inline uint64 MSizeOp();
+inline uint64 PcOp();
   inline int Main_decode(uint32 ocode);
   inline int EVM_Main_GetInstNum(uint32 ocode);
   void update();

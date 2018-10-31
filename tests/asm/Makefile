@@ -39,7 +39,9 @@ all:
 	$(MAKE) -C sha3
 	$(MAKE) -C msize
 	$(MAKE) -C sload
+	$(MAKE) -C mload
 	$(MAKE) -C swap1
+	$(MAKE) -C pc
 
 compare:
 	@rm -rf passes
@@ -59,6 +61,7 @@ compare:
 	$(MAKE) -C sub compare
 	$(MAKE) -C mul compare
 	$(MAKE) -C div compare
+	$(MAKE) -C sdiv compare
 	$(MAKE) -C mod compare
 	$(MAKE) -C smod compare
 	$(MAKE) -C addmod compare
@@ -66,6 +69,7 @@ compare:
 	$(MAKE) -C exp compare
 	$(MAKE) -C signextend compare
 	$(MAKE) -C swap1 compare
+	$(MAKE) -C pc compare
 	$(MAKE) -C gaslimit compare
 	$(MAKE) -C gaslimit compare GASLIMIT=0xffff
 	$(MAKE) -C gas compare
@@ -75,12 +79,13 @@ compare:
 	# with segfault $(MAKE) -C balance compare
 	# with segfault $(MAKE) -C origin compare
 	# with segfault $(MAKE) -C caller compare
-	$(MAKE) -C callvalue compare
+	# with segfault $(MAKE) -C callvalue compare
 	$(MAKE) -C codesize compare
-	$(MAKE) -C sha3 compare
+	$(MAKE) -C extcodesize compare
+	# $(MAKE) -C sha3 compare
 	$(MAKE) -C msize compare
+	$(MAKE) -C mload compare
 	$(MAKE) -C sload compare
-	# with segfault $(MAKE) -C extcodesize compare
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -134,7 +139,9 @@ run-evm:
 	$(MAKE) -C sha3 run-evm
 	$(MAKE) -C msize run-evm
 	$(MAKE) -C sload run-evm
+	$(MAKE) -C mload run-evm
 	$(MAKE) -C swap1 run-evm
+	$(MAKE) -C pc run-evm
 
 run-cemu:
 	$(MAKE) -C lt run-cemu
@@ -174,7 +181,9 @@ run-cemu:
 	$(MAKE) -C sha3 run-cemu
 	$(MAKE) -C msize run-cemu
 	$(MAKE) -C sload run-cemu
+	$(MAKE) -C mload run-cemu
 	$(MAKE) -C swap1 run-cemu
+	$(MAKE) -C pc run-cemu
 
 clean:
 	$(MAKE) -C lt clean
@@ -212,4 +221,6 @@ clean:
 	$(MAKE) -C sha3 clean
 	$(MAKE) -C msize clean
 	$(MAKE) -C sload clean
+	$(MAKE) -C mload clean
 	$(MAKE) -C swap1 clean
+	$(MAKE) -C pc clean

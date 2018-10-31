@@ -1,5 +1,6 @@
 #define MAIN_TYPE int64
 #define MAIN_TYPE_SIZE 64
+#define MAIN_TYPE_BLOCK_SIZE 4
 #define EVM_ADDR_TYPE int64
 #define EVM_BALANCE_TYPE int64
 
@@ -25,7 +26,7 @@ Device EVM
   Reg EVM_ADDR_TYPE     origin_addr, "origin_addr";
  
   Reg EVM_BALANCE_TYPE  gas_price, "gas_price";  
-  Var EVM_BALANCE_TYPE  gas_available, "gas_available";
+  Var EVM_BALANCE_TYPE  gas_available[MAIN_TYPE_BLOCK_SIZE], "gas_available$";
   
   // Reg MAIN_TYPE  code_size,"code_size"; // replaced by GetElfSize() call
   Reg MAIN_TYPE  ext_code_size,"ext_code_size";
@@ -56,6 +57,40 @@ Device EVM
   extern MAIN_TYPE GetElfSize();
   extern void      SaveToStorage(int32 offs, MAIN_TYPE value);
   extern MAIN_TYPE LoadFromStorage(int32 offs);
+  extern void      UseGas(MAIN_TYPE value);
+
+  extern void      DoArithm(int32 opcode);
+  extern void      DoCompare(int32 opcode);
+
+  // used to get stack value if it fits in single block (uint64)
+  MAIN_TYPE GetSingleBlockFromStack()
+  {
+    int32 i;
+    MAIN_TYPE data_val = 0;
+    MAIN_TYPE data_tmp = stack_arr[sp-3];
+    sp = sp - 4;
+    for (i = 0; i < 8; i=i+1) {
+      data_val = data_val | (((data_tmp >> 8*(7-i)) & 0xFF) << i);
+    }
+    return data_val;
+  }
+
+  // used to push value to stack if it fits in single block (uint64)
+  Func PushSingleBlockToStack(MAIN_TYPE data_tmp)
+  {
+    int32 i;
+    MAIN_TYPE data_val = 0;
+
+    for (i = 0; i < 8; i=i+1) {
+      data_val = data_val | (((data_tmp >> 8*i) & 0xFF) << 8*(7-i));
+    }
+    sp = sp + 1;
+    stack_arr[sp]   = data_val;
+    stack_arr[sp+1] = 0;
+    stack_arr[sp+2] = 0;
+    stack_arr[sp+3] = 0;
+    sp = sp + 3;
+  }
 
   MAIN_TYPE StopExec()
   {
@@ -76,7 +111,6 @@ Device EVM
     }
     sp = sp - 1;
     stack_arr[sp] = res;
-    // return res;
     return (MAIN_TYPE)0;
   }
 
@@ -116,7 +150,6 @@ Device EVM
       else
         number = b & mask;
       stack_arr[sp] = number;
-      // return number;
       return (MAIN_TYPE)0;
     }
     stack_arr[sp] = (MAIN_TYPE)0;
@@ -133,7 +166,6 @@ Device EVM
      int32 end_bit = start_bit + 7;
      sp = sp - 1;
      stack_arr[sp] = b[end_bit:start_bit];
-     // return b[end_bit:start_bit];
      return (MAIN_TYPE)0;
   }
 
@@ -153,7 +185,6 @@ Device EVM
     {
       div = a / mod;
       stack_arr[sp] = a - (div * mod);
-      // return a - (div * mod);
       return (MAIN_TYPE)0;
     }
   }
@@ -175,7 +206,6 @@ Device EVM
     {
       div = base / mod;
       stack_arr[sp] = base - (div * mod);
-      // return base - (div * mod);
       return (MAIN_TYPE)0;
     }
   }
@@ -197,7 +227,6 @@ Device EVM
     {
       div = base / mod;
       stack_arr[sp] = base - (div * mod);
-      // return base - (div * mod);
       return (MAIN_TYPE)0;
     }
   }
@@ -221,7 +250,6 @@ Device EVM
     {
       div = a / mod;
       stack_arr[sp] = (sign * (a - (div * mod)));
-      // return (sign * (a - (div * mod)));
       return (MAIN_TYPE)0;
     }// if(mod == 0) .. else
   }
@@ -240,7 +268,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a + b;
-    // return a + b ;
     return (MAIN_TYPE)0;
   }
 
@@ -251,7 +278,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a - b;
-    // return a - b ;
     return (MAIN_TYPE)0;
   }
 
@@ -262,7 +288,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a * b;
-    // return a * b ;
     return (MAIN_TYPE)0;
   }
 
@@ -274,13 +299,11 @@ Device EVM
     sp = sp - 1;
     if (b == 0) {
       stack_arr[sp] = (MAIN_TYPE)0;
-      return (MAIN_TYPE)0;
     }
     else {
       stack_arr[sp] = a / b;
-      // return a / b;
-      return (MAIN_TYPE)0;
     }
+    return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE DivOpS()
@@ -291,13 +314,11 @@ Device EVM
     sp = sp - 1;
     if (b == 0) {
       stack_arr[sp] = (MAIN_TYPE)0;
-      return (MAIN_TYPE)0;
     }
     else {
       stack_arr[sp] = (signed)a / (signed)b;
-      // return (signed)a / (signed)b;
-      return (MAIN_TYPE)0;
     }
+    return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE LtOp()
@@ -307,7 +328,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a < b;
-    // return a < b;
     return (MAIN_TYPE)0;
   }
 
@@ -318,7 +338,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = (signed)a < (signed)b;
-    // return (signed)a < (signed)b;
     return (MAIN_TYPE)0;
   }
 
@@ -329,7 +348,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a > b;
-    // return a > b;
     return (MAIN_TYPE)0;
   }
 
@@ -340,7 +358,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = (signed)a > (signed)b;
-    // return (signed)a > (signed)b;
     return (MAIN_TYPE)0;
   }
 
@@ -351,7 +368,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a == b;
-    // return a == b;
     return (MAIN_TYPE)0;
   }
 
@@ -360,7 +376,6 @@ Device EVM
     USEGAS(STEPGAS2);
     MAIN_TYPE a = stack_arr[sp];
     stack_arr[sp] = a == 0;
-    // return a == 0;
     return (MAIN_TYPE)0;
   }
 
@@ -371,7 +386,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a & b;
-    // return a & b;
     return (MAIN_TYPE)0;
   }
 
@@ -382,7 +396,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a | b;
-    // return a | b;
     return (MAIN_TYPE)0;
   }
 
@@ -393,7 +406,6 @@ Device EVM
     MAIN_TYPE b = stack_arr[sp-1];
     sp = sp - 1;
     stack_arr[sp] = a ^ b;
-    // return a ^ b;
     return (MAIN_TYPE)0;
   }
 
@@ -402,7 +414,6 @@ Device EVM
     USEGAS(STEPGAS2);
     MAIN_TYPE a = stack_arr[sp];
     stack_arr[sp] = ~a;
-    // return ~a;
     return (MAIN_TYPE)0;
   }
 
@@ -414,31 +425,16 @@ Device EVM
     "DIV","SDIV","MOD","SMOD",
     // 8
     "ADDMOD","MULMOD","EXP","SIGNEXTEND"
-  },
-  {
-    // 0
-    StopOp(), AddOp(), MulOp(), SubOp(),
-    // 4
-    DivOp(), DivOpS(), GetModule(), GetModuleS(),
-    // 8
-    GetModuleAdd(), GetModuleMul(), GetExp(), SignExtend()
   };
-    
-    
+
   ArgList MAIN_TYPE CompareLogOps(),
   {
     // 
     "LT","GT","SLT","SGT",
     "EQ","ISZERO","AND","OR",
     "XOR","NOT","BYTE"
-  },
-  {
-    LtOp(), GtOp(), LtOpS(), GtOpS(), 
-    EqOp(), IsZeroOp(), AndOp(), OrOp(), 
-    XorOp(), NotOp(), ByteFromWord()
-  };   
-    
-    
+  };
+
   ArgList MAIN_TYPE MemOps,
   {
     "POP", "MLOAD", "MSTORE", "MSTORE8",
@@ -469,9 +465,7 @@ Device EVM
   MAIN_TYPE CallDataSize()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = inp_data_size;
-    // return inp_data_size;
+    PushSingleBlockToStack(inp_data_size);
     return (MAIN_TYPE)0;
   }
 
@@ -489,9 +483,7 @@ Device EVM
   MAIN_TYPE ExtCodeSize()
   {
     USEGAS(STEPGAS6);
-    sp = sp + 1;
-    stack_arr[sp] = ext_code_size;
-    // return ext_code_size;
+    PushSingleBlockToStack(ext_code_size);
     return (MAIN_TYPE)0;
   }
 
@@ -512,9 +504,7 @@ Device EVM
   {
    USEGAS(STEPGAS1);
    EVM_ADDR_TYPE ca = cur_addr;
-   sp = sp + 1;
-   stack_arr[sp] = (MAIN_TYPE)ca;
-   // return (MAIN_TYPE)ca;
+   PushSingleBlockToStack((MAIN_TYPE)ca);
    return (MAIN_TYPE)0;
   }
 
@@ -531,9 +521,7 @@ Device EVM
   {
    USEGAS(STEPGAS1);
    EVM_ADDR_TYPE oa = origin_addr;
-   sp = sp + 1;
-   stack_arr[sp] = (MAIN_TYPE)oa;
-   // return (MAIN_TYPE)oa;
+   PushSingleBlockToStack((MAIN_TYPE)oa);
    return (MAIN_TYPE)0;
   }
 
@@ -541,9 +529,7 @@ Device EVM
   {
    EVM_ADDR_TYPE ca = caller_addr;
    USEGAS(STEPGAS1);
-   sp = sp + 1;
-   stack_arr[sp] = (MAIN_TYPE)ca;
-   // return (MAIN_TYPE)ca;
+   PushSingleBlockToStack((MAIN_TYPE)ca);
    return (MAIN_TYPE)0;
   }
 
@@ -553,16 +539,14 @@ Device EVM
    int32 addr_val = (int32)(stack_arr[sp]);
    MAIN_TYPE inp_data = input_data[addr_val];
    stack_arr[sp] = inp_data;
-   // return inp_data;
    return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE GetCodeSize()
   {
    USEGAS(STEPGAS1);
-   sp = sp + 1;
-   stack_arr[sp] = GetElfSize();
-   // return GetElfSize();
+   MAIN_TYPE elf_size = GetElfSize();
+   PushSingleBlockToStack(elf_size);
    return (MAIN_TYPE)0;
   }
 
@@ -570,9 +554,7 @@ Device EVM
    {
      USEGAS(STEPGAS1);
      EVM_BALANCE_TYPE gp = gas_price;
-     sp = sp + 1;
-     stack_arr[sp] = (MAIN_TYPE)gp;
-     // return (MAIN_TYPE)gp;
+     PushSingleBlockToStack((MAIN_TYPE)gp);
      return (MAIN_TYPE)0;
    }
 
@@ -607,53 +589,39 @@ Device EVM
     Number = 0x1234543234;
     Difficulty = 0x420323;
     GasLimit = 0x1000;
-    stack_arr[sp] = (MAIN_TYPE)0;
+    // TODO
+    PushSingleBlockToStack((MAIN_TYPE)0);
     return (MAIN_TYPE)0;
   }
 
   MAIN_TYPE GetCoinBase()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = CoinBase;
-    // return CoinBase;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(CoinBase);
   }
 
   MAIN_TYPE GetTimeStamp()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = TimeStamp;
-    // return TimeStamp;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(TimeStamp);
   }
 
   MAIN_TYPE GetNumber()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = Number;
-    // return Number;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(Number);
   }
 
   MAIN_TYPE GetDifficulty()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = Difficulty;
-    // return Difficulty;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(Difficulty);
   }
 
   MAIN_TYPE GetGasLimit()
   {
     USEGAS(STEPGAS1);
-    sp = sp + 1;
-    stack_arr[sp] = GasLimit;
-    // return GasLimit;
-    return (MAIN_TYPE)0;
+    PushSingleBlockToStack(GasLimit);
   }
 
   ArgList MAIN_TYPE BlockChain(),
@@ -677,7 +645,6 @@ Device EVM
     // TODO
     sp = sp - 2;
     stack_arr[sp] = account;
-    // return account;
     return (MAIN_TYPE)0;
   }
    
@@ -695,7 +662,6 @@ Device EVM
     // TODO
     sp = sp - 6;
     stack_arr[sp] = call_res;
-    // return call_res;
     return (MAIN_TYPE)0;
   }
    
@@ -713,15 +679,12 @@ Device EVM
     // TODO
     sp = sp - 6;
     stack_arr[sp] = call_res;
-    // return call_res;
     return (MAIN_TYPE)0;
   }
    
   MAIN_TYPE Return()
   {
     USEGAS(STEPGAS0);
-    // MAIN_TYPE a = Pop();
-    // MAIN_TYPE b = Pop();
     StopExec();
     return (MAIN_TYPE)0;
   }
@@ -739,7 +702,6 @@ Device EVM
     // TODO
     sp = sp - 5;
     stack_arr[sp] = call_res;
-    // return call_res;
     return (MAIN_TYPE)0;
   }
  
@@ -750,20 +712,49 @@ Device EVM
   {
     CreateAccount(), MakeCall(), MakeCallCode(), Return(), DelegateCall()
   };
+
+  Func ArithmStub(int32 opcode)
+  {
+    DoArithm(opcode);
+  }
+
+  Func CompareStub(int32 opcode)
+  {
+    DoCompare(opcode);
+  }
    
   Func PushInst(int32 cnt)
   {
     int32 i;
+    int32 j;
     MAIN_TYPE a = 0;
     MAIN_TYPE tmp;
-    for(i = 0; i < cnt; i=i+1)
-    {
-      tmp = prog_bus[pc + i + 1] & 0xFF;
-      a = (a<< 8) | tmp;
+    MAIN_TYPE block_cnt = 0;
+    sp = sp + 4;
+    for(j = 0; j < (cnt/8); j=j+1) {
+      a = 0;
+      for(i = 0; i < 8; i=i+1)
+      {
+        tmp = prog_bus[pc + (cnt-i-8*j)] & 0xFF;
+        a = a | (tmp << (8*(7-i)));
+      }
+      stack_arr[sp-3+block_cnt] = a;
+      block_cnt = block_cnt + 1;
     }
-    sp = sp + 1;
-    stack_arr[sp] = a;
-    // Push(a);
+    if ((cnt&7) != 0) {
+      a = 0;
+      for(i = 0; i < (cnt&7); i=i+1)
+      {
+        tmp = prog_bus[pc + ((cnt&7)-i)] & 0xFF;
+        tmp = tmp << 8*(7-i);
+        a = a | tmp;
+      }
+      stack_arr[sp-3+block_cnt] = a;
+      block_cnt = block_cnt + 1;
+    }
+    for(j=j+1; j < 4; j=j+1) {
+      stack_arr[sp-3+j] = (MAIN_TYPE)0;
+    }
     return 0;
   }
 
@@ -781,41 +772,82 @@ Device EVM
   Func MloadInst(int32 addr_val)
   {
     int32 i;
-    MAIN_TYPE data_val;
+    int32 j;
+    MAIN_TYPE data_val[4];
     int32 init_shift;
     MAIN_TYPE data_tmp;
-    data_val = 0;
-    init_shift = 0; // most significant byte is first
-    for(i = 0; i < 32; i=i+1)
-    {
-      data_val = (data_val << init_shift) | ((MAIN_TYPE)data_bus[addr_val]);
-      addr_val = addr_val + 1;
-      init_shift = init_shift + 8;
+    for(j = 3; ((signed)j) >= 0; j=j-1) {
+      data_val[j] = 0;
+      for(i = 0; i < 8; i=i+1)
+      {
+        data_tmp = (MAIN_TYPE)data_bus[addr_val] << (8*i);
+        data_val[j] = data_val[j] | data_tmp;
+        addr_val = addr_val + 1;
+      }
     }
-    sp = sp + 1;
-    stack_arr[sp] = data_val;
-    // Push(data_val);
+    stack_arr[sp+1] = data_val[0];
+    stack_arr[sp+2] = data_val[1];
+    stack_arr[sp+3] = data_val[2];
+    stack_arr[sp+4] = data_val[3];
+    sp = sp + 4;
     return 0;
   }
 
-  Func MStoreInst(int32 addr_val)
+  // write to memory 'as-readable' - straight big-endian (need in case of overlapping writes)
+  Func MStoreInst(MAIN_TYPE addr_val)
   {
     int32 i;
-    MAIN_TYPE data_val;
-    int32 init_shift;
+    int32 j;
+    MAIN_TYPE data_val[4];
     MAIN_TYPE data_tmp;
-    data_val = stack_arr[sp];
-    sp = sp - 1;
-    init_shift = 31 * 8; // most significant byte is first
-    for(i = 0; i < 32; i=i+1)
-    {
-      data_tmp = (data_val >> init_shift);
-      data_bus[addr_val] = (int8)(data_tmp);
-      addr_val = addr_val + 1;
-      init_shift = init_shift - 8;
+    data_val[3] = stack_arr[sp];
+    data_val[2] = stack_arr[sp-1];
+    data_val[1] = stack_arr[sp-2];
+    data_val[0] = stack_arr[sp-3];
+    sp = sp - 4;
+    for(j = 3; ((signed)j) >= 0; j=j-1) {
+      for(i = 0; i < 8; i=i+1)
+      {
+        data_tmp = (data_val[j] >> (8*i)) & 0xFF;
+        data_bus[addr_val] = (int8)(data_tmp);
+        addr_val = addr_val + 1;
+      }
     }
     if (addr_val > mem_size)
       mem_size = addr_val;
+  }
+
+  Func MSizeOp()
+  {
+    int32 i;
+    MAIN_TYPE data_tmp = (MAIN_TYPE)mem_size;
+    MAIN_TYPE data_val = 0;
+    for (i = 0; i < 8; i=i+1) {
+      data_val = data_val | (((data_tmp >> 8*i) & 0xFF) << 8*(7-i));
+    }
+    sp = sp + 1;
+    stack_arr[sp] = data_val; // mem_size cannot be greater than 0x400 (size of data_bus)
+    stack_arr[sp+1] = 0;
+    stack_arr[sp+2] = 0;
+    stack_arr[sp+3] = 0;
+    sp = sp + 3;
+  }
+
+  Func PcOp()
+  {
+    int32 i;
+    MAIN_TYPE data_tmp  = (MAIN_TYPE)pc;
+    MAIN_TYPE data_val = 0;
+    for (i = 0; i < 8; i=i+1) {
+      data_val = data_val | (((data_tmp >> 8*i) & 0xFF) << 8*(7-i));
+    }
+    sp = sp + 1;
+    // TODO test if pc cannot fit in single 64bit block
+    stack_arr[sp]   = data_val;
+    stack_arr[sp+1] = 0;
+    stack_arr[sp+2] = 0;
+    stack_arr[sp+3] = 0;
+    sp = sp + 3;
   }
 
   //  instruction set;
@@ -823,10 +855,7 @@ Device EVM
   {
     INST "$syscall",(8,int4 syscall = SystemOps,int4 0xf)
     {
-      // MAIN_TYPE res;
       syscall;
-      // if(idx(syscall) != 0x3) // except return
-      //  Push(res);
     }
 
     INST "STATICCALL",(8,int8 0xfa)
@@ -869,10 +898,7 @@ Device EVM
 
     INST "$opcode",(8,int4 opcode = AccountsData,int4 0x3)
     {
-      // MAIN_TYPE res = opcode;
       opcode;
-      // if( (idx(opcode)!=0x7)  && (idx(opcode)!=9) && (idx(opcode)!=0xc))
-      //   Push(res);
     }
 
     INST "PUSH$count", (8,int5 count,int3 0b011)
@@ -890,7 +916,6 @@ Device EVM
       a = stack_arr[sp - (count + 1)];
       sp = sp + 1;
       stack_arr[sp] = a;
-      // Push(a);
     }
 
     INST "SWAP$count", (8,int4 count,int4 0x9)
@@ -919,21 +944,20 @@ Device EVM
     {
       int32 i;
       int32 dec_cnt;
-      int32 addr_val;
+      MAIN_TYPE addr_val = 0;
       int32 init_shift;
       MAIN_TYPE data_val;
       MAIN_TYPE pc_val;
       MAIN_TYPE data_tmp;
 
-      if(opcode < 8) {
-        addr_val = (int32)stack_arr[sp];
-        sp = sp - 1;
+      if((opcode < 8) & (opcode != 0)) {
+        addr_val = GetSingleBlockFromStack();
       }
       switch((int32)opcode)
       {
         case 0: // POP
           USEGAS(STEPGAS1);
-          Pop(); 
+          sp = sp - 4;
           break;
 
         case 1: // MLOAD
@@ -948,29 +972,24 @@ Device EVM
 
         case 3: // MSTORE8
           USEGAS(STEPGAS2);
-          data_val = stack_arr[sp];
-          // data_val = Pop();
-          sp = sp - 1;
-          data_bus[addr_val] = (int8)(data_val);
+          data_val = stack_arr[sp-3];
+          sp = sp - 4;
+          data_bus[addr_val] = (int8)((data_val >> 7*8) & 0xFF);
           if (addr_val > mem_size)
             mem_size = addr_val;
           break;
 
         case 4: // SLOAD
           USEGAS(SLOADGAS);
-          // data_val = storage_bus[addr_val];
           data_val = LoadFromStorage(addr_val);
           sp = sp + 1;
           stack_arr[sp] = data_val;
-          // Push(data_val);
           break;
 
         case 5: // SSTORE
           USEGAS(STEPGAS0);
-          // data_val = Pop();
           data_val = stack_arr[sp];
           sp = sp - 1;
-          // storage_bus[addr_val] = data_val;
           SaveToStorage(addr_val, data_val);
           break;
 
@@ -991,27 +1010,24 @@ Device EVM
           break;
 
         case 8: // PC
-         USEGAS(STEPGAS1);
-         data_val = (MAIN_TYPE)pc;
-         sp = sp + 1;
-         stack_arr[sp] = data_val;
-         // Push(data_val);
-         break;
+          USEGAS(STEPGAS1);
+          PcOp();
+          break;
 
         case 9: // MSIZE
-         USEGAS(STEPGAS1);
-         data_val  = (MAIN_TYPE)mem_size;
-         sp = sp + 1;
-         stack_arr[sp] = data_val;
-         // Push(data_val);
-         break;
+          USEGAS(STEPGAS1);
+          MSizeOp();
+          break;
 
         case 10: // GAS
-         USEGAS(STEPGAS1);
-         sp = sp + 1;
-         stack_arr[sp] = (MAIN_TYPE)gas_available;
-         // Push((MAIN_TYPE)gas_available);
-         break;
+          USEGAS(STEPGAS1);
+          sp = sp + 1;
+          stack_arr[sp]   = gas_available[0];
+          stack_arr[sp+1] = gas_available[1];
+          stack_arr[sp+2] = gas_available[2];
+          stack_arr[sp+3] = gas_available[3];
+          sp = sp + 3;
+          break;
 
         case 11: // JUMPDEST
          USEGAS(JUMPDESTGAS);
@@ -1021,57 +1037,23 @@ Device EVM
 
     INST "$opcode",(8,int4 opcode = ArithmOps,int4 0x0)
     {
-      // MAIN_TYPE a;
-      // MAIN_TYPE b;
-      // MAIN_TYPE c;
-      // MAIN_TYPE res;
-      // int8 is_c_opcode;
-      // get args;
-      // a = Pop();
-      // b = Pop();
-      // is_c_opcode = ((idx(opcode)== 8) || (idx(opcode) == 9));
-      // c = (is_c_opcode != 0) ? Pop() : 0;
-      // compute
-      // res = opcode(a,b,c);
-      opcode;
-      // push to stack
-      // Push(res);
+      ArithmStub((int32)opcode);
     }
 
     INST "$opcode", (8,int4 opcode = CompareLogOps, int4 0x1)
     {
-      // MAIN_TYPE a;
-      // MAIN_TYPE b;
-      // MAIN_TYPE c;
-      // MAIN_TYPE res;
-      // int8 is_b_opcode;
-      // get args;
-      // a = Pop();
-      
-      // is_b_opcode = ((idx(opcode) == 5) || (idx(opcode) == 9));
-      // b = (is_b_opcode!=0) ? 0: Pop();
-      // compute
-      //res = opcode(a,b);
-      opcode;
-      // push to stack
-      // Push(res);
+      CompareStub((int32)opcode);
     }
 
     INST "SHA3", (8,int8 0x20)
     {
       USEGAS(SHA3GAS);
-       // compute Keccak-256 hash
-      // MAIN_TYPE a;
-      // MAIN_TYPE b;
+      // compute Keccak-256 hash
       MAIN_TYPE res = 0xdeadbeef;
-      // a = Pop();
-      // b = Pop();
-      // res = KeccakAlg((int32)a,(int32)b);
       // TODO Keccak does not support 64-bit hash. Add 256-bit support, delete argument passing and uncomment
       // KeccakAlg((int32)a,(int32)b);
-      sp = sp - 1;
+      // sp = sp - 1;
       stack_arr[sp] = res;
-      // Push(res);
     }
 
   }// end of ISET
