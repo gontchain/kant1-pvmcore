@@ -2000,6 +2000,26 @@ inline uint64 EVM::GetAddrVal()
   return 0;
 };
 #undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::MSizeOp()
+{
+  uint32 i ;
+  uint64 data_tmp  =  (uint64)(mem_size);
+  uint64 data_val  = 0;
+  ;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh( data_tmp ,(8 *  i )) & 255),(8 * (7 -  i ))));
+  }
+  sp = (sp + 1);
+  stack_arr[sp] =  data_val ;
+  stack_arr[(sp + 1)] = 0;
+  stack_arr[(sp + 2)] = 0;
+  stack_arr[(sp + 3)] = 0;
+  sp = (sp + 3);
+  return 0;
+};
+#undef SARG
 inline int EVM::Main_decode(uint32 ocode){
   TMainInst* cur_inst;
   RUN_PIPE(MainPipe,0);
@@ -2254,9 +2274,7 @@ inline int EVM::Main_decode(uint32 ocode){
     case 9:
   ;
  UseGas((TDevice*)this,2);
-   data_val  =  (uint64)(mem_size);
-  sp = (sp + 1);
-  stack_arr[sp] =  data_val ;
+  MSizeOp();
     break;
     case 10:
   ;

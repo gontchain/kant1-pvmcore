@@ -804,6 +804,22 @@ Device EVM
     return addr_val;
   }
 
+  Func MSizeOp()
+  {
+    int32 i;
+    MAIN_TYPE data_tmp  = (MAIN_TYPE)mem_size;
+    MAIN_TYPE data_val = 0;
+    for (i = 0; i < 8; i=i+1) {
+      data_val = data_val | (((data_tmp >> 8*i) & 0xFF) << 8*(7-i));
+    }
+    sp = sp + 1;
+    stack_arr[sp] = data_val; // mem_size cannot be greater than 0x400 (size of data_bus)
+    stack_arr[sp+1] = 0;
+    stack_arr[sp+2] = 0;
+    stack_arr[sp+3] = 0;
+    sp = sp + 3;
+  }
+
   //  instruction set;
   ISET Main
   {
@@ -972,9 +988,7 @@ Device EVM
 
         case 9: // MSIZE
          USEGAS(STEPGAS1);
-         data_val  = (MAIN_TYPE)mem_size;
-         sp = sp + 1;
-         stack_arr[sp] = data_val;
+         MSizeOp();
          break;
 
         case 10: // GAS
