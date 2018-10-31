@@ -4533,11 +4533,49 @@
                                 <REG name="stack_arr">
                                     <REG name="sp" />
                                 </REG>
-                                <TYPE name="uint64">
-                                    <REG name="gas_available">
-                                        <IMM32 value="0" />
-                                    </REG>
-                                </TYPE>
+                                <REG name="gas_available">
+                                    <IMM32 value="0" />
+                                </REG>
+                            </OPERATOR>
+                            <OPERATOR name=" = ">
+                                <REG name="stack_arr">
+                                    <OPERATOR name="+">
+                                        <REG name="sp" />
+                                        <IMM32 value="1" />
+                                    </OPERATOR>
+                                </REG>
+                                <REG name="gas_available">
+                                    <IMM32 value="1" />
+                                </REG>
+                            </OPERATOR>
+                            <OPERATOR name=" = ">
+                                <REG name="stack_arr">
+                                    <OPERATOR name="+">
+                                        <REG name="sp" />
+                                        <IMM32 value="2" />
+                                    </OPERATOR>
+                                </REG>
+                                <REG name="gas_available">
+                                    <IMM32 value="2" />
+                                </REG>
+                            </OPERATOR>
+                            <OPERATOR name=" = ">
+                                <REG name="stack_arr">
+                                    <OPERATOR name="+">
+                                        <REG name="sp" />
+                                        <IMM32 value="3" />
+                                    </OPERATOR>
+                                </REG>
+                                <REG name="gas_available">
+                                    <IMM32 value="3" />
+                                </REG>
+                            </OPERATOR>
+                            <OPERATOR name=" = ">
+                                <REG name="sp" />
+                                <OPERATOR name="+">
+                                    <REG name="sp" />
+                                    <IMM32 value="3" />
+                                </OPERATOR>
                             </OPERATOR>
                         </CASE>
                         <CASE index="11">

@@ -2280,7 +2280,11 @@ inline int EVM::Main_decode(uint32 ocode){
   ;
  UseGas((TDevice*)this,2);
   sp = (sp + 1);
-  stack_arr[sp] =  (uint64)(gas_available[0]);
+  stack_arr[sp] = gas_available[0];
+  stack_arr[(sp + 1)] = gas_available[1];
+  stack_arr[(sp + 2)] = gas_available[2];
+  stack_arr[(sp + 3)] = gas_available[3];
+  sp = (sp + 3);
     break;
     case 11:
   ;
