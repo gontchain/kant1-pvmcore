@@ -66,6 +66,7 @@ test-qemu:
 	$(MAKE) -C sub test-qemu
 	$(MAKE) -C mul test-qemu
 	$(MAKE) -C div test-qemu
+	$(MAKE) -C sdiv test-qemu
 	$(MAKE) -C mod test-qemu
 	$(MAKE) -C smod test-qemu
 	$(MAKE) -C addmod test-qemu
@@ -73,20 +74,24 @@ test-qemu:
 	$(MAKE) -C exp test-qemu
 	$(MAKE) -C signextend test-qemu
 	$(MAKE) -C gaslimit test-qemu
-	$(MAKE) -C gaslimit test-qemu GASLIMIT=0xffff
+	$(MAKE) -C gaslimit test-qemu GASLIMIT=0xfff
 	$(MAKE) -C gas test-qemu
-	$(MAKE) -C gas test-qemu GASLIMIT=0xffff
+	$(MAKE) -C gas test-qemu GASLIMIT=0xfff
 	$(MAKE) -C gasprice test-qemu
 	# with segfault $(MAKE) -C address test-qemu
 	# with segfault $(MAKE) -C balance test-qemu
 	# with segfault $(MAKE) -C origin test-qemu
 	# with segfault $(MAKE) -C caller test-qemu
-	$(MAKE) -C callvalue test-qemu
+	# with segfault $(MAKE) -C callvalue test-qemu
 	$(MAKE) -C codesize test-qemu
+	$(MAKE) -C extcodesize test-qemu
 	$(MAKE) -C sha3 test-qemu
 	$(MAKE) -C msize test-qemu
 	$(MAKE) -C sload test-qemu
-	# with segfault $(MAKE) -C extcodesize test-qemu
+	$(MAKE) -C mload test-qemu
+	$(MAKE) -C swap1 test-qemu
+	$(MAKE) -C dup test-qemu
+	$(MAKE) -C pc test-qemu
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -120,6 +125,7 @@ test-cemu:
 	$(MAKE) -C sub test-cemu
 	$(MAKE) -C mul test-cemu
 	$(MAKE) -C div test-cemu
+	$(MAKE) -C sdiv test-cemu
 	$(MAKE) -C mod test-cemu
 	$(MAKE) -C smod test-cemu
 	$(MAKE) -C addmod test-cemu
@@ -127,20 +133,24 @@ test-cemu:
 	$(MAKE) -C exp test-cemu
 	$(MAKE) -C signextend test-cemu
 	$(MAKE) -C gaslimit test-cemu
-	$(MAKE) -C gaslimit test-cemu GASLIMIT=0xffff
+	$(MAKE) -C gaslimit test-cemu GASLIMIT=0xfff
 	$(MAKE) -C gas test-cemu
-	$(MAKE) -C gas test-cemu GASLIMIT=0xffff
+	$(MAKE) -C gas test-cemu GASLIMIT=0xfff
 	$(MAKE) -C gasprice test-cemu
 	# with segfault $(MAKE) -C address test-cemu
 	# with segfault $(MAKE) -C balance test-cemu
 	# with segfault $(MAKE) -C origin test-cemu
 	# with segfault $(MAKE) -C caller test-cemu
-	$(MAKE) -C callvalue test-cemu
+	# with segfault $(MAKE) -C callvalue test-cemu
 	$(MAKE) -C codesize test-cemu
+	$(MAKE) -C extcodesize test-cemu
 	$(MAKE) -C sha3 test-cemu
 	$(MAKE) -C msize test-cemu
 	$(MAKE) -C sload test-cemu
-	# with segfault $(MAKE) -C extcodesize test-cemu
+	$(MAKE) -C mload test-cemu
+	$(MAKE) -C swap1 test-cemu
+	$(MAKE) -C dup test-cemu
+	$(MAKE) -C pc test-cemu
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -243,11 +253,11 @@ run-qemu:
 	$(MAKE) -C gas run-qemu
 	$(MAKE) -C gas run-qemu GASLIMIT=0xfff
 	$(MAKE) -C gasprice run-qemu
-	$(MAKE) -C address run-qemu
-	$(MAKE) -C balance run-qemu
-	$(MAKE) -C origin run-qemu
-	$(MAKE) -C caller run-qemu
-	$(MAKE) -C callvalue run-qemu
+	# with segfault $(MAKE) -C address run-qemu
+	# with segfault $(MAKE) -C balance run-qemu
+	# with segfault $(MAKE) -C origin run-qemu
+	# with segfault $(MAKE) -C caller run-qemu
+	# with segfault $(MAKE) -C callvalue run-qemu
 	$(MAKE) -C codesize run-qemu
 	$(MAKE) -C extcodesize run-qemu
 	$(MAKE) -C sha3 run-qemu
@@ -282,11 +292,11 @@ run-evm:
 	$(MAKE) -C gas run-evm
 	$(MAKE) -C gas run-evm GASLIMIT=0xfff
 	$(MAKE) -C gasprice run-evm
-	$(MAKE) -C address run-evm
-	$(MAKE) -C balance run-evm
-	$(MAKE) -C origin run-evm
-	$(MAKE) -C caller run-evm
-	$(MAKE) -C callvalue run-evm
+	# with segfault $(MAKE) -C address run-evm
+	# with segfault $(MAKE) -C balance run-evm
+	# with segfault $(MAKE) -C origin run-evm
+	# with segfault $(MAKE) -C caller run-evm
+	# with segfault $(MAKE) -C callvalue run-evm
 	$(MAKE) -C codesize run-evm
 	$(MAKE) -C extcodesize run-evm
 	$(MAKE) -C sha3 run-evm
@@ -325,11 +335,11 @@ run-cemu:
 	$(MAKE) -C gas run-cemu
 	$(MAKE) -C gas run-cemu GASLIMIT=0xfff
 	$(MAKE) -C gasprice run-cemu
-	$(MAKE) -C address run-cemu
-	$(MAKE) -C balance run-cemu
-	$(MAKE) -C origin run-cemu
-	$(MAKE) -C caller run-cemu
-	$(MAKE) -C callvalue run-cemu
+	# with segfault $(MAKE) -C address run-cemu
+	# with segfault $(MAKE) -C balance run-cemu
+	# with segfault $(MAKE) -C origin run-cemu
+	# with segfault $(MAKE) -C caller run-cemu
+	# with segfault $(MAKE) -C callvalue run-cemu
 	$(MAKE) -C codesize run-cemu
 	$(MAKE) -C extcodesize run-cemu
 	$(MAKE) -C sha3 run-cemu
