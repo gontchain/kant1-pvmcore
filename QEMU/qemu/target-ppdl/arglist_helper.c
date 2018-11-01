@@ -71,40 +71,40 @@ uint64_t HELPER(SystemOps)(CPUPPDLState *env, uint64_t aVal) {
 uint64_t HELPER(ArithmOps)(CPUPPDLState *env, uint64_t aVal) {
 	switch (aVal) {
 		case 0:
-			return StopOp(env);
+			return 0x0;
 			break;
 		case 1:
-			return AddOp(env);
+			return 0x1;
 			break;
 		case 2:
-			return MulOp(env);
+			return 0x2;
 			break;
 		case 3:
-			return SubOp(env);
+			return 0x3;
 			break;
 		case 4:
-			return DivOp(env);
+			return 0x4;
 			break;
 		case 5:
-			return DivOpS(env);
+			return 0x5;
 			break;
 		case 6:
-			return GetModule(env);
+			return 0x6;
 			break;
 		case 7:
-			return GetModuleS(env);
+			return 0x7;
 			break;
 		case 8:
-			return GetModuleAdd(env);
+			return 0x8;
 			break;
 		case 9:
-			return GetModuleMul(env);
+			return 0x9;
 			break;
 		case 10:
-			return GetExp(env);
+			return 0xA;
 			break;
 		case 11:
-			return SignExtend(env);
+			return 0xB;
 			break;
 	}
 }
@@ -176,37 +176,37 @@ uint64_t HELPER(BlockChain)(CPUPPDLState *env, uint64_t aVal) {
 uint64_t HELPER(CompareLogOps)(CPUPPDLState *env, uint64_t aVal) {
 	switch (aVal) {
 		case 0:
-			return LtOp(env);
+			return 0x0;
 			break;
 		case 1:
-			return GtOp(env);
+			return 0x1;
 			break;
 		case 2:
-			return LtOpS(env);
+			return 0x2;
 			break;
 		case 3:
-			return GtOpS(env);
+			return 0x3;
 			break;
 		case 4:
-			return EqOp(env);
+			return 0x4;
 			break;
 		case 5:
-			return IsZeroOp(env);
+			return 0x5;
 			break;
 		case 6:
-			return AndOp(env);
+			return 0x6;
 			break;
 		case 7:
-			return OrOp(env);
+			return 0x7;
 			break;
 		case 8:
-			return XorOp(env);
+			return 0x8;
 			break;
 		case 9:
-			return NotOp(env);
+			return 0x9;
 			break;
 		case 10:
-			return ByteFromWord(env);
+			return 0xA;
 			break;
 	}
 }

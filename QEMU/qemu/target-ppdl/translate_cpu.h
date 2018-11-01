@@ -34,17 +34,19 @@ typedef struct CPUPPDLState {
 	uint64_t 	ext_code_size;
 	/*--------------------- VARS ---------------------*/
 	uint64_t 	stack_arr[2048];
+	uint64_t 	counter;
 	uint64_t 	mem_size;
 	uint64_t 	sp;
 	uint64_t 	GasLimit;
 	uint64_t 	Number;
 	uint64_t 	is_pc_const_changed;
 	uint64_t 	Difficulty;
-	uint64_t 	gas_available;
+	uint64_t 	gas_available[4];
 	uint64_t 	TimeStamp;
 	uint64_t 	CoinBase;
 	uint64_t 	data_bus[1024];
 	uint64_t 	is_pc_within_inst;
+	uint64_t elfSize;
 	uint32_t sr;
 	target_ulong eear;
 	#ifndef CONFIG_USER_ONLY

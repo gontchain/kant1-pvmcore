@@ -6,6 +6,7 @@
 extern uint64_t elf_entry;
 #ifdef EVM
 extern uint64_t gas;
+extern uint64_t end_pc;
 #endif
 #endif
 
@@ -17,12 +18,17 @@ void RESET(CPUPPDLState *env) {
 	env->pc = elf_entry;
 	#endif
 	#ifdef EVM
-	env->gas_available = gas;
+	env->gas_available[0] = gas;
 	env->GasLimit = gas;
+	env->elfSize = end_pc;
 	#endif
 	env->sp = (0x0-0x1);
 	env->log_ptr = 0x0;
+	for (env->counter = 0x0; (env->counter < 0x400); env->counter = (env->counter+0x1)) {
+		env->data_bus[env->counter] = 0x0;
+	}
 	saveState(&envSaved, env);
+	initialize();
 }
 
 void OPER(CPUPPDLState *env) {
@@ -33,12 +39,17 @@ void OPER(CPUPPDLState *env) {
 	env->pc = elf_entry;
 	#endif
 	#ifdef EVM
-	env->gas_available = gas;
+	env->gas_available[0] = gas;
 	env->GasLimit = gas;
+	env->elfSize = end_pc;
 	#endif
 	env->sp = (0x0-0x1);
 	env->log_ptr = 0x0;
+	for (env->counter = 0x0; (env->counter < 0x400); env->counter = (env->counter+0x1)) {
+		env->data_bus[env->counter] = 0x0;
+	}
 	saveState(&envSaved, env);
+	initialize();
 }
 
 void saveState(CPUPPDLState *out, CPUPPDLState *in) {
@@ -52,7 +63,9 @@ void saveState(CPUPPDLState *out, CPUPPDLState *in) {
 	out->inp_data_size = in->inp_data_size;
 	out->log_ptr = in->log_ptr;
 	out->sp = in->sp;
-	out->gas_available = in->gas_available;
+	for (i = 0; i < 4; i++) {
+		out->gas_available[i] = in->gas_available[i];
+	}
 	for (i = 0; i < 1024; i++) {
 		out->data_bus[i] = in->data_bus[i];
 	}
@@ -103,9 +116,11 @@ void compareState(CPUPPDLState *stateBefore, CPUPPDLState *state) {
 		if (use_regtracer) printf("sp%d: %016lx -> %016lx\n", i, stateBefore->sp, state->sp);
 		if (use_ctracer)   printf("sp = %016lx\n", state->sp);
 	}
-	if ((stateBefore->gas_available != state->gas_available) && qemu_reg_mask("gas_available", -1)) {
-		if (use_regtracer) printf("gas_available%d: %016lx -> %016lx\n", i, stateBefore->gas_available, state->gas_available);
-		if (use_ctracer)   printf("gas_available = %016lx\n", state->gas_available);
+	for (i = 0; i < 4; i++) {
+		if ((stateBefore->gas_available[i] != state->gas_available[i])  && qemu_reg_mask("gas_available", i)) {
+			if (use_regtracer) printf("gas_available%d: %016lx -> %016lx\n", i, stateBefore->gas_available[i], state->gas_available[i]);
+			if (use_ctracer)   printf("gas_available%d = %016lx\n", i, state->gas_available[i]);
+		}
 	}
 	for (i = 0; i < 1024; i++) {
 		if ((stateBefore->data_bus[i] != state->data_bus[i])  && qemu_reg_mask("data_bus", i)) {

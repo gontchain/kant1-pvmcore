@@ -59,7 +59,10 @@ typedef uint8_t uint8;
 typedef int8_t int8;
 typedef unsigned int uint32;
 typedef signed int int32;
+#ifndef uint64_DEFINED
 typedef uint64_t uint64;
+#define uint64_DEFINED
+#endif
 typedef int64_t int64;
 
 #define LIT64( a ) a##LL
