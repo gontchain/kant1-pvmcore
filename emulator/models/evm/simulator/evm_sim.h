@@ -153,6 +153,7 @@ inline int CheckNull_SystemOps(uint32 aIdx);
   int FillMem(uint32 aVal,int busnum,int addr,int size);
   int GetCellSize(int busnum,int addr);
 inline uint64 USEGAS(uint64 value);
+inline uint64 Pop();
 inline uint64 GetSingleBlockFromStack();
 inline uint64 PushSingleBlockToStack(uint64 data_tmp);
 inline uint64 StopExec();

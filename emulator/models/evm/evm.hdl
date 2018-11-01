@@ -67,6 +67,12 @@ Device EVM
     UseGas(value);
   }
 
+  // pop result from stack (shift the pointer)
+  Func Pop()
+  {
+    sp = sp - 4;
+  }
+
   // used to get stack value if it fits in single block (uint64)
   MAIN_TYPE GetSingleBlockFromStack()
   {
@@ -719,7 +725,7 @@ Device EVM
       {
         case 0: // POP
           USEGAS(STEPGAS1);
-          sp = sp - 4;
+          Pop();
           break;
 
         case 1: // MLOAD

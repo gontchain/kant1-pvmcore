@@ -1152,6 +1152,14 @@ inline uint64 EVM::USEGAS(uint64 value)
 };
 #undef SARG
 #define SARG(aidx) aidx
+inline uint64 EVM::Pop()
+{
+  ;
+  sp = (sp - 4);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
 inline uint64 EVM::GetSingleBlockFromStack()
 {
   uint32 i ;
@@ -1829,7 +1837,7 @@ inline int EVM::Main_decode(uint32 ocode){
     case 0:
   ;
   USEGAS(2);
-  sp = (sp - 4);
+  Pop();
     break;
     case 1:
   ;

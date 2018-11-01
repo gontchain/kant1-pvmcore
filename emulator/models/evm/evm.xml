@@ -84,6 +84,17 @@
                 </CALL>
             </CODE>
         </USEGAS>
+        <Pop RETSIZE="64">
+            <CODE>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="-">
+                        <REG name="sp" />
+                        <IMM32 value="4" />
+                    </OPERATOR>
+                </OPERATOR>
+            </CODE>
+        </Pop>
         <GetSingleBlockFromStack RETSIZE="64">
             <LOCALVARS>
                 <i SIZE="32" />
@@ -2501,13 +2512,9 @@
                                     <IMM32 value="2" />
                                 </ARGS>
                             </CALL>
-                            <OPERATOR name=" = ">
-                                <REG name="sp" />
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="4" />
-                                </OPERATOR>
-                            </OPERATOR>
+                            <CALL name="Pop">
+                                <ARGS />
+                            </CALL>
                         </CASE>
                         <CASE index="1">
                             <CALL name="USEGAS">
