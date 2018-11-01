@@ -1527,11 +1527,6 @@
                 <i SIZE="32" />
             </LOCALVARS>
             <CODE>
-                <CALL name="USEGAS">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
                 <FOR>
                     <FOR_START>
                         <OPERATOR name=" = ">
@@ -1636,11 +1631,6 @@
                 <first_el SIZE="64" ARRSIZE="4" />
             </LOCALVARS>
             <CODE>
-                <CALL name="USEGAS">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
                 <OPERATOR name=" = ">
                     <LVAR name="first_el">
                         <IMM32 value="3" />
@@ -2402,6 +2392,11 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
+                    <CALL name="USEGAS">
+                        <ARGS>
+                            <IMM32 value="3" />
+                        </ARGS>
+                    </CALL>
                     <CALL name="DupOp">
                         <ARGS>
                             <ARG name="count" />
@@ -2416,6 +2411,11 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
+                    <CALL name="USEGAS">
+                        <ARGS>
+                            <IMM32 value="3" />
+                        </ARGS>
+                    </CALL>
                     <CALL name="SwapOp">
                         <ARGS>
                             <ARG name="count" />

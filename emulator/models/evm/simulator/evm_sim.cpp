@@ -1588,7 +1588,6 @@ inline uint64 EVM::DupOp(uint32 count)
   uint32 offset  = (4 * SARG(count));
   uint32 i ;
   ;
-  USEGAS(3);
  for( i  = 0; i  < 4; i  = ( i  + 1)){
   ;
    copy_el[ i ]  = stack_arr[(sp - ( offset  +  i ))];
@@ -1609,7 +1608,6 @@ inline uint64 EVM::SwapOp(uint32 count)
   uint32 offs ;
   uint64 first_el[4] ;
   ;
-  USEGAS(3);
    first_el[3]  = stack_arr[(sp - 3)];
    first_el[2]  = stack_arr[(sp - 2)];
    first_el[1]  = stack_arr[(sp - 1)];
@@ -1773,6 +1771,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst8.aidx
       {
   ;
+  USEGAS(3);
   DupOp(SARG(count));
       }
   #undef SARG
@@ -1786,6 +1785,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst9.aidx
       {
   ;
+  USEGAS(3);
   SwapOp(SARG(count));
       }
   #undef SARG

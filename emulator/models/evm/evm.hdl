@@ -553,7 +553,6 @@ Device EVM
     int32 offset = 4*count;
     int32 i;
 
-    USEGAS(STEPGAS2);
     for (i=0; i<4; i=i+1) {
       copy_el[i] = stack_arr[sp-(offset+i)];
     }
@@ -570,7 +569,6 @@ Device EVM
     int32 offs;
     MAIN_TYPE first_el[4];
 
-    USEGAS(STEPGAS2);
     first_el[3] = stack_arr[sp-3];
     first_el[2] = stack_arr[sp-2];
     first_el[1] = stack_arr[sp-1];
@@ -679,11 +677,13 @@ Device EVM
 
     INST "DUP$count", (8,int4 count,int4 0x8)
     {
+      USEGAS(STEPGAS2);
       DupOp(count);
     }
 
     INST "SWAP$count", (8,int4 count,int4 0x9)
     {
+      USEGAS(STEPGAS2);
       SwapOp(count);
     }
 
