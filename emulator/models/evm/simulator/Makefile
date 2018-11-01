@@ -1,11 +1,13 @@
 # makefile <Dir: lib-dll>
 include ../../../headers/make.inc
 
+SYSTEMC_ELSE = $(PWD)/../../../../systemc
+
 PROGNAME = ./evm.so
 OBJ_FILES = $(DIR_OBJECTS)/architecture.o $(DIR_OBJECTS)/evm_sim.o $(DIR_OBJECTS)/sha3/Keccak.o $(DIR_OBJECTS)/bignum/v_bignum.o
 INCLUDE = -I./include -I./../../../headers -I./../../../dbg_interface -I./../../../peripheral -I../../../../$(SYSTEMC_INC)
 LIB_DIR = ../../../libs/linux
-SC_DIR = $(PWD)/../systemc/lib
+SC_DIR = $(if $(SYSTEMC),$(SYSTEMC)/lib,$(SYSTEMC_ELSE)/lib)
 
 LIBRARIES = $(LIB_DIR)/simlib.a $(LIB_DIR)/libelf.a $(LIB_DIR)/libdwarf.a $(SC_DIR)/libsystemc.a
 

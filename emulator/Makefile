@@ -3,7 +3,7 @@ include ./headers/make.inc
 
 MODEL_DIR = ./models/evm/simulator
 LIB_DIR= ./libs/linux
-
+SYSTEMC=$(PWD)/../systemc
 LIBRARIES = $(LIB_DIR)/simlib.a $(LIB_DIR)/libelf.a $(LIB_DIR)/libdwarf.a $(MODEL_DIR)/evm.so
 
 all: $(LIBRARIES) ./tracer/tracer
@@ -18,7 +18,7 @@ $(LIB_DIR)/simlib.a:
 	$(MYMAKE) -C ./libs_src/simlib/
 
 $(MODEL_DIR)/evm.so:
-	$(MYMAKE) -C $(MODEL_DIR)
+	$(MYMAKE) -C $(MODEL_DIR) SYSTEMC=$(SYSTEMC)
 
 ./tracer/tracer:
 	$(MYMAKE) -C ./tracer
