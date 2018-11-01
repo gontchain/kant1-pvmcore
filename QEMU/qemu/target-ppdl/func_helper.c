@@ -61,16 +61,16 @@ uint64_t HELPER(MSizeOp)(CPUPPDLState *env) {
 
 uint64_t HELPER(DupOp)(CPUPPDLState *env, uint64_t count) {
 	uint32_t i;
-	uint64_t copy_el;
 	uint32_t offset;
+	uint64_t copy_el[4];
 	uint32_t _count = (uint32_t)count;
 	offset = (0x4*_count);
 	for (i = 0x0; (i < 0x4); i = (i+0x1)) {
-		copy_el = env->stack_arr[(env->sp-(offset+i))];
+		copy_el[i] = env->stack_arr[(env->sp-(offset+i))];
 	}
 	env->sp = (env->sp+0x1);
 	for (i = 0x0; (i < 0x4); i = (i+0x1)) {
-		env->stack_arr[(env->sp+i)] = copy_el;
+		env->stack_arr[(env->sp+i)] = copy_el[(0x3-i)];
 	}
 	env->sp = (env->sp+0x3);
 }
@@ -79,15 +79,15 @@ uint64_t HELPER(MStoreInst)(CPUPPDLState *env, uint64_t addr_val) {
 	uint32_t i;
 	uint64_t data_tmp;
 	uint32_t j;
-	uint64_t data_val;
-	data_val = env->stack_arr[env->sp];
-	data_val = env->stack_arr[(env->sp-0x1)];
-	data_val = env->stack_arr[(env->sp-0x2)];
-	data_val = env->stack_arr[(env->sp-0x3)];
+	uint64_t data_val[4];
+	data_val[0x3] = env->stack_arr[env->sp];
+	data_val[0x2] = env->stack_arr[(env->sp-0x1)];
+	data_val[0x1] = env->stack_arr[(env->sp-0x2)];
+	data_val[0x0] = env->stack_arr[(env->sp-0x3)];
 	env->sp = (env->sp-0x4);
 	for (j = 0x3; ((signed)j >= 0x0); j = (j-0x1)) {
 		for (i = 0x0; (i < 0x8); i = (i+0x1)) {
-			data_tmp = (pd_rsh(data_val, (0x8*i))&0xFF);
+			data_tmp = (pd_rsh(data_val[j], (0x8*i))&0xFF);
 			env->data_bus[addr_val] = (uint8)( data_tmp );
 			addr_val = (addr_val+0x1);
 		}
@@ -112,21 +112,21 @@ uint64_t HELPER(MloadInst)(CPUPPDLState *env, uint64_t addr_val) {
 	uint32_t i;
 	uint64_t data_tmp;
 	uint32_t j;
-	uint64_t data_val;
+	uint64_t data_val[4];
 	uint32_t init_shift;
 	uint32_t _addr_val = (uint32_t)addr_val;
 	for (j = 0x3; ((signed)j >= 0x0); j = (j-0x1)) {
-		data_val = 0x0;
+		data_val[j] = 0x0;
 		for (i = 0x0; (i < 0x8); i = (i+0x1)) {
 			data_tmp = pd_lsh((uint64)( env->data_bus[_addr_val] ), (0x8*i));
-			data_val = (data_val|data_tmp);
+			data_val[j] = (data_val[j]|data_tmp);
 			_addr_val = (_addr_val+0x1);
 		}
 	}
-	env->stack_arr[(env->sp+0x1)] = data_val;
-	env->stack_arr[(env->sp+0x2)] = data_val;
-	env->stack_arr[(env->sp+0x3)] = data_val;
-	env->stack_arr[(env->sp+0x4)] = data_val;
+	env->stack_arr[(env->sp+0x1)] = data_val[0x0];
+	env->stack_arr[(env->sp+0x2)] = data_val[0x1];
+	env->stack_arr[(env->sp+0x3)] = data_val[0x2];
+	env->stack_arr[(env->sp+0x4)] = data_val[0x3];
 	env->sp = (env->sp+0x4);
 	return 0x0;
 }
@@ -250,16 +250,16 @@ uint64_t HELPER(GetCaller)(CPUPPDLState *env) {
 uint64_t HELPER(SwapOp)(CPUPPDLState *env, uint64_t count) {
 	uint32_t i;
 	uint32_t offs;
-	uint64_t first_el;
+	uint64_t first_el[4];
 	uint32_t _count = (uint32_t)count;
-	first_el = env->stack_arr[(env->sp-0x3)];
-	first_el = env->stack_arr[(env->sp-0x2)];
-	first_el = env->stack_arr[(env->sp-0x1)];
-	first_el = env->stack_arr[env->sp];
+	first_el[0x3] = env->stack_arr[(env->sp-0x3)];
+	first_el[0x2] = env->stack_arr[(env->sp-0x2)];
+	first_el[0x1] = env->stack_arr[(env->sp-0x1)];
+	first_el[0x0] = env->stack_arr[env->sp];
 	for (i = 0x0; (i < 0x4); i = (i+0x1)) {
 		offs = (env->sp-((0x4*(_count+0x1))+i));
 		env->stack_arr[(env->sp-i)] = env->stack_arr[offs];
-		env->stack_arr[offs] = first_el;
+		env->stack_arr[offs] = first_el[i];
 	}
 }
 

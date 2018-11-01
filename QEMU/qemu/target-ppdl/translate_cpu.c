@@ -11,15 +11,26 @@ extern uint64_t end_pc;
 #endif
 
 void RESET(CPUPPDLState *env) {
-	int i;
 	#ifdef CONFIG_USER_ONLY
 	env->pc = 0x0;
 	#else
 	env->pc = elf_entry;
 	#endif
 	#ifdef EVM
-	env->gas_available[0] = gas;
 	env->GasLimit = gas;
+	uint64 gasprice_byte, gasprice = 0x0;
+	int i, j;
+	for (i = 0; i < 4; i++) {
+		if (i == 0) {
+			for (j = 0; j < 8; j++) {
+				gasprice_byte = (gas >> (8*j)) & 0xff;
+				gasprice |= gasprice_byte << 8*(7-j);
+			}
+			env->gas_available[i] = gasprice;
+		} else {
+			env->gas_available[i] = 0x0;
+		}
+	}
 	env->elfSize = end_pc;
 	#endif
 	env->sp = (0x0-0x1);
@@ -32,15 +43,26 @@ void RESET(CPUPPDLState *env) {
 }
 
 void OPER(CPUPPDLState *env) {
-	int i;
 	#ifdef CONFIG_USER_ONLY
 	env->pc = 0x0;
 	#else
 	env->pc = elf_entry;
 	#endif
 	#ifdef EVM
-	env->gas_available[0] = gas;
 	env->GasLimit = gas;
+	uint64 gasprice_byte, gasprice = 0x0;
+	int i, j;
+	for (i = 0; i < 4; i++) {
+		if (i == 0) {
+			for (j = 0; j < 8; j++) {
+				gasprice_byte = (gas >> (8*j)) & 0xff;
+				gasprice |= gasprice_byte << 8*(7-j);
+			}
+			env->gas_available[i] = gasprice;
+		} else {
+			env->gas_available[i] = 0x0;
+		}
+	}
 	env->elfSize = end_pc;
 	#endif
 	env->sp = (0x0-0x1);

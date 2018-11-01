@@ -44,30 +44,28 @@ void finalize() {
 
 void result_message(CPUArchState* env) {
     finalize();
-    if (env->gas_available[0] == 0)
-    {
-      printf("\ngas limit error\n");
-      exit(-1);
+    if (env->gas_available[0] == 0) {
+        printf("\ngas limit error\n");
+        exit(-1);
     }
     uint64 offs = 0x0, size = 0x0, return_byte = 0x0;
     int i;
     // getting return offset and size (lower 64bit)
     for (i = 0; i < 8; i++) {
-      return_byte = (env->stack_arr[env->sp-3] >> (8*i)) & 0xff;
-      return_byte = return_byte << 8*(7-i);
-      offs = offs | return_byte;
+        return_byte = (env->stack_arr[env->sp-3] >> (8*i)) & 0xff;
+        return_byte = return_byte << 8*(7-i);
+        offs = offs | return_byte;
     }
     for (i = 0; i < 8; i++) {
-      return_byte = (env->stack_arr[env->sp-7] >> (8*i)) & 0xff;
-      return_byte = return_byte << 8*(7-i);
-      size = size | return_byte;
+        return_byte = (env->stack_arr[env->sp-7] >> (8*i)) & 0xff;
+        return_byte = return_byte << 8*(7-i);
+        size = size | return_byte;
     }
     env->sp -= 8;
     printf("0x");
-    for (i = 0; i < size; i++)
-    {
-      uint8 val = env->data_bus[i + offs];
-      printf("%02X", val);
+    for (i = 0; i < size; i++) {
+        uint8 val = env->data_bus[i + offs];
+        printf("%02X", val);
     }
     printf("\n");
     exit(0);
