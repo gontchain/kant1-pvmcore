@@ -472,6 +472,17 @@ LIB_EXPORT void CheckPostProgram()
       printf("%02X", val);
     }
     printf("\n");
+
+    // free mainStorage
+    // TODO pass it to the blockchain, then free
+    Storage *temp = mainStorage->next;
+    while (temp != NULL) {
+      mainStorage->next = temp->next;
+      temp->next = NULL;
+      delete temp;
+      temp = mainStorage->next;
+    }
+    delete mainStorage;
     exit(0);
   }
 }
