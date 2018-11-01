@@ -237,7 +237,7 @@ int TDevice::DisAssembly(char *aStr,int aBusNum,int aAddr,int aSize)
       char *istr = (char*)this->disasm(iptr,offs_size);
       // read opcode and increment counter
       opcode = (uint32)*((uint8*)iptr);
-      sptr+=sprintf(sptr,"%08X  |   %02X   | %-09s |",aAddr,LO_WRD(opcode),istr);
+      sptr+=sprintf(sptr,"%08X %08X    %-09s",aAddr,LO_WRD(opcode),istr);
       // output disassembly string
       // increment address of the variable
       aAddr+= offs_size / cell_size;

@@ -84,6 +84,7 @@ TGetDevCore       GetDevCore;
 // config file name
 char*  ConfigFileName;
 // GAS limit
+uint64 GasMaxLimitValue = 0xFFFFFFFFFFFFFFFF;
 uint64 GasLimitValue = 10000000000;
 char*  ProfileFileName;
 int    default_config_file;
@@ -274,6 +275,7 @@ void InitRegs()
 			{
 				//in case of 32 bit registers
 				RegVal[i] = new int[cfg->regs[i].arrsize];
+        reg[0] = 0;
 				for( int j = 0; j < cfg->regs[i].arrsize; j++ ){
 					Dev->GetReg(i, j, (char*)&reg);
 					//fill register value from register array
@@ -339,6 +341,7 @@ void InitPrintRegs()
 				}
 				else
 				{//32 bit
+
 					for( int j = 0; j < arrsize; j++ ){
 						Device->GetReg(i, j, (char*)&reg);
 						printf("\t%s%d = %08x\n", RegNames[i], j, reg[0]);
@@ -399,7 +402,8 @@ int CheckRegs(char* regnames)
 {
 	typedef unsigned long long uint64;
 	uint64 regval64;
-	int reg[2],fl = 0, arrsize;
+	unsigned int reg[2];
+	int fl = 0, arrsize;
 	const tDProcCfg *cfg = Device->GetCfg();
 	bool flag;
 	char tmpstr[128];
@@ -422,7 +426,7 @@ int CheckRegs(char* regnames)
 							RegVal[i][tmp] = reg[0];		
 							RegVal[i][tmp+1] = reg[1];
 							regval64 = (((uint64)reg[1])<<32)|(((uint64)reg[0]));
-							sprintf(tmpstr,"%s%d = %016llx, ", RegNames[i], j, regval64);
+							sprintf(tmpstr,"%s%d = %016llx\n", RegNames[i], j, regval64);
 							strcat(regnames, tmpstr);
 							strcpy(tmpstr, "");
 							flag = true;
@@ -432,10 +436,11 @@ int CheckRegs(char* regnames)
 				else
 				{//32 bit
 					for( int j = 0; j < arrsize; j++ ){
-						Device->GetReg(i, j, (char*)&reg);
+            reg[0] = 0;
+            Device->GetReg(i, j, (char*)&reg);
 						if (RegVal[i][j] != reg[0]){
 							RegVal[i][j] = reg[0];	
-							sprintf(tmpstr,"%s%d = %08x, ", RegNames[i], j, reg[0]);
+							sprintf(tmpstr,"%s%d = %08x\n", RegNames[i], j, reg[0]);
 							strcat(regnames, tmpstr);
 							strcpy(tmpstr, "");
 							flag = true;
@@ -446,13 +451,14 @@ int CheckRegs(char* regnames)
 			else if(strcmp(cfg->regs[i].name,WARN_FLAGS))
 			{
 				int t = cfg->regs[i].type;
-				Device->GetReg(i, 0, (char*)&reg);		  
+        reg[0] = 0;
+        Device->GetReg(i, 0, (char*)&reg);		  
 				if (t == 8){//64 bit
 					if ((RegVal[i][0] != reg[0]) || RegVal[i][1] != reg[1]){
 						RegVal[i][0] = reg[0];
 						RegVal[i][1] = reg[1];
 						regval64 = (((uint64)reg[1])<<32)|(((uint64)reg[0]));
-						sprintf(tmpstr,"%s = %016llx, ", RegNames[i], regval64);
+						sprintf(tmpstr,"%s = %016llx\n", RegNames[i], regval64);
 						strcat(regnames, tmpstr);
 						strcpy(tmpstr, "");
 						flag = true;
@@ -461,7 +467,7 @@ int CheckRegs(char* regnames)
 				else if (RegVal[i][0] != reg[0])
 				{
 					RegVal[i][0] = reg[0];
-					sprintf(tmpstr,"%s = %08x, ", RegNames[i],reg[0]);
+					sprintf(tmpstr,"%s = %08x\n", RegNames[i],reg[0]);
 					strcat(regnames, tmpstr);
 					strcpy(tmpstr, "");
 					flag = true;
@@ -469,9 +475,6 @@ int CheckRegs(char* regnames)
 			}
 			if (flag) fl++;
 	}//end for
-	//erase last symbol ','
-	int l = strlen(regnames)-1;
-	regnames[l-1] = '\0';
 	return fl;	
 }
 
@@ -687,7 +690,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	int out_flag = 0;
 	unsigned long st, end;
 	int ElfFileNumber = -1;
-	char upregs[2048];//здесь имена регистров изменивших значение 
+	char upregs[128*1024];//здесь имена регистров изменивших значение 
 	tDisAsmArea* elf_res;
 	uint32 cur_pc;
   
@@ -715,12 +718,12 @@ int RunSimulation(char* aSimName,uint32 aWait)
 	int reg_res;
 	uint32 prev_tics = 0;
 	/// initialization registers
-//  InitRegs();
+ InitRegs();
   {
 	// print init state of register
-		printf("Initial registers state:\n");
-	//	InitPrintRegs();
-		printf("\n");
+		// printf("Initial registers state:\n");
+		// InitPrintRegs();
+		// printf("\n");
 	}
 
 #ifdef USE_BREAK_POINTS
@@ -729,10 +732,10 @@ int RunSimulation(char* aSimName,uint32 aWait)
   else
 	 Device->SetBreakPoint(elf_res->mSize);
 #endif
-	printf("#### TRACE ####\n\n\
-			\r------------------------------------------\n\
-		    \r| ticks |  address  | opcode | assembler |\n\
-		    \r------------------------------------------\n");
+	printf("\n#### TRACE ####\n\n\
+			\r-------------------------------------\n\
+		    \rticks | address | opcode | assembler \n\
+		    \r-------------------------------------\n");
 	cur_pc = pc_count;
 	// simulation cycle
 	while(1)
@@ -760,7 +763,7 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		if(cur_tics > (prev_tics + 1))
 			printf("      +%d wait\n",cur_tics - prev_tics - 1);
 		PRINT_LOG("print line\n")
-		printf("| %05d | %s", cur_tics, disasm);
+		printf("%05d %s", cur_tics, disasm);
 		fflush(stdout);
 		// execute StepInfo, check 
 		PRINT_LOG("start \n")
@@ -777,19 +780,19 @@ int RunSimulation(char* aSimName,uint32 aWait)
 		
 			PRINT_LOG("check regs\n")
         printf("\n");
-		//	if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
+			if (CheckRegs((char*)upregs)) printf("%s", upregs); else printf("\n");
 			upregs[0] = 0; 
 
-			PRINT_LOG("check fifos\n")
-			CheckFifos((char*)upregs); printf("%s",upregs);
+			// PRINT_LOG("check fifos\n")
+			// CheckFifos((char*)upregs); printf("%s",upregs);
 			PRINT_LOG("end of check results\n")
 		}
 		catch(void* aHrv)
 		{
 			////check registers for update
       ErrorHeader* aHr = (ErrorHeader*)aHrv;
-      //if (CheckRegs((char*)upregs)) printf("//\n%s\n", upregs); else printf("\n");
-			upregs[0] = 0; CheckFifos((char*)upregs);printf("%s",upregs);
+      if (CheckRegs((char*)upregs)) printf("%s", upregs); else printf("\n");
+			upregs[0] = 0; //CheckFifos((char*)upregs);printf("%s",upregs);
 			
       if (aHr->m_MsgType == MSGTYPE_EXIT)
       {
@@ -1080,7 +1083,7 @@ char usage_text[] = "usage: cemu [keys] [-bsp bsp_file_name]simulator_lib_name e
 	"  -rp - print return value, but returns 0 if success, -1 or -2 if error;\n"\
 	"  -lmem - out log of memory operations;\n"\
 	"  -ra - print all 'gr', 'ar' values every tact;\n"\
-	"  -gas GASLIMIT - gas limit for the evm (default: 10000000000);\n";
+	"  -gas GASLIMIT - gas limit for the evm (default: 10000000000, '-gas 0x0' - set infinite gas);\n";
 
 
 void usage(int exit_code)
@@ -1208,7 +1211,7 @@ int main(int argc,char* argv[])
 				}
 				// if Gas limit was set 0x0 - set infinite GAS
 				if (GasLimitValue == 0x0) {
-					GasLimitValue = 0xFFFFFFFFFFFFFFFF;
+					GasLimitValue = GasMaxLimitValue;
 				}
 				i_args++;
 			}

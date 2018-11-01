@@ -9,31 +9,33 @@ const char *reg_5 = "ext_code_size";
 const char *reg_6 = "inp_data_size";
 const char *reg_7 = "log_ptr";
 const char *var_8 = "sp";
-const char *var_9 = "gas_available";
-const char *var_10 = "data";
-const char *var_11 = "CoinBase";
-const char *var_12 = "TimeStamp";
-const char *var_13 = "Number";
-const char *var_14 = "Difficulty";
-const char *var_15 = "GasLimit";
+const char *var_9 = "gas_available$";
+const char *var_10 = "data_bus$";
+const char *var_11 = "stack_arr$";
+const char *var_12 = "CoinBase";
+const char *var_13 = "TimeStamp";
+const char *var_14 = "Number";
+const char *var_15 = "Difficulty";
+const char *var_16 = "GasLimit";
 
-const tDRegister EVM_regs[16] = {
+const tDRegister EVM_regs[17] = {
   {reg_0,4,0,0},
-  {reg_1,20,0,0},
-  {reg_2,20,0,0},
-  {reg_3,20,0,0},
-  {reg_4,4,0,0},
-  {reg_5,32,0,0},
-  {reg_6,32,0,0},
+  {reg_1,8,0,0},
+  {reg_2,8,0,0},
+  {reg_3,8,0,0},
+  {reg_4,8,0,0},
+  {reg_5,8,0,0},
+  {reg_6,8,0,0},
   {reg_7,4,0,0},
-  {var_8,9,0,0},
-  {var_9,10,0,0},
-  {var_10,1,1024,0},
-  {var_11,12,0,0},
-  {var_12,13,0,0},
-  {var_13,14,0,0},
-  {var_14,15,0,0},
-  {var_15,16,0,0},
+  {var_8,4,0},
+  {var_9,8,4},
+  {var_10,1,1024},
+  {var_11,8,2048},
+  {var_12,8,0},
+  {var_13,8,0},
+  {var_14,8,0},
+  {var_15,8,0},
+  {var_16,8,0},
 };
 
 
@@ -43,13 +45,13 @@ const tDMemBus EVM_membus[] = {
 
 
 const tDProcCfg EVM_ProcCfg = {
-  16,EVM_regs,
+  17,EVM_regs,
   1,EVM_membus,
   0,NULL,
   0,NULL,
 };
 
-void EVM::DisasmList_ArithmOps(char* out_buf,uint32 idx,uint32 arg_a,uint32 arg_b,uint32 arg_c ){
+void EVM::DisasmList_ArithmOps(char* out_buf,uint32 idx ){
   switch(idx){
     case 0: sprintf(out_buf,"STOP"); break;
     case 1: sprintf(out_buf,"ADD"); break;
@@ -66,7 +68,7 @@ void EVM::DisasmList_ArithmOps(char* out_buf,uint32 idx,uint32 arg_a,uint32 arg_
     default: sprintf(out_buf,"wrong_code");
  break;  }
 }
-void EVM::DisasmList_CompareLogOps(char* out_buf,uint32 idx,uint32 arg_a,uint32 arg_b ){
+void EVM::DisasmList_CompareLogOps(char* out_buf,uint32 idx ){
   switch(idx){
     case 0: sprintf(out_buf,"LT"); break;
     case 1: sprintf(out_buf,"GT"); break;
@@ -139,7 +141,7 @@ void EVM::DisasmList_SystemOps(char* out_buf,uint32 idx ){
  break;  }
 }
 #define SARG(aidx) aidx
-void EVM::CheckList_ArithmOps(int aPipeNum,int aIdx,uint256 a,uint256 b,uint256 c){
+void EVM::CheckList_ArithmOps(int aPipeNum,int aIdx){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -168,7 +170,7 @@ void EVM::CheckList_ArithmOps(int aPipeNum,int aIdx,uint256 a,uint256 b,uint256 
     default: break;
   }
 }
-void EVM::LockList_ArithmOps(int aPipeNum,int aIdx,uint256 a,uint256 b,uint256 c){
+void EVM::LockList_ArithmOps(int aPipeNum,int aIdx){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -197,7 +199,7 @@ void EVM::LockList_ArithmOps(int aPipeNum,int aIdx,uint256 a,uint256 b,uint256 c
     default: break;
   }
 }
-void EVM::UnLockList_ArithmOps(int aPipeNum,int aIdx,uint256 a,uint256 b,uint256 c){
+void EVM::UnLockList_ArithmOps(int aPipeNum,int aIdx){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -226,7 +228,7 @@ void EVM::UnLockList_ArithmOps(int aPipeNum,int aIdx,uint256 a,uint256 b,uint256
     default: break;
   }
 }
-void EVM::LLink_ArithmOps(int aIdx,uint256 a,uint256 b,uint256 c,TCycleCount aCycleCount,int aLockAdd){
+void EVM::LLink_ArithmOps(int aIdx,TCycleCount aCycleCount,int aLockAdd){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -255,7 +257,7 @@ void EVM::LLink_ArithmOps(int aIdx,uint256 a,uint256 b,uint256 c,TCycleCount aCy
     default: break;
   }
 }
-TCycleCount EVM::ArithmOps_GetLock(int aPipeNum,int aIdx,uint256 a,uint256 b,uint256 c){
+TCycleCount EVM::ArithmOps_GetLock(int aPipeNum,int aIdx){
   TCycleCount ret_val = 0;
   switch (aIdx){
     case 0:
@@ -286,26 +288,26 @@ TCycleCount EVM::ArithmOps_GetLock(int aPipeNum,int aIdx,uint256 a,uint256 b,uin
   }
   return ret_val;
 }
-inline uint256 EVM::Get_ArithmOps(uint32 aIdx,uint256 a,uint256 b,uint256 c){
+inline uint64 EVM::Get_ArithmOps(uint32 aIdx){
   switch (aIdx){
-    case 0: return StopOp(); break; // value of the element 0 of the list
-    case 1: return AddOp(SARG(a),SARG(b)); break; // value of the element 1 of the list
-    case 2: return MulOp(SARG(a),SARG(b)); break; // value of the element 2 of the list
-    case 3: return SubOp(SARG(a),SARG(b)); break; // value of the element 3 of the list
-    case 4: return DivOp(SARG(a),SARG(b)); break; // value of the element 4 of the list
-    case 5: return DivOpS(SARG(a),SARG(b)); break; // value of the element 5 of the list
-    case 6: return GetModule(SARG(a),SARG(b)); break; // value of the element 6 of the list
-    case 7: return GetModuleS(SARG(a),SARG(b)); break; // value of the element 7 of the list
-    case 8: return GetModuleAM(SARG(a) + SARG(b),SARG(c)); break; // value of the element 8 of the list
-    case 9: return GetModuleAM(SARG(a) * SARG(b),SARG(c)); break; // value of the element 9 of the list
-    case 10: return GetExp(SARG(a),SARG(b)); break; // value of the element 10 of the list
-    case 11: return SignExtend(SARG(a),SARG(b)); break; // value of the element 11 of the list
+    case 0: return 0; break; // value of the element 0 of the list
+    case 1: return 1; break; // value of the element 1 of the list
+    case 2: return 2; break; // value of the element 2 of the list
+    case 3: return 3; break; // value of the element 3 of the list
+    case 4: return 4; break; // value of the element 4 of the list
+    case 5: return 5; break; // value of the element 5 of the list
+    case 6: return 6; break; // value of the element 6 of the list
+    case 7: return 7; break; // value of the element 7 of the list
+    case 8: return 8; break; // value of the element 8 of the list
+    case 9: return 9; break; // value of the element 9 of the list
+    case 10: return 10; break; // value of the element 10 of the list
+    case 11: return 11; break; // value of the element 11 of the list
     default: return aIdx; break;
   };
   return 0;
 }
 
-void EVM::CheckList_CompareLogOps(int aPipeNum,int aIdx,uint256 a,uint256 b){
+void EVM::CheckList_CompareLogOps(int aPipeNum,int aIdx){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -332,7 +334,7 @@ void EVM::CheckList_CompareLogOps(int aPipeNum,int aIdx,uint256 a,uint256 b){
     default: break;
   }
 }
-void EVM::LockList_CompareLogOps(int aPipeNum,int aIdx,uint256 a,uint256 b){
+void EVM::LockList_CompareLogOps(int aPipeNum,int aIdx){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -359,7 +361,7 @@ void EVM::LockList_CompareLogOps(int aPipeNum,int aIdx,uint256 a,uint256 b){
     default: break;
   }
 }
-void EVM::UnLockList_CompareLogOps(int aPipeNum,int aIdx,uint256 a,uint256 b){
+void EVM::UnLockList_CompareLogOps(int aPipeNum,int aIdx){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -386,7 +388,7 @@ void EVM::UnLockList_CompareLogOps(int aPipeNum,int aIdx,uint256 a,uint256 b){
     default: break;
   }
 }
-void EVM::LLink_CompareLogOps(int aIdx,uint256 a,uint256 b,TCycleCount aCycleCount,int aLockAdd){
+void EVM::LLink_CompareLogOps(int aIdx,TCycleCount aCycleCount,int aLockAdd){
   switch (aIdx){
     case 0:
      break; // value of the element 0 of the list
@@ -413,7 +415,7 @@ void EVM::LLink_CompareLogOps(int aIdx,uint256 a,uint256 b,TCycleCount aCycleCou
     default: break;
   }
 }
-TCycleCount EVM::CompareLogOps_GetLock(int aPipeNum,int aIdx,uint256 a,uint256 b){
+TCycleCount EVM::CompareLogOps_GetLock(int aPipeNum,int aIdx){
   TCycleCount ret_val = 0;
   switch (aIdx){
     case 0:
@@ -442,19 +444,19 @@ TCycleCount EVM::CompareLogOps_GetLock(int aPipeNum,int aIdx,uint256 a,uint256 b
   }
   return ret_val;
 }
-inline uint256 EVM::Get_CompareLogOps(uint32 aIdx,uint256 a,uint256 b){
+inline uint64 EVM::Get_CompareLogOps(uint32 aIdx){
   switch (aIdx){
-    case 0: return LtOp(SARG(a),SARG(b)); break; // value of the element 0 of the list
-    case 1: return GtOp(SARG(a),SARG(b)); break; // value of the element 1 of the list
-    case 2: return LtOpS(SARG(a),SARG(b)); break; // value of the element 2 of the list
-    case 3: return GtOpS(SARG(a),SARG(b)); break; // value of the element 3 of the list
-    case 4: return EqOp(SARG(a),SARG(b)); break; // value of the element 4 of the list
-    case 5: return IsZeroOp(SARG(a)); break; // value of the element 5 of the list
-    case 6: return AndOp(SARG(a),SARG(b)); break; // value of the element 6 of the list
-    case 7: return OrOp(SARG(a),SARG(b)); break; // value of the element 7 of the list
-    case 8: return XorOp(SARG(a),SARG(b)); break; // value of the element 8 of the list
-    case 9: return NotOp(SARG(a)); break; // value of the element 9 of the list
-    case 10: return ByteFromWord(SARG(a),SARG(b)); break; // value of the element 10 of the list
+    case 0: return 0; break; // value of the element 0 of the list
+    case 1: return 1; break; // value of the element 1 of the list
+    case 2: return 2; break; // value of the element 2 of the list
+    case 3: return 3; break; // value of the element 3 of the list
+    case 4: return 4; break; // value of the element 4 of the list
+    case 5: return 5; break; // value of the element 5 of the list
+    case 6: return 6; break; // value of the element 6 of the list
+    case 7: return 7; break; // value of the element 7 of the list
+    case 8: return 8; break; // value of the element 8 of the list
+    case 9: return 9; break; // value of the element 9 of the list
+    case 10: return 10; break; // value of the element 10 of the list
     default: return aIdx; break;
   };
   return 0;
@@ -607,7 +609,7 @@ TCycleCount EVM::MemOps_GetLock(int aPipeNum,int aIdx){
   }
   return ret_val;
 }
-inline uint32 EVM::Get_MemOps(uint32 aIdx){
+inline uint64 EVM::Get_MemOps(uint32 aIdx){
   switch (aIdx){
     case 0: return 0; break; // value of the element 0 of the list
     case 1: return 1; break; // value of the element 1 of the list
@@ -783,21 +785,21 @@ TCycleCount EVM::AccountsData_GetLock(int aPipeNum,int aIdx){
   }
   return ret_val;
 }
-inline uint256 EVM::Get_AccountsData(uint32 aIdx){
+inline uint64 EVM::Get_AccountsData(uint32 aIdx){
   switch (aIdx){
     case 0: return GetAddress(); break; // value of the element 0 of the list
-    case 1: return GetBalance(Pop()); break; // value of the element 1 of the list
+    case 1: return GetBalance(); break; // value of the element 1 of the list
     case 2: return GetOrigin(); break; // value of the element 2 of the list
     case 3: return GetCaller(); break; // value of the element 3 of the list
     case 4: return CallValue(); break; // value of the element 4 of the list
     case 5: return GetInputData(); break; // value of the element 5 of the list
     case 6: return CallDataSize(); break; // value of the element 6 of the list
-    case 7: return CallDataCopy(Pop(),Pop(),Pop()); break; // value of the element 7 of the list
+    case 7: return CallDataCopy(); break; // value of the element 7 of the list
     case 8: return GetCodeSize(); break; // value of the element 8 of the list
-    case 9: return CodeCopy(Pop(),Pop(),Pop()); break; // value of the element 9 of the list
+    case 9: return CodeCopy(); break; // value of the element 9 of the list
     case 10: return GetGasPrice(); break; // value of the element 10 of the list
     case 11: return ExtCodeSize(); break; // value of the element 11 of the list
-    case 12: return ExtCodeCopy(Pop(),Pop(),Pop(),Pop()); break; // value of the element 12 of the list
+    case 12: return ExtCodeCopy(); break; // value of the element 12 of the list
     default: return aIdx; break;
   };
   return 0;
@@ -890,9 +892,9 @@ TCycleCount EVM::BlockChain_GetLock(int aPipeNum,int aIdx){
   }
   return ret_val;
 }
-inline uint256 EVM::Get_BlockChain(uint32 aIdx){
+inline uint64 EVM::Get_BlockChain(uint32 aIdx){
   switch (aIdx){
-    case 0: return BlockChainHash(Pop()); break; // value of the element 0 of the list
+    case 0: return BlockChainHash(); break; // value of the element 0 of the list
     case 1: return GetCoinBase(); break; // value of the element 1 of the list
     case 2: return GetTimeStamp(); break; // value of the element 2 of the list
     case 3: return GetNumber(); break; // value of the element 3 of the list
@@ -980,9 +982,9 @@ TCycleCount EVM::SystemOps_GetLock(int aPipeNum,int aIdx){
   }
   return ret_val;
 }
-inline uint256 EVM::Get_SystemOps(uint32 aIdx){
+inline uint64 EVM::Get_SystemOps(uint32 aIdx){
   switch (aIdx){
-    case 0: return CreateAccount(Pop(),Pop(),Pop()); break; // value of the element 0 of the list
+    case 0: return CreateAccount(); break; // value of the element 0 of the list
     case 1: return MakeCall(); break; // value of the element 1 of the list
     case 2: return MakeCallCode(); break; // value of the element 2 of the list
     case 3: return Return(); break; // value of the element 3 of the list
@@ -1015,21 +1017,22 @@ inline int EVM::CheckNull_SystemOps(uint32 aIdx){
 int EVM::SetReg(int rnum,int anum,char* val){
   switch(rnum){
   case 0: pc = *((uint32*)val); UpdateRegs(); break;
-  case 1: cur_addr = *((uint160*)val); UpdateRegs(); break;
-  case 2: caller_addr = *((uint160*)val); UpdateRegs(); break;
-  case 3: origin_addr = *((uint160*)val); UpdateRegs(); break;
-  case 4: gas_price = *((uint32*)val); UpdateRegs(); break;
-  case 5: ext_code_size = *((uint256*)val); UpdateRegs(); break;
-  case 6: inp_data_size = *((uint256*)val); UpdateRegs(); break;
+  case 1: cur_addr = *((uint64*)val); UpdateRegs(); break;
+  case 2: caller_addr = *((uint64*)val); UpdateRegs(); break;
+  case 3: origin_addr = *((uint64*)val); UpdateRegs(); break;
+  case 4: gas_price = *((uint64*)val); UpdateRegs(); break;
+  case 5: ext_code_size = *((uint64*)val); UpdateRegs(); break;
+  case 6: inp_data_size = *((uint64*)val); UpdateRegs(); break;
   case 7: log_ptr = *((uint32*)val); UpdateRegs(); break;
   case 8: sp = *((uint32*)val); break;
-  case 9: gas_available = *((uint32*)val); break;
+  case 9: gas_available[anum] = *((uint64*)val); break;
   case 10: data_bus[anum] = *((uint8*)val); break;
-  case 11: CoinBase = *((uint256*)val); break;
-  case 12: TimeStamp = *((uint256*)val); break;
-  case 13: Number = *((uint256*)val); break;
-  case 14: Difficulty = *((uint256*)val); break;
-  case 15: GasLimit = *((uint256*)val); break;
+  case 11: stack_arr[anum] = *((uint64*)val); break;
+  case 12: CoinBase = *((uint64*)val); break;
+  case 13: TimeStamp = *((uint64*)val); break;
+  case 14: Number = *((uint64*)val); break;
+  case 15: Difficulty = *((uint64*)val); break;
+  case 16: GasLimit = *((uint64*)val); break;
     default: return 0;
     }
   return 1;
@@ -1041,22 +1044,22 @@ int EVM::GetReg(int rnum,int anum,char* val){
      *((uint32*)val) = pc;
     break;
     case 1:
-     *((uint160*)val) = cur_addr;
+     *((uint64*)val) = cur_addr;
     break;
     case 2:
-     *((uint160*)val) = caller_addr;
+     *((uint64*)val) = caller_addr;
     break;
     case 3:
-     *((uint160*)val) = origin_addr;
+     *((uint64*)val) = origin_addr;
     break;
     case 4:
-     *((uint32*)val) = gas_price;
+     *((uint64*)val) = gas_price;
     break;
     case 5:
-     *((uint256*)val) = ext_code_size;
+     *((uint64*)val) = ext_code_size;
     break;
     case 6:
-     *((uint256*)val) = inp_data_size;
+     *((uint64*)val) = inp_data_size;
     break;
     case 7:
      *((uint32*)val) = log_ptr;
@@ -1065,25 +1068,28 @@ int EVM::GetReg(int rnum,int anum,char* val){
      *((uint32*)val) = sp;
     break;
     case 9:
-     *((uint32*)val) = gas_available;
+     *((uint64*)val) = gas_available[anum];
     break;
     case 10:
      *((uint8*)val) = data_bus[anum];
     break;
     case 11:
-     *((uint256*)val) = CoinBase;
+     *((uint64*)val) = stack_arr[anum];
     break;
     case 12:
-     *((uint256*)val) = TimeStamp;
+     *((uint64*)val) = CoinBase;
     break;
     case 13:
-     *((uint256*)val) = Number;
+     *((uint64*)val) = TimeStamp;
     break;
     case 14:
-     *((uint256*)val) = Difficulty;
+     *((uint64*)val) = Number;
     break;
     case 15:
-     *((uint256*)val) = GasLimit;
+     *((uint64*)val) = Difficulty;
+    break;
+    case 16:
+     *((uint64*)val) = GasLimit;
     break;
     default: return 0;
     }
@@ -1138,971 +1144,315 @@ int EVM::GetCellSize(int busnum,int addr){
   return 0;
 };
 #define SARG(aidx) aidx
-inline uint256 EVM::StopExec()
+inline uint64 EVM::USEGAS(uint64 value)
 {
   ;
-  CheckError("@");
+ UseGas((TDevice*)this,SARG(value));
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GetExp(uint256 base,uint256 pow)
+inline uint64 EVM::Pop()
 {
-  uint256 i ;
-  uint256 res  = 1;
   ;
-  if(gas_available < 10)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 10);
-  }
- for( i  = 0; i  < SARG(pow); i  = ( i  + 1)){
-  ;
-   res  = ( res  * SARG(base));
-  }
-    return  res ;
+  sp = (sp - 4);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::Pop()
+inline uint64 EVM::GetSingleBlockFromStack()
 {
-  uint256 ret ;
+  uint32 i ;
+  uint64 data_val  = 0;
+  uint64 data_tmp  = stack_arr[(sp - 3)];
   ;
-   ret  = stack_arr[sp];
+  sp = (sp - 4);
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh( data_tmp ,(8 * (7 -  i ))) & 255), i ));
+  }
+    return  data_val ;
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::PushSingleBlockToStack(uint64 data_tmp)
+{
+  uint32 i ;
+  uint64 data_val  = 0;
+  ;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh(SARG(data_tmp),(8 *  i )) & 255),(8 * (7 -  i ))));
+  }
   sp = (sp + 1);
-    return  ret ;
+  stack_arr[sp] =  data_val ;
+  stack_arr[(sp + 1)] = 0;
+  stack_arr[(sp + 2)] = 0;
+  stack_arr[(sp + 3)] = 0;
+  sp = (sp + 3);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline void EVM::Push(uint256 val)
+inline uint64 EVM::StopExec()
 {
   ;
-  sp = (sp - 1);
-  stack_arr[sp] = SARG(val);
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::SignExtend(uint256 a,uint256 b)
-{
-  uint32 testBit ;
-  uint32 end_bit ;
-  uint256 number ;
-  uint256 mask ;
-  ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
-  if(SARG(a) < 31)
-  {
-  ;
-   testBit  = ( (uint32)(((SARG(a) * 8)).to_uint64()) + 7);
-   end_bit  = ( testBit  + 1);
-   mask  = (pd_lsh( (uint256)(1), testBit ) - 1);
-  if(SARG(b).range( end_bit , testBit ) == 1)
-  {
-   number  = (SARG(b) | (~ mask ));
-  }
-  else
-  {
-   number  = (SARG(b) &  mask );
-  }
-    return  number ;
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::ByteFromWord(uint256 a,uint256 b)
-{
-  uint32 start_bit  =  (uint32)((((31 - SARG(a)) * 8)).to_uint64());
-  uint32 end_bit  = ( start_bit  + 7);
-  ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(b).range( end_bit , start_bit );
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetModule(uint256 a,uint256 mod)
-{
-  uint256 div ;
-  ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
-  if(SARG(mod) == 0)
-  {
-    return 0;
-  }
-  else
-  {
-  ;
-   div  = (SARG(a) / SARG(mod));
-    return SARG(a) - ( div  * SARG(mod));
-  }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetModuleAM(uint256 a,uint256 mod)
-{
-  uint256 div ;
-  ;
-  if(gas_available < 8)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 8);
-  }
-  if(SARG(mod) == 0)
-  {
-    return  (uint256)(0);
-  }
-  else
-  {
-  ;
-   div  = (SARG(a) / SARG(mod));
-    return SARG(a) - ( div  * SARG(mod));
-  }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetModuleS(uint256 a,uint256 mod)
-{
-  uint256 div ;
-  uint256 sign ;
-  uint1 is_signed  = ( ((int256)(SARG(a))) < 0);
-  ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
-   sign  =  ( ( is_signed  != 0) ? ( (uint256)((0 - 1))) : ( (uint256)(1)) );
-  if(SARG(mod) == 0)
-  {
-  ;
-    return 0;
-  }
-  else
-  {
-  ;
-   div  = (SARG(a) / SARG(mod));
-    return  sign  * (SARG(a) - ( div  * SARG(mod)));
-  }
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::StopOp()
-{
-  ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
   CheckError("@");
-    return  (uint256)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::AddOp(uint256 a,uint256 b)
+inline uint64 EVM::CallValue()
 {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) + SARG(b);
+  USEGAS(2);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::SubOp(uint256 a,uint256 b)
+inline uint64 EVM::CallDataCopy()
 {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) - SARG(b);
+  USEGAS(3);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::MulOp(uint256 a,uint256 b)
+inline uint64 EVM::CallDataSize()
 {
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
-    return SARG(a) * SARG(b);
+  USEGAS(2);
+  PushSingleBlockToStack(inp_data_size);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::DivOp(uint256 a,uint256 b)
+inline uint64 EVM::CodeCopy()
 {
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
-  if(SARG(b) == 0)
-  {
-    return 0;
-  }
-  else
-  {
-    return SARG(a) / SARG(b);
-  }
+  USEGAS(3);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::DivOpS(uint256 a,uint256 b)
+inline uint64 EVM::ExtCodeSize()
 {
   ;
-  if(gas_available < 5)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 5);
-  }
-  if(SARG(b) == 0)
-  {
-    return 0;
-  }
-  else
-  {
-    return  ((int256)((SARG(a) /  ((int256)(SARG(b))))));
-  }
+  USEGAS(20);
+  PushSingleBlockToStack(ext_code_size);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::LtOp(uint256 a,uint256 b)
+inline uint64 EVM::ExtCodeCopy()
 {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) < SARG(b);
+  USEGAS(20);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::LtOpS(uint256 a,uint256 b)
+inline uint64 EVM::GetAddress()
 {
+  uint64 ca  = cur_addr;
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  ((int256)((SARG(a) <  ((int256)(SARG(b))))));
+  USEGAS(2);
+  PushSingleBlockToStack( (uint64)( ca ));
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GtOp(uint256 a,uint256 b)
+inline uint64 EVM::GetBalance()
 {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) > SARG(b);
+  USEGAS(20);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GtOpS(uint256 a,uint256 b)
+inline uint64 EVM::GetOrigin()
 {
+  uint64 oa  = origin_addr;
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  ((int256)((SARG(a) >  ((int256)(SARG(b))))));
+  USEGAS(2);
+  PushSingleBlockToStack( (uint64)( oa ));
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::EqOp(uint256 a,uint256 b)
+inline uint64 EVM::GetCaller()
 {
+  uint64 ca  = caller_addr;
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) == SARG(b);
+  USEGAS(2);
+  PushSingleBlockToStack( (uint64)( ca ));
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::IsZeroOp(uint256 a)
+inline uint64 EVM::GetInputData()
 {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) == 0;
+  USEGAS(3);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::AndOp(uint256 a,uint256 b)
+inline uint64 EVM::GetElfSizeStub()
 {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) & SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::OrOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) | SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::XorOp(uint256 a,uint256 b)
-{
-  ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return SARG(a) ^ SARG(b);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::NotOp(uint256 a)
-{
-  ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return (~SARG(a));
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CallValue()
-{
-  ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CallDataCopy(uint256 a,uint256 b,uint256 c)
-{
-  ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CallDataSize()
-{
-  ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return inp_data_size;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::CodeCopy(uint256 a,uint256 b,uint256 c)
-{
-  ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::ExtCodeSize()
-{
-  ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
-    return ext_code_size;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::ExtCodeCopy(uint256 a,uint256 b,uint256 c,uint256 d)
-{
-  ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetAddress()
-{
-  uint160 ca  = cur_addr;
-  ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return ( ca ).range(255,0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetBalance(uint256 a)
-{
-  ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
-    return  (uint256)(0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetOrigin()
-{
-  uint160 oa  = origin_addr;
-  ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return ( oa ).range(255,0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetCaller()
-{
-  uint160 ca  = caller_addr;
-  ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return ( ca ).range(255,0);
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetInputData()
-{
-  uint32 addr_val  =  (uint32)((Pop()).to_uint64());
-  uint256 inp_data  = input_data[ addr_val ];
-  ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-    return  inp_data ;
-  return 0;
-};
-#undef SARG
-#define SARG(aidx) aidx
-inline uint256 EVM::GetCodeSize()
-{
-  ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
     return GetElfSize((TDevice*)this);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GetGasPrice()
+inline uint64 EVM::GetCodeSize()
 {
-  uint32 gp  = gas_price;
+  uint64 elf_size  = GetElfSizeStub();
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return  (uint256)( gp );
+  USEGAS(2);
+  PushSingleBlockToStack( elf_size );
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::BlockChainHash(uint256 a)
+inline uint64 EVM::GetGasPrice()
 {
+  uint64 gp  = gas_price;
   ;
-  if(gas_available < 20)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 20);
-  }
-  CoinBase = 16;
-  TimeStamp = 4096;
-  Number = 0x1234543234LL;
-  Difficulty = 4326179;
-  GasLimit = 4096;
-    return  (uint256)(0);
+  USEGAS(2);
+  PushSingleBlockToStack( (uint64)( gp ));
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GetCoinBase()
+inline uint64 EVM::BlockChainHash()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return CoinBase;
+  USEGAS(20);
+  PushSingleBlockToStack( (uint64)(0));
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GetTimeStamp()
+inline uint64 EVM::GetCoinBase()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return TimeStamp;
+  USEGAS(2);
+  PushSingleBlockToStack(CoinBase);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GetNumber()
+inline uint64 EVM::GetTimeStamp()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return Number;
+  USEGAS(2);
+  PushSingleBlockToStack(TimeStamp);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GetDifficulty()
+inline uint64 EVM::GetNumber()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return Difficulty;
+  USEGAS(2);
+  PushSingleBlockToStack(Number);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::GetGasLimit()
+inline uint64 EVM::GetDifficulty()
 {
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-    return GasLimit;
+  USEGAS(2);
+  PushSingleBlockToStack(Difficulty);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::CreateAccount(uint256 endowment,uint256 initOff,uint256 initSize)
+inline uint64 EVM::GetGasLimit()
 {
-  uint256 account ;
   ;
-  if(gas_available < 32000)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 32000);
-  }
-   account  = 1193046;
-    return  account ;
+  USEGAS(2);
+  PushSingleBlockToStack(GasLimit);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::MakeCall()
+inline uint64 EVM::CreateAccount()
 {
-  uint256 callGas  = Pop();
-  uint256 address  = Pop();
-  uint256 value  = Pop();
-  uint256 inOff  = Pop();
-  uint256 inSize  = Pop();
-  uint256 outOff  = Pop();
-  uint256 outSize  = Pop();
-  uint256 call_res  = 0;
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
-    return  call_res ;
+  USEGAS(32000);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::MakeCallCode()
+inline uint64 EVM::MakeCall()
 {
-  uint256 callGas  = Pop();
-  uint256 address  = Pop();
-  uint256 value  = Pop();
-  uint256 inOff  = Pop();
-  uint256 inSize  = Pop();
-  uint256 outOff  = Pop();
-  uint256 outSize  = Pop();
-  uint256 call_res  = 0;
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
-    return  call_res ;
+  USEGAS(40);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::Return()
+inline uint64 EVM::MakeCallCode()
 {
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
-  StopExec();
-    return  (uint256)(0);
+  USEGAS(40);
+    return  (uint64)(0);
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint256 EVM::DelegateCall()
+inline uint64 EVM::Return()
 {
-  uint256 callGas  = Pop();
-  uint256 address  = Pop();
-  uint256 inOff  = Pop();
-  uint256 inSize  = Pop();
-  uint256 outOff  = Pop();
-  uint256 outSize  = Pop();
-  uint256 call_res  = 0;
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
+  USEGAS(0);
   StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
-    return  call_res ;
+    return  (uint64)(0);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::DelegateCall()
+{
+  ;
+  USEGAS(40);
+    return  (uint64)(0);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::ArithmStub(uint32 opcode)
+{
+  ;
+ DoArithm((TDevice*)this,SARG(opcode));
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::CompareStub(uint32 opcode)
+{
+  ;
+ DoCompare((TDevice*)this,SARG(opcode));
   return 0;
 };
 #undef SARG
@@ -2110,15 +1460,41 @@ inline uint256 EVM::DelegateCall()
 inline uint64 EVM::PushInst(uint32 cnt)
 {
   uint32 i ;
-  uint256 a  = 0;
-  uint256 tmp ;
+  uint32 j ;
+  uint64 a  = 0;
+  uint64 tmp ;
+  uint64 block_cnt  = 0;
   ;
- for( i  = 0; i  < SARG(cnt); i  = ( i  + 1)){
+  sp = (sp + 1);
+ for( j  = 0; j  < (SARG(cnt) / 8); j  = ( j  + 1)){
   ;
-   tmp  = ((*prog_bus)[((pc +  i ) + 1)] & 255);
-   a  = (pd_lsh( a ,8) |  tmp );
+   a  = 0;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   tmp  = ((*prog_bus)[(pc + ((SARG(cnt) -  i ) - (8 *  j )))] & 255);
+   a  = ( a  | pd_lsh( tmp ,(8 * (7 -  i ))));
   }
-  Push( a );
+  stack_arr[(sp +  block_cnt )] =  a ;
+   block_cnt  = ( block_cnt  + 1);
+  }
+  if((SARG(cnt) & 7) != 0)
+  {
+  ;
+   a  = 0;
+ for( i  = 0; i  < (SARG(cnt) & 7); i  = ( i  + 1)){
+  ;
+   tmp  = ((*prog_bus)[(pc + ((SARG(cnt) & 7) -  i ))] & 255);
+   tmp  = pd_lsh( tmp ,(8 * (7 -  i )));
+   a  = ( a  |  tmp );
+  }
+  stack_arr[(sp +  block_cnt )] =  a ;
+   block_cnt  = ( block_cnt  + 1);
+  }
+ for( j  = ( j  + 1); j  < 4; j  = ( j  + 1)){
+  ;
+  stack_arr[(sp +  j )] =  (uint64)(0);
+  }
+  sp = (sp + 3);
     return 0;
   return 0;
 };
@@ -2130,7 +1506,8 @@ inline uint64 EVM::LogInst(uint32 count,uint32 log_ptr)
   ;
  for( i  = 0; i  < SARG(count); i  = ( i  + 1)){
   ;
-  log_bus[((SARG(log_ptr) + 2) + SARG(count))] = Pop();
+  log_bus[((SARG(log_ptr) + 2) + SARG(count))] = stack_arr[sp];
+  sp = (sp - 1);
   }
   return 0;
 };
@@ -2139,44 +1516,162 @@ inline uint64 EVM::LogInst(uint32 count,uint32 log_ptr)
 inline uint64 EVM::MloadInst(uint32 addr_val)
 {
   uint32 i ;
-  uint256 data_val ;
+  uint32 j ;
+  uint64 data_val[4] ;
   uint32 init_shift ;
-  uint256 data_tmp ;
+  uint64 data_tmp ;
   ;
-   data_val  = 0;
-   init_shift  = 0;
- for( i  = 0; i  < 32; i  = ( i  + 1)){
+ for( j  = 3; ((int32)( j )) >= 0; j  = ( j  - 1)){
   ;
-   data_val  = (pd_lsh( data_val , init_shift ) |  (uint256)(data_bus[SARG(addr_val)]));
+   data_val[ j ]  = 0;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_tmp  = pd_lsh( (uint64)(data_bus[SARG(addr_val)]),(8 *  i ));
+   data_val[ j ]  = ( data_val[ j ]  |  data_tmp );
   SARG(addr_val) = (SARG(addr_val) + 1);
-   init_shift  = ( init_shift  + 8);
   }
-  Push( data_val );
+  }
+  stack_arr[(sp + 1)] =  data_val[0] ;
+  stack_arr[(sp + 2)] =  data_val[1] ;
+  stack_arr[(sp + 3)] =  data_val[2] ;
+  stack_arr[(sp + 4)] =  data_val[3] ;
+  sp = (sp + 4);
     return 0;
   return 0;
 };
 #undef SARG
 #define SARG(aidx) aidx
-inline uint64 EVM::MStoreInst(uint32 addr_val)
+inline uint64 EVM::MStoreInst(uint64 addr_val)
 {
   uint32 i ;
-  uint256 data_val ;
-  uint32 init_shift ;
-  uint256 data_tmp ;
+  uint32 j ;
+  uint64 data_val[4] ;
+  uint64 data_tmp ;
   ;
-   data_val  = Pop();
-   init_shift  = (31 * 8);
- for( i  = 0; i  < 32; i  = ( i  + 1)){
+   data_val[3]  = stack_arr[sp];
+   data_val[2]  = stack_arr[(sp - 1)];
+   data_val[1]  = stack_arr[(sp - 2)];
+   data_val[0]  = stack_arr[(sp - 3)];
+  sp = (sp - 4);
+ for( j  = 3; ((int32)( j )) >= 0; j  = ( j  - 1)){
   ;
-   data_tmp  = pd_rsh( data_val , init_shift );
-  data_bus[SARG(addr_val)] =  (uint8)(( data_tmp ).to_uint64());
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_tmp  = (pd_rsh( data_val[ j ] ,(8 *  i )) & 255);
+  data_bus[SARG(addr_val)] =  (uint8)( data_tmp );
   SARG(addr_val) = (SARG(addr_val) + 1);
-   init_shift  = ( init_shift  - 8);
+  }
   }
   if(SARG(addr_val) > mem_size)
   {
   mem_size = SARG(addr_val);
   }
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::MSizeOp()
+{
+  uint32 i ;
+  uint64 data_tmp  =  (uint64)(mem_size);
+  uint64 data_val  = 0;
+  ;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh( data_tmp ,(8 *  i )) & 255),(8 * (7 -  i ))));
+  }
+  sp = (sp + 1);
+  stack_arr[sp] =  data_val ;
+  stack_arr[(sp + 1)] = 0;
+  stack_arr[(sp + 2)] = 0;
+  stack_arr[(sp + 3)] = 0;
+  sp = (sp + 3);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::DupOp(uint32 count)
+{
+  uint64 copy_el[4] ;
+  uint32 offset  = (4 * SARG(count));
+  uint32 i ;
+  ;
+ for( i  = 0; i  < 4; i  = ( i  + 1)){
+  ;
+   copy_el[ i ]  = stack_arr[(sp - ( offset  +  i ))];
+  }
+  sp = (sp + 1);
+ for( i  = 0; i  < 4; i  = ( i  + 1)){
+  ;
+  stack_arr[(sp +  i )] =  copy_el[(3 -  i )] ;
+  }
+  sp = (sp + 3);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::SwapOp(uint32 count)
+{
+  uint32 i ;
+  uint32 offs ;
+  uint64 first_el[4] ;
+  ;
+   first_el[3]  = stack_arr[(sp - 3)];
+   first_el[2]  = stack_arr[(sp - 2)];
+   first_el[1]  = stack_arr[(sp - 1)];
+   first_el[0]  = stack_arr[sp];
+ for( i  = 0; i  < 4; i  = ( i  + 1)){
+  ;
+   offs  = (sp - ((4 * (SARG(count) + 1)) +  i ));
+  stack_arr[(sp -  i )] = stack_arr[ offs ];
+  stack_arr[ offs ] =  first_el[ i ] ;
+  }
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::PcOp()
+{
+  uint32 i ;
+  uint64 data_tmp  =  (uint64)(pc);
+  uint64 data_val  = 0;
+  ;
+ for( i  = 0; i  < 8; i  = ( i  + 1)){
+  ;
+   data_val  = ( data_val  | pd_lsh((pd_rsh( data_tmp ,(8 *  i )) & 255),(8 * (7 -  i ))));
+  }
+  sp = (sp + 1);
+  stack_arr[sp] =  data_val ;
+  stack_arr[(sp + 1)] = 0;
+  stack_arr[(sp + 2)] = 0;
+  stack_arr[(sp + 3)] = 0;
+  sp = (sp + 3);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::SaveToStorageStub(uint64 addr)
+{
+  ;
+ SaveToStorage((TDevice*)this,SARG(addr));
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::LoadFromStorageStub(uint64 addr)
+{
+  ;
+ LoadFromStorage((TDevice*)this,SARG(addr));
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
+inline uint64 EVM::KeccakAlgStub()
+{
+  uint32 a  = GetSingleBlockFromStack();
+  uint32 b  = GetSingleBlockFromStack();
+  ;
+ KeccakAlg((TDevice*)this, a , b );
   return 0;
 };
 #undef SARG
@@ -2190,13 +1685,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 1;
   #define SARG(aidx) cur_inst->inst1.aidx
       {
-  uint256 res ;
   ;
-   res  = Get_SystemOps(SARG(syscall));
-  if(SARG(syscall) != 3)
-  {
-  Push( res );
-  }
+  Get_SystemOps(SARG(syscall));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2207,24 +1697,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 2;
   #define SARG(aidx) cur_inst->inst2.aidx
       {
-  uint256 callGas  = Pop();
-  uint256 address  = Pop();
-  uint256 value  = 0;
-  uint256 inOff  = Pop();
-  uint256 inSize  = Pop();
-  uint256 outOff  = Pop();
-  uint256 outSize  = Pop();
   ;
-  if(gas_available < 40)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 40);
-  }
+  USEGAS(40);
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2235,19 +1709,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 3;
   #define SARG(aidx) cur_inst->inst3.aidx
       {
-  uint256 a  = Pop();
-  uint256 b  = Pop();
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
+  USEGAS(0);
   StopExec();
       }
   #undef SARG
@@ -2259,18 +1722,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 4;
   #define SARG(aidx) cur_inst->inst4.aidx
       {
-  uint256 a  = Pop();
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
+  USEGAS(0);
   StopExec();
       }
   #undef SARG
@@ -2283,9 +1736,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 5;
   #define SARG(aidx) cur_inst->inst5.aidx
       {
-  uint256 res  = Get_BlockChain(SARG(gas_opcode));
   ;
-  Push( res );
+  Get_BlockChain(SARG(gas_opcode));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2297,12 +1749,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 6;
   #define SARG(aidx) cur_inst->inst6.aidx
       {
-  uint256 res  = Get_AccountsData(SARG(opcode));
   ;
-  if(((SARG(opcode) != 7) & (SARG(opcode) != 9)) & (SARG(opcode) != 12))
-  {
-  Push( res );
-  }
+  Get_AccountsData(SARG(opcode));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2315,18 +1763,9 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst7.aidx
       {
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+  USEGAS(3);
   PushInst(SARG(count) + 1);
-  is_pc_within_inst = 1;
+  is_pc_const_changed = 1;
   pc = ((pc + SARG(count)) + 2);
       }
   #undef SARG
@@ -2339,20 +1778,9 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 8;
   #define SARG(aidx) cur_inst->inst8.aidx
       {
-  uint256 a ;
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-   a  = stack_arr[(sp + (SARG(count) + 1))];
-  Push( a );
+  USEGAS(3);
+  DupOp(SARG(count));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2364,20 +1792,9 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 9;
   #define SARG(aidx) cur_inst->inst9.aidx
       {
-  uint256 first_el  = stack_arr[(sp + 1)];
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-  stack_arr[(sp + 1)] = stack_arr[((sp + SARG(count)) + 2)];
-  stack_arr[((sp + SARG(count)) + 2)] =  first_el ;
+  USEGAS(3);
+  SwapOp(SARG(count));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2389,24 +1806,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 10;
   #define SARG(aidx) cur_inst->inst10.aidx
       {
-  uint32 i ;
-  uint256 l1_data  = Pop();
-  uint256 l2_data  = Pop();
-  uint32 m_ptr  =  (uint32)(( l1_data ).to_uint64());
-  uint32 m_size  =  (uint32)(( l2_data ).to_uint64());
   ;
-  if(gas_available < (375 + (SARG(count) * 375)))
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - (375 + (SARG(count) * 375)));
-  }
-  LogInst(SARG(count), m_ptr );
-  log_ptr = (SARG(count) + 2);
+  USEGAS(375 + (SARG(count) * 375));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2420,74 +1821,40 @@ inline int EVM::Main_decode(uint32 ocode){
       {
   uint32 i ;
   uint32 dec_cnt ;
-  uint32 addr_val ;
+  uint64 addr_val  = 0;
   uint32 init_shift ;
-  uint256 data_val ;
-  uint256 pc_val ;
-  uint256 data_tmp ;
+  uint64 data_val ;
+  uint64 pc_val ;
+  uint64 data_tmp ;
   ;
-  if(Get_MemOps(SARG(opcode)) < 8)
+  if((Get_MemOps(SARG(opcode)) < 8) & (Get_MemOps(SARG(opcode)) != 0))
   {
-   addr_val  =  (uint32)((Pop()).to_uint64());
+  ;
+   addr_val  = GetSingleBlockFromStack();
   }
   switch( (uint32)(Get_MemOps(SARG(opcode))))
   {
     case 0:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
+  USEGAS(2);
   Pop();
     break;
     case 1:
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+  USEGAS(3);
   MloadInst( addr_val );
     break;
     case 2:
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
+  USEGAS(3);
   MStoreInst( addr_val );
     break;
     case 3:
   ;
-  if(gas_available < 3)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 3);
-  }
-   data_val  = Pop();
-  data_bus[ addr_val ] =  (uint8)(( data_val ).to_uint64());
+  USEGAS(3);
+   data_val  = stack_arr[(sp - 3)];
+  sp = (sp - 4);
+  data_bus[ addr_val ] =  (uint8)((pd_rsh( data_val ,(7 * 8)) & 255));
   if( addr_val  > mem_size)
   {
   mem_size =  addr_val ;
@@ -2495,124 +1862,47 @@ inline int EVM::Main_decode(uint32 ocode){
     break;
     case 4:
   ;
-  if(gas_available < 50)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 50);
-  }
-   data_val  = LoadFromStorage((TDevice*)this, addr_val );
-  Push( data_val );
+  USEGAS(50);
+  LoadFromStorageStub( addr_val );
     break;
     case 5:
   ;
-  if(gas_available < 0)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 0);
-  }
-   data_val  = Pop();
- SaveToStorage((TDevice*)this, addr_val , data_val );
+  USEGAS(0);
+  SaveToStorageStub( addr_val );
     break;
     case 6:
   ;
-  if(gas_available < 8)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 8);
-  }
+  USEGAS(8);
   pc =  addr_val ;
   is_pc_within_inst = 1;
     break;
     case 7:
   ;
-  if(gas_available < 10)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 10);
-  }
-  if(Pop() != 0)
-  {
-  ;
-  pc =  (uint32)( addr_val );
-  is_pc_within_inst = 1;
-  }
+  USEGAS(10);
     break;
     case 8:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-   data_val  =  (uint256)(pc);
-  Push( data_val );
+  USEGAS(2);
+  PcOp();
     break;
     case 9:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-   data_val  =  (uint256)(mem_size);
-  Push( data_val );
+  USEGAS(2);
+  MSizeOp();
     break;
     case 10:
   ;
-  if(gas_available < 2)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 2);
-  }
-  Push( (uint256)(gas_available));
+  USEGAS(2);
+  sp = (sp + 1);
+  stack_arr[sp] = gas_available[0];
+  stack_arr[(sp + 1)] = gas_available[1];
+  stack_arr[(sp + 2)] = gas_available[2];
+  stack_arr[(sp + 3)] = gas_available[3];
+  sp = (sp + 3);
     break;
     case 11:
   ;
-  if(gas_available < 1)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 1);
-  }
+  USEGAS(1);
     break;
   }
       }
@@ -2626,18 +1916,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 12;
   #define SARG(aidx) cur_inst->inst12.aidx
       {
-  uint256 a ;
-  uint256 b ;
-  uint256 c ;
-  uint256 res ;
-  uint8 is_c_opcode ;
   ;
-   a  = Pop();
-   b  = Pop();
-   is_c_opcode  = ((SARG(opcode) == 8) || (SARG(opcode) == 9));
-   c  =  ( ( is_c_opcode  != 0) ? (Pop()) : (0) );
-   res  = Get_ArithmOps(SARG(opcode), a , b , c );
-  Push( res );
+  ArithmStub( (uint32)(Get_ArithmOps(SARG(opcode))));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2649,17 +1929,8 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 13;
   #define SARG(aidx) cur_inst->inst13.aidx
       {
-  uint256 a ;
-  uint256 b ;
-  uint256 c ;
-  uint256 res ;
-  uint8 is_b_opcode ;
   ;
-   a  = Pop();
-   is_b_opcode  = ((SARG(opcode) == 5) || (SARG(opcode) == 9));
-   b  =  ( ( is_b_opcode  != 0) ? (0) : (Pop()) );
-   res  = Get_CompareLogOps(SARG(opcode), a , b );
-  Push( res );
+  CompareStub( (uint32)(Get_CompareLogOps(SARG(opcode))));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2670,24 +1941,9 @@ inline int EVM::Main_decode(uint32 ocode){
       cur_inst->inum = 14;
   #define SARG(aidx) cur_inst->inst14.aidx
       {
-  uint256 a ;
-  uint256 b ;
-  uint256 res ;
   ;
-  if(gas_available < 30)
-  {
-  ;
-  gas_available = -1;
-  StopExec();
-  }
-  else
-  {
-  gas_available = (gas_available - 30);
-  }
-   a  = Pop();
-   b  = Pop();
-   res  = KeccakAlg((TDevice*)this, (uint32)(( a ).to_uint64()), (uint32)(( b ).to_uint64()));
-  Push( res );
+  USEGAS(30);
+  KeccakAlgStub();
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)
@@ -2725,8 +1981,9 @@ void EVM::Operate(){
   uint8 code  = (*prog_bus)[pc];
   ;
   is_pc_within_inst = 0;
+  is_pc_const_changed = 0;
   Main_decode( code );
-  if(is_pc_within_inst == 0)
+  if((is_pc_within_inst == 0) & (is_pc_const_changed == 0))
   {
   pc = (pc + 1);
   }
@@ -2735,8 +1992,12 @@ void EVM::Operate(){
 void EVM::ResetDevice(){
   ;
   pc = 0;
-  sp = 2048;
+  sp = (0 - 1);
   log_ptr = 0;
+ for(counter = 0;counter < 1024;counter = (counter + 1)){
+  ;
+  data_bus[counter] = 0;
+  }
   MainPipe.Reset();
   pc.ResetMutable();
   prog_bus->ResetMemMutable();
@@ -2859,7 +2120,7 @@ char* EVM::EVM_Main_DisAssembly(char *bin,int& size)
     uint8 ocode= BIN(uint8);
     uint32 arg_opcode = (uint32) ((ocode>>0)&0xF);
     char arg_opcode_name[256];
-    DisasmList_ArithmOps(arg_opcode_name,arg_opcode,0,0,0);
+    DisasmList_ArithmOps(arg_opcode_name,arg_opcode);
     sprintf(EVM_Main_dstr,"%s",arg_opcode_name);
     size = 1;
     return EVM_Main_dstr;
@@ -2869,7 +2130,7 @@ char* EVM::EVM_Main_DisAssembly(char *bin,int& size)
     uint8 ocode= BIN(uint8);
     uint32 arg_opcode = (uint32) ((ocode>>0)&0xF);
     char arg_opcode_name[256];
-    DisasmList_CompareLogOps(arg_opcode_name,arg_opcode,0,0);
+    DisasmList_CompareLogOps(arg_opcode_name,arg_opcode);
     sprintf(EVM_Main_dstr,"%s",arg_opcode_name);
     size = 1;
     return EVM_Main_dstr;
