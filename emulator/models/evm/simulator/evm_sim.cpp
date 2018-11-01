@@ -1582,6 +1582,27 @@ inline uint64 EVM::MSizeOp()
 };
 #undef SARG
 #define SARG(aidx) aidx
+inline uint64 EVM::DupOp(uint32 count)
+{
+  uint64 copy_el[4] ;
+  uint32 offset  = (4 * SARG(count));
+  uint32 i ;
+  ;
+  USEGAS(3);
+ for( i  = 0; i  < 4; i  = ( i  + 1)){
+  ;
+   copy_el[ i ]  = stack_arr[(sp - ( offset  +  i ))];
+  }
+  sp = (sp + 1);
+ for( i  = 0; i  < 4; i  = ( i  + 1)){
+  ;
+  stack_arr[(sp +  i )] =  copy_el[(3 -  i )] ;
+  }
+  sp = (sp + 3);
+  return 0;
+};
+#undef SARG
+#define SARG(aidx) aidx
 inline uint64 EVM::SwapOp(uint32 count)
 {
   uint32 i ;
@@ -1590,7 +1611,7 @@ inline uint64 EVM::SwapOp(uint32 count)
   ;
   USEGAS(3);
    first_el[3]  = stack_arr[(sp - 3)];
-   first_el[2]  = stack_arr[(sp - 3)];
+   first_el[2]  = stack_arr[(sp - 2)];
    first_el[1]  = stack_arr[(sp - 1)];
    first_el[0]  = stack_arr[sp];
  for( i  = 0; i  < 4; i  = ( i  + 1)){
@@ -1752,7 +1773,7 @@ inline int EVM::Main_decode(uint32 ocode){
   #define SARG(aidx) cur_inst->inst8.aidx
       {
   ;
-  USEGAS(3);
+  DupOp(SARG(count));
       }
   #undef SARG
   SEND_PIPE(MainPipe,0)

@@ -547,6 +547,23 @@ Device EVM
     sp = sp + 3;
   }
 
+  Func DupOp(int32 count)
+  {
+    MAIN_TYPE copy_el[4];
+    int32 offset = 4*count;
+    int32 i;
+
+    USEGAS(STEPGAS2);
+    for (i=0; i<4; i=i+1) {
+      copy_el[i] = stack_arr[sp-(offset+i)];
+    }
+    sp = sp + 1;
+    for (i=0; i<4; i=i+1) {
+      stack_arr[sp+i] = copy_el[3-i];
+    }
+    sp = sp + 3;
+  }
+
   Func SwapOp(int32 count)
   {
     int32 i;
@@ -555,7 +572,7 @@ Device EVM
 
     USEGAS(STEPGAS2);
     first_el[3] = stack_arr[sp-3];
-    first_el[2] = stack_arr[sp-3];
+    first_el[2] = stack_arr[sp-2];
     first_el[1] = stack_arr[sp-1];
     first_el[0] = stack_arr[sp];
     for (i=0; i<4; i=i+1) {
@@ -662,12 +679,7 @@ Device EVM
 
     INST "DUP$count", (8,int4 count,int4 0x8)
     {
-      USEGAS(STEPGAS2);
-      // TODO
-      // MAIN_TYPE a;
-      // a = stack_arr[sp - (count + 1)];
-      // sp = sp + 1;
-      // stack_arr[sp] = a;
+      DupOp(count);
     }
 
     INST "SWAP$count", (8,int4 count,int4 0x9)

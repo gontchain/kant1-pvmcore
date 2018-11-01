@@ -1510,6 +1510,122 @@
                 </OPERATOR>
             </CODE>
         </MSizeOp>
+        <DupOp RETSIZE="64">
+            <ARGUMENTS>
+                <count SIZE="32" />
+            </ARGUMENTS>
+            <LOCALVARS>
+                <copy_el SIZE="64" ARRSIZE="4" />
+                <offset SIZE="32">
+                    <INITAL_EXP>
+                        <OPERATOR name="*">
+                            <IMM32 value="4" />
+                            <ARG name="count" />
+                        </OPERATOR>
+                    </INITAL_EXP>
+                </offset>
+                <i SIZE="32" />
+            </LOCALVARS>
+            <CODE>
+                <CALL name="USEGAS">
+                    <ARGS>
+                        <IMM32 value="3" />
+                    </ARGS>
+                </CALL>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="4" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="copy_el">
+                                <LVAR name="i" />
+                            </LVAR>
+                            <REG name="stack_arr">
+                                <OPERATOR name="-">
+                                    <REG name="sp" />
+                                    <OPERATOR name="+">
+                                        <LVAR name="offset" />
+                                        <LVAR name="i" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </REG>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="1" />
+                    </OPERATOR>
+                </OPERATOR>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="4" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <OPERATOR name="+">
+                                    <REG name="sp" />
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </REG>
+                            <LVAR name="copy_el">
+                                <OPERATOR name="-">
+                                    <IMM32 value="3" />
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </LVAR>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="3" />
+                    </OPERATOR>
+                </OPERATOR>
+            </CODE>
+        </DupOp>
         <SwapOp RETSIZE="64">
             <ARGUMENTS>
                 <count SIZE="32" />
@@ -1543,7 +1659,7 @@
                     <REG name="stack_arr">
                         <OPERATOR name="-">
                             <REG name="sp" />
-                            <IMM32 value="3" />
+                            <IMM32 value="2" />
                         </OPERATOR>
                     </REG>
                 </OPERATOR>
@@ -2286,9 +2402,9 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <CALL name="USEGAS">
+                    <CALL name="DupOp">
                         <ARGS>
-                            <IMM32 value="3" />
+                            <ARG name="count" />
                         </ARGS>
                     </CALL>
                 </CODE>
