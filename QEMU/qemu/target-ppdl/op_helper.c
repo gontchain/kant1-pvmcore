@@ -148,14 +148,14 @@ void HELPER(print)(CPUPPDLState *env)
 
 void HELPER(error_message)(CPUPPDLState *env, uint64_t index, uint64_t data)
 {
-    FILE *log_file = fopen("qemu.err.log", "w");
+    //FILE *log_file = fopen("qemu.err.log", "w");
     switch (index) {
         case 1:
             //printf("@\n");
-            fprintf(log_file, "@\n");
+            //fprintf(log_file, "@\n");
             break;
     }
-    fclose(log_file);
+    //fclose(log_file);
 }
 
 int64_t HELPER(sign64)(uint64_t aVal)
