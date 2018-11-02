@@ -47,6 +47,7 @@ all:
 	$(MAKE) -C swap1
 	$(MAKE) -C dup
 	$(MAKE) -C pc
+	$(MAKE) -C addBig
 
 test-qemu:
 	@rm -rf passes
@@ -92,6 +93,7 @@ test-qemu:
 	$(MAKE) -C swap1 test-qemu
 	$(MAKE) -C dup test-qemu
 	$(MAKE) -C pc test-qemu
+	$(MAKE) -C addBig test-qemu
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -151,6 +153,7 @@ test-cemu:
 	$(MAKE) -C swap1 test-cemu
 	$(MAKE) -C dup test-cemu
 	$(MAKE) -C pc test-cemu
+	$(MAKE) -C addBig test-cemu
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -191,13 +194,10 @@ compare:
 	$(MAKE) -C mulmod compare
 	$(MAKE) -C exp compare
 	$(MAKE) -C signextend compare
-	$(MAKE) -C swap1 compare
-	$(MAKE) -C dup compare
-	$(MAKE) -C pc compare
 	$(MAKE) -C gaslimit compare
-	$(MAKE) -C gaslimit compare GASLIMIT=0xffff
+	$(MAKE) -C gaslimit compare GASLIMIT=0xfff
 	$(MAKE) -C gas compare
-	$(MAKE) -C gas compare GASLIMIT=0xffff
+	$(MAKE) -C gas compare GASLIMIT=0xfff
 	$(MAKE) -C gasprice compare
 	# with segfault $(MAKE) -C address compare
 	# with segfault $(MAKE) -C balance compare
@@ -208,8 +208,12 @@ compare:
 	$(MAKE) -C extcodesize compare
 	$(MAKE) -C sha3 compare
 	$(MAKE) -C msize compare
-	$(MAKE) -C mload compare
 	$(MAKE) -C sload compare
+	$(MAKE) -C mload compare
+	$(MAKE) -C swap1 compare
+	$(MAKE) -C dup compare
+	$(MAKE) -C pc compare
+	$(MAKE) -C addBig compare
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -263,6 +267,11 @@ run-qemu:
 	$(MAKE) -C sha3 run-qemu
 	$(MAKE) -C msize run-qemu
 	$(MAKE) -C sload run-qemu
+	$(MAKE) -C mload run-qemu
+	$(MAKE) -C swap1 run-qemu
+	$(MAKE) -C dup run-qemu
+	$(MAKE) -C pc run-qemu
+	$(MAKE) -C addBig run-qemu
 
 run-evm:
 	$(MAKE) -C lt run-evm
@@ -306,6 +315,7 @@ run-evm:
 	$(MAKE) -C swap1 run-evm
 	$(MAKE) -C dup run-evm
 	$(MAKE) -C pc run-evm
+	$(MAKE) -C addBig run-evm
 
 run-cemu:
 	$(MAKE) -C lt run-cemu
@@ -349,6 +359,7 @@ run-cemu:
 	$(MAKE) -C swap1 run-cemu
 	$(MAKE) -C dup run-cemu
 	$(MAKE) -C pc run-cemu
+	$(MAKE) -C addBig run-cemu
 
 clean:
 	$(MAKE) -C lt clean
@@ -390,3 +401,4 @@ clean:
 	$(MAKE) -C swap1 clean
 	$(MAKE) -C dup clean
 	$(MAKE) -C pc clean
+	$(MAKE) -C addBig clean
