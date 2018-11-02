@@ -35,7 +35,7 @@ inline int index2(int x, int y);
 //   (eg 64 for SHA-3-512)
 keccakState *keccakCreate(int length)
 {
-	keccakState *state;
+	keccakState *state = (keccakState*)malloc(sizeof(keccakState));
 	memset(state, 0, sizeof(keccakState));
 
 	state->A = calloc(25, sizeof(uint64_t));

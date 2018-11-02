@@ -389,18 +389,19 @@ void LoadFromStorage(CPUArchState* env, uint32 offs) {
 void KeccakAlg(CPUArchState* env, uint32 offs, uint32 size) {
     int32 sp = env->sp;
     uint64 *ret = &(env->stack_arr[sp+1]);
-    uint8 *start = env->data_bus + offs;
     uint64 res_reg[4] = {0,0,0,0};
-    unsigned char buf[255] = "";
+    uint8 buf[255];
     unsigned int hashSize = 256;
     // read memory
-    memcpy(buf, start, size);
+    //memcpy(buf, start, size);
+    unsigned int i;
+    for (i = 0; i < size; i++)
+        buf[i] = env->data_bus[offs + i];
     // compute Keccak hash
     keccakState *st = keccakCreate(hashSize);
     keccakUpdate((uint8_t*)buf, 0, size, st);
     unsigned char *op = keccakDigest(st);
     // construct numbers blocks
-    unsigned int i;
     for (i = 0; i != (hashSize / 8); i++) {
         uint32 block_idx = i == 0 ? 0 : i/8, shift = i == 0 ? 0 : 8*(i%8);
         uint64 byte = *(op++);
