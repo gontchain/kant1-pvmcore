@@ -48,6 +48,7 @@ all:
 	$(MAKE) -C dup
 	$(MAKE) -C pc
 	$(MAKE) -C addBig
+	$(MAKE) -C subBig
 
 test-qemu:
 	@rm -rf passes
@@ -94,6 +95,7 @@ test-qemu:
 	$(MAKE) -C dup test-qemu
 	$(MAKE) -C pc test-qemu
 	$(MAKE) -C addBig test-qemu
+	$(MAKE) -C subBig test-qemu
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -154,6 +156,7 @@ test-cemu:
 	$(MAKE) -C dup test-cemu
 	$(MAKE) -C pc test-cemu
 	$(MAKE) -C addBig test-cemu
+	$(MAKE) -C subBig test-cemu
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -214,6 +217,7 @@ compare:
 	$(MAKE) -C dup compare
 	$(MAKE) -C pc compare
 	$(MAKE) -C addBig compare
+	$(MAKE) -C subBig compare
 
 	echo "\nTest Result Summary:"
 	echo "\tPASS: \c"
@@ -272,6 +276,7 @@ run-qemu:
 	$(MAKE) -C dup run-qemu
 	$(MAKE) -C pc run-qemu
 	$(MAKE) -C addBig run-qemu
+	$(MAKE) -C subBig run-qemu
 
 run-evm:
 	$(MAKE) -C lt run-evm
@@ -316,6 +321,7 @@ run-evm:
 	$(MAKE) -C dup run-evm
 	$(MAKE) -C pc run-evm
 	$(MAKE) -C addBig run-evm
+	$(MAKE) -C subBig run-evm
 
 run-cemu:
 	$(MAKE) -C lt run-cemu
@@ -360,6 +366,7 @@ run-cemu:
 	$(MAKE) -C dup run-cemu
 	$(MAKE) -C pc run-cemu
 	$(MAKE) -C addBig run-cemu
+	$(MAKE) -C subBig run-cemu
 
 clean:
 	$(MAKE) -C lt clean
@@ -402,3 +409,4 @@ clean:
 	$(MAKE) -C dup clean
 	$(MAKE) -C pc clean
 	$(MAKE) -C addBig clean
+	$(MAKE) -C subBig clean
