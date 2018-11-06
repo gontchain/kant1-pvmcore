@@ -104,7 +104,7 @@ test-qemu:
 	else \
 		echo "0"; \
 	fi
-	echo "\tFAILS: \c"
+	echo "\tFAIL: \c"
 	if [ -f fails ]; then \
 		echo "`cat fails | wc -l`\n"; \
 	else \
@@ -165,7 +165,7 @@ test-cemu:
 	else \
 		echo "0"; \
 	fi
-	echo "\tFAILS: \c"
+	echo "\tFAIL: \c"
 	if [ -f fails ]; then \
 		echo "`cat fails | wc -l`\n"; \
 	else \
@@ -226,7 +226,7 @@ compare:
 	else \
 		echo "0"; \
 	fi
-	echo "\tFAILS: \c"
+	echo "\tFAIL: \c"
 	if [ -f fails ]; then \
 		echo "`cat fails | wc -l`\n"; \
 	else \
