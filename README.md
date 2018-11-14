@@ -56,9 +56,12 @@
 ```  
 будут собраны симуляторы **go-ethereum** (только Linux), **cemu** (только Linux) и **qemu**, а также тесты системы тестирования.
 
-* Индикацией успешной сборки будет наличие:
+*Примечание:* для сборки симулятора CEMU под Windows используется MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC8\simulator.sln*)
+
+Индикацией успешной сборки является наличие:
+* **Linux**:
   1. бинарных файлов симуляторов:
-      * *ethereum/build/bin/evm* (только Linux)
+      * *ethereum/build/bin/evm*
       * *emulator/bins/cemu*
       * *QEMU/qemu/ppdl-softmmu/qemu-system-ppdl*
   2. библиотек архитектуры:
@@ -66,9 +69,17 @@
       * *QEMU/qemu/ppdl-softmmu/libevm-ppdl.so*
   3. бинарных файлов тестов:
       * *tests/asm/test_name/test_name.bin*
+* **Windows**:
+  1. бинарных файлов симуляторов:
+      * *emulator/bins/cemu.exe*
+      * *QEMU/qemu/ppdl-softmmu/qemu-system-ppdl.exe*
+  2. библиотек архитектуры:
+      * *emulator/models/evm/simulator/bins/evm.dll*
+      * *QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll*
+  3. бинарных файлов тестов:
+      * *tests/asm/test_name/test_name.bin*
 
 *Примечание:* в Windows выполнение любых команд необходимо производить из терминала Cygwin.
-*Примечание:* для сборки симулятора CEMU под Windows используется MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC8\simulator.sln*)
 
 
 ## Тестирование

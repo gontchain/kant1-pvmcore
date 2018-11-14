@@ -56,19 +56,30 @@ After cloning a project, you need to install:
 ```  
 this will build **go-ethereum** (Linux only), **cemu** (Linux only) and **qemu** simulators, and tests for testing system.
 
-* Successful build is indicated by:
-  1. simulators' binaries:
-      * *ethereum/build/bin/evm* (Linux only)
+*Note:* to build CEMU simulator under Windows, use MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC8\simulator.sln*)
+
+Successful build is indicated by:
+* **Linux**:
+  1. simulator binaries:
+      * *ethereum/build/bin/evm*
       * *emulator/bins/cemu*
       * *QEMU/qemu/ppdl-softmmu/qemu-system-ppdl*
   2. architecture libraries:
       * *emulator/models/evm/simulator/evm.so*
       * *QEMU/qemu/ppdl-softmmu/libevm-ppdl.so*
-  3. tests' binaries:
+  3. test binaries:
+      * *tests/asm/test_name/test_name.bin*
+* **Windows**:
+  1. simulator binaries:
+      * *emulator/bins/cemu.exe*
+      * *QEMU/qemu/ppdl-softmmu/qemu-system-ppdl.exe*
+  2. architecture libraries:
+      * *emulator/models/evm/simulator/bins/evm.dll*
+      * *QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll*
+  3. test binaries:
       * *tests/asm/test_name/test_name.bin*
 
 *Note:* using any command under Windows is meant to be run under Cygwin terminal.
-*Note:* to build CEMU simulator under Windows, use MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC8\simulator.sln*)
 
 
 ## Testing
