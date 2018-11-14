@@ -45,7 +45,7 @@ After cloning a project, you need to install:
   * mingw64-x86_64-ncurses
   * mingw64-x86_64-gnutls
 
-2. [Solidity compiler для Windows](https://github.com/ethereum/solidity/releases/) and [Microsoft Visual C++ 2015 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=52685) package for it. After unpacking the compiler archive into the desired destination (e.g., *С:\solc*) add it to your system's PATH variable.
+2. [Solidity compiler for Windows](https://github.com/ethereum/solidity/releases/) and [Microsoft Visual C++ 2015 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=52685) package for it. After unpacking the compiler archive into the desired destination (e.g., *С:\solc*) add it to your system's PATH variable.
 
 
 ## Building
