@@ -18,6 +18,7 @@
 *.v12.suo
 
 # testing system artifacts
+tests/**/out.qemu
 tests/**/out.cemu
 tests/**/out.evm
 tests/**/*.bin
