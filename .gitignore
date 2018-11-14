@@ -3,17 +3,30 @@
 *.o
 *.a
 *.so
-*.bin
-*.out
+
+# VS build artifacts
 *.obj
 *.log
 *.tlog
 *.lastbuildstate
+*.idb
+*.pdb
+
+# VS setting files
 *.vcxproj.filters
 *.vcxproj.user
 *.v12.suo
-out.cemu
-out.evm
-bins/cemu
+
+# testing system artifacts
+tests/**/out.cemu
+tests/**/out.evm
+tests/**/*.bin
+tests/**/*.out
+tests/asm/passes
+tests/asm/fails
+
+**/bins/cemu*
+
+# QEMU config artifacts
 QEMU/qemu/roms/seabios/config.mak
 QEMU/qemu/roms/vgabios/config.mak
