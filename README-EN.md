@@ -54,7 +54,7 @@ After cloning a project, you need to install:
 ```
 ./build-all
 ```  
-this will build **go-ethereum** (Linux only), **cemu** and **qemu** simulators, and tests for testing system.
+this will build **go-ethereum** (Linux only), **cemu** (Linux only) and **qemu** simulators, and tests for testing system.
 
 * Successful build is indicated by:
   1. simulators' binaries:
@@ -68,6 +68,7 @@ this will build **go-ethereum** (Linux only), **cemu** and **qemu** simulators, 
       * *tests/asm/test_name/test_name.bin*
 
 *Note:* using any command under Windows is meant to be run under Cygwin terminal.
+*Note:* to build CEMU simulator under Windows, use MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC8\simulator.sln*)
 
 
 ## Testing
