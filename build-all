@@ -15,29 +15,41 @@ fi
 }
 
 CURDIR=`pwd`
+IS_WIN32=0
 
-if [ ! -d "$CURDIR/ethereum" ] || [ ! -d "$CURDIR/systemc" ]; then
-    echo You must run 'first-start' script first!
-    exit 1
+case "$(uname -s)" in
+    CYGWIN*|MINGW32*|MSYS*)
+        IS_WIN32=1
+        ;;
+    *)
+        ;;
+esac
+
+if [ $IS_WIN32 -eq 0 ]; then
+    if [ ! -d "$CURDIR/ethereum" ]; then # || [ ! -d "$CURDIR/systemc" ]; then
+        echo You must run 'first-start' script first!
+        exit 1
+    fi
 fi
 
-# build go-ethereum evm
-echo -e "\n-----------------------\nBuilding Ethereum EVM\n-----------------------\n"
-cd $CURDIR/ethereum
-make clean && make all
-checkSuccess go-ethereum 2
+if [ $IS_WIN32 -eq 0 ]; then
+    # build go-ethereum evm (unavailable on Windows)
+    echo -e "\n-----------------------\nBuilding Ethereum EVM\n-----------------------\n"
+    cd $CURDIR/ethereum
+    make clean && make all
+    checkSuccess go-ethereum 2
 
-# build cemu evm
-echo -e "\n-----------------------\nBuilding CEMU EVM\n-----------------------\n"
-cd $CURDIR/emulator
-make clean && make
-checkSuccess cemu 3
+    # build cemu evm (on Windows use Visual Studio)
+    echo -e "\n-----------------------\nBuilding CEMU EVM\n-----------------------\n"
+    cd $CURDIR/emulator
+    make clean && make
+    checkSuccess cemu 3
+fi
 
 # build qemu evm
 echo -e "\n-----------------------\nBuilding QEMU EVM\n-----------------------\n"
 cd $CURDIR/QEMU/qemu
-./configure-evm
-make clean && make
+./builder-evm
 checkSuccess qemu 4
 
 echo -e "\n-----------------------\nBuilding Test System....\n-----------------------\n"
