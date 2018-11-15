@@ -60,7 +60,7 @@ void DoArithm(TDevice* dev, uint32 opcode) {
   // }
   // printf("\n");
   switch (opcode) {
-    case 1 ... 7:
+    case 1: case 2: case 3: case 4: case 5: case 6: case 7:
     case 10:
     case 11:
       arg1 = &(((EVM*)dev)->stack_arr[sp-3]);
@@ -194,8 +194,8 @@ void DoCompare(TDevice* dev, uint32 opcode) {
       // v_bignum_print_hex_lf(a);
       sp = sp - (1*4 - 1);
       break;
-    case 0 ... 4:
-    case 6 ... 8:
+    case 0: case 1: case 2: case 3: case 4:
+    case 6: case 7: case 8:
     case 10:
       arg1 = &(((EVM*)dev)->stack_arr[sp-3]);
       arg2 = &(((EVM*)dev)->stack_arr[sp-7]);
@@ -433,10 +433,10 @@ void* Init(void* mParams)
 
 void Destroy()
 {
-	delete prog_mem;
-	delete data_mem;
-	delete storage_mem;
-	delete log_mem;
+    delete prog_mem;
+    delete data_mem;
+    delete storage_mem;
+    delete log_mem;
 }
 
 LIB_EXPORT void CheckPostProgram()

@@ -195,7 +195,7 @@ LIB_EXPORT void* InitSys(void* aParam)
 #ifdef SYSTEMC_MODELING
   {
     GlobalCycleCounter = 0;
-    char args[2][64] = {"cemu.exe", "param"}; 
+    char* args[2] = {"cemu.exe", "param"};
     GlobalParam = aParam;
     main(1, (char**)args);
     dev = GlobalDevice;

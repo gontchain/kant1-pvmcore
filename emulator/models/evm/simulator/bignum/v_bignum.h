@@ -61,6 +61,10 @@ typedef unsigned int    VBigDigs;   /* Should hold precisely two digits. */
 
 /* ----------------------------------------------------------------------------------------- */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Convert internal register representation (4 64-bit parts)
  * into bignum variable and vice versa.
 */
@@ -135,3 +139,7 @@ extern void v_bignum_square_half(VBigDig *x);
 
 /* Compute pow(x, y, n) == (x raised to the y:th power) modulo n. */
 extern void v_bignum_pow_mod(VBigDig *x, const VBigDig *y, const VBigDig *n);
+
+#ifdef __cplusplus
+}
+#endif
