@@ -47,6 +47,9 @@
 
 2. Установить [solidity compiler для Windows](https://github.com/ethereum/solidity/releases/), а также пакет [Microsoft Visual C++ 2015 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=52685). После распаковки архива с компилятором в нужное место (напр., *С:\solc*) добавить путь в переменную окружения PATH.
 
+3. Установить MS Visual Studio (рекомендуется MS Visual Studio 2017), необходимую для сборки cemu и его библиотек
+
+4. Загрузить и собрать [SystemC](http://www.accellera.org/downloads/standards/systemc) (рекомендуется версия 2.3.2). Для сборки использовать MS Visual Studio. Каталог SystemC расположить по пути *C:\systemc-2.3.2*.
 
 ## Сборка проекта
 
@@ -56,7 +59,7 @@
 ```  
 будут собраны симуляторы **go-ethereum** (только Linux), **cemu** (только Linux) и **qemu**, а также тесты системы тестирования.
 
-*Примечание:* для сборки симулятора CEMU под Windows используется MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC8\simulator.sln*)
+*Примечание:* для сборки CEMU под Windows используется MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC14\simulator.sln*)
 
 Индикацией успешной сборки является наличие:
 * **Linux**:

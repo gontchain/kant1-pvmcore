@@ -47,6 +47,9 @@ After cloning a project, you need to install:
 
 2. [Solidity compiler for Windows](https://github.com/ethereum/solidity/releases/) and [Microsoft Visual C++ 2015 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=52685) package for it. After unpacking the compiler archive into the desired destination (e.g., *С:\solc*) add it to your system's PATH variable.
 
+3. Install MS Visual Studio (MS Visual Studio 2017 is recommended), required for building CEMU and its libraries.
+
+4. Download and build [SystemC](http://www.accellera.org/downloads/standards/systemc) (recommended version is 2.3.2). Use MS Visual Studio for building. Place SystemC directory at *C:\systemc-2.3.2*.
 
 ## Building
 
@@ -56,7 +59,7 @@ After cloning a project, you need to install:
 ```  
 this will build **go-ethereum** (Linux only), **cemu** (Linux only) and **qemu** simulators, and tests for testing system.
 
-*Note:* to build CEMU simulator under Windows, use MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC8\simulator.sln*)
+*Note:* to build CEMU under Windows, use MS Visual Studio (*C:\Users\alex\Desktop\kant1-pvmcore\emulator\models\evm\simulator\VC14\simulator.sln*)
 
 Successful build is indicated by:
 * **Linux**:
