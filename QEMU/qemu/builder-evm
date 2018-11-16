@@ -8,8 +8,43 @@ check_success() {
    fi
 }
 
-./configure-evm
-make clean
-make
+make clean && make distclean
 check_success
-make evm
+case "$(uname -s)" in
+    CYGWIN*|MINGW32*|MSYS*)
+        # build mman library for win32
+        mkdir -p build-mman && cd build-mman && \
+        ./../mman-win32/configure \
+        --prefix=${INSTALL_PATH} \
+        --cross-prefix=x86_64-w64-mingw32- && \
+        cp ../mman-win32/*[ch] . && \
+        cp ../mman-win32/Makefile . && \
+        make libmman.a && make static-install && cd -  
+        if (($?!=0));then
+        echo Build libmman fail!
+        exit -1
+        fi
+        # build dlfcn library for win32
+        cd dlfcn-win32 && \
+        make && make install && cd -
+        if (($?!=0));then
+            echo Build dlfcn fail!
+            exit -1
+        fi
+        # patch ffs calls for MinGW
+        cat ../qemu-mingw-ffs.patch | patch -p1
+        ;;
+    *)
+        ;;
+esac
+./configure-evm && make
+check_success
+case "$(uname -s)" in
+    CYGWIN*|MINGW32*|MSYS*)
+        make evm-win32
+        ;;
+    *)
+        make evm
+        ;;
+esac
+check_success

@@ -16,6 +16,14 @@
 #define HI_WRD(val) (uint32_t)(val>>32)
 #define DECODER_CLASS EVM
 
+int EVM_Main_GetInstNum(uint32 ocode);
+int CheckNull_ArithmOps(uint32 aIdx);
+int CheckNull_CompareLogOps(uint32 aIdx);
+int CheckNull_MemOps(uint32 aIdx);
+int CheckNull_AccountsData(uint32 aIdx);
+int CheckNull_BlockChain(uint32 aIdx);
+int CheckNull_SystemOps(uint32 aIdx);
+
 void EVM_DisasmList_ArithmOps(char* out_buf,uint32 idx,uint32 arg_a,uint32 arg_b,uint32 arg_c ){
   switch(idx){
     case 0: sprintf(out_buf,"STOP"); break;

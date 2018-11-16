@@ -21,6 +21,7 @@ else
 # system emulator name
 QEMU_PROG=qemu-system-$(TARGET_NAME)$(EXESUF)
 LIB_EVM=libevm-$(TARGET_NAME).so
+LIB_EVM_WIN32=libevm-$(TARGET_NAME).dll
 ifneq (,$(findstring -mwindows,$(libs_softmmu)))
 # Terminate program name with a 'w' because the linker builds a windows executable.
 QEMU_PROGW=qemu-system-$(TARGET_NAME)w$(EXESUF)
@@ -71,6 +72,8 @@ endif
 
 all: $(PROGS) stap
 evm: all $(LIB_EVM)
+evm-win32: all $(LIB_EVM_WIN32)
+
 # Dummy command so that make thinks it has done something
 	@true
 
@@ -174,12 +177,16 @@ evm-obj-y := $(filter-out ../qapi-visit.o ../qapi-event.o ../qapi-types.o ../stu
 evm-obj-y += ../stubs/dump.o ../stubs/pci-drive-hot-add.o
 evm-obj-y += ../hw/mem/pc-dimm.o
 ifeq ($(TARGET_NAME), ppdl)
-evm-obj-y += ../stubs/gdbstub.o ../evm.o ../hw/core/ptimer.o
+evm-obj-y += ../stubs/gdbstub.o ../stubs/arch-query-cpu-def.o ../evm.o ../hw/core/ptimer.o
 endif
 
 $(LIB_EVM): $(evm-obj-y) ../libqemuutil.a
 	$(CC) -shared -fPIC -Wl,-soname,$(LIB_EVM) \
 	        -Wl,--whole-archive -o $@ $^ -Wl,--no-whole-archive -pthread -lstdc++ $(LIBS)
+
+$(LIB_EVM_WIN32): $(evm-obj-y) ../libqemuutil.a
+	$(CC) -shared -fPIC -Wl,-soname,$(LIB_EVM_WIN32) \
+	        -Wl,--whole-archive -o $@ $^ -Wl,--no-whole-archive -pthread -lstdc++ -lssp -lpsapi $(LIBS)
 
 gdbstub-xml.c: $(TARGET_XML_FILES) $(SRC_PATH)/scripts/feature_to_c.sh
 	$(call quiet-command,rm -f $@ && $(SHELL) $(SRC_PATH)/scripts/feature_to_c.sh $@ $(TARGET_XML_FILES),"  GEN   $(TARGET_DIR)$@")

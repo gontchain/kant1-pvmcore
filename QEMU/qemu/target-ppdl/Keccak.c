@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "stdlib.h"
 #include "stdint.h"
 #include "string.h"
 
@@ -27,8 +28,8 @@ const int R[] = {
 };
 
 
-inline int index1(int x);
-inline int index2(int x, int y);
+int index1(int x);
+int index2(int x, int y);
 
 // Function to create the state structure for keccak application, of size length
 //   (where length is the number of bits in the hash divided by 8. 

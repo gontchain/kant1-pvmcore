@@ -1,3 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 
-./configure --target-list=ppdl-softmmu --extra-cflags="-fPIC -D EVM" --enable-debug --disable-werror --disable-pie --disable-curses --disable-sdl --disable-vnc --disable-xen --disable-kvm
+CONFIG_OPTS="--prefix=${INSTALL_PATH}/qemu"
+CONFIG_OPTS+=" --target-list=ppdl-softmmu"
+CONFIG_OPTS+=" --enable-debug --disable-werror --disable-pie --disable-curses --disable-sdl --disable-vnc --disable-xen --disable-kvm"
+
+case "$(uname -s)" in
+    CYGWIN*|MINGW32*|MSYS*)
+        CONFIG_OPTS+=" --interp-prefix=${INSTALL_PATH}/sysroot"
+        CONFIG_OPTS+=" --python=python2"
+        CONFIG_OPTS+=" --cross-prefix=x86_64-w64-mingw32-"
+        CONFIG_OPTS+=" --extra-cflags=-I${INSTALL_PATH}/mingw/include"
+        CONFIG_OPTS+=" --extra-ldflags=-L${INSTALL_PATH}/mingw/lib"
+        ;;
+    *)
+        ;;
+esac
+./configure ${CONFIG_OPTS} --extra-cflags="-fPIC -D EVM"

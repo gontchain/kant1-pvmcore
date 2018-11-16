@@ -281,6 +281,10 @@ evm:
 	echo $(TARGET_DIRS)
 	for a in $(TARGET_DIRS); do $(MAKE) -C $$a evm BUILD_DIR=${BUILD_DIR}; done
 
+evm-win32:
+	echo $(TARGET_DIRS)
+	for a in $(TARGET_DIRS); do $(MAKE) -C $$a evm-win32 BUILD_DIR=${BUILD_DIR}; done
+
 libevm.a: evm.o
 	$(AR) -r $@ $<
 

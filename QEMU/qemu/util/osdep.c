@@ -429,8 +429,7 @@ static void socket_cleanup(void)
 int socket_init(void)
 {
 #ifdef _WIN32
-	printf("%s %d call",__FILE__, __LINE__);
-/*    WSADATA Data;
+    WSADATA Data;
     int ret, err;
 
     ret = WSAStartup(MAKEWORD(2, 2), &Data);
@@ -439,7 +438,7 @@ int socket_init(void)
         fprintf(stderr, "WSAStartup: %d\n", err);
         return -1;
     }
-    atexit(socket_cleanup);*/
+    atexit(socket_cleanup);
 #endif
     return 0;
 }

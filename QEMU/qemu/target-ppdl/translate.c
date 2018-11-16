@@ -56,6 +56,8 @@ uint32_t is_branch_delayed_first = 1;
 #include "translate.h"
 uint8_t     insn;
 
+unsigned int get_ppdl_shift_pc(uint8_t instraction);
+
 inline unsigned int get_ppdl_shift_pc(uint8_t instraction) {
     /*
      * PUSH$count

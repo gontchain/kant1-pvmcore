@@ -7,6 +7,13 @@ typedef enum { false, true } bool;
 
 #include "stdint.h"
 
+bool littleEndian();
+uint16_t swapEndian16(uint16_t in);
+uint32_t swapEndian32(uint32_t in);
+uint64_t swapEndian64(uint64_t in);
+uint64_t NativeToLittle64(uint64_t in);
+uint64_t LittleToNative64(uint64_t in);
+
 // Endianness conversion inlines - These will be optimised out on platforms where
 //  it's not necessary, and will collapse to only the swapping code on 
 //  other big endian platforms.
