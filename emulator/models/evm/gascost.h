@@ -24,5 +24,3 @@
 #define VALUETRANSFERGAS 9000
 #define CALLSTIPEND      2300
 #define CALLNEWACCOUNT   25000
-
-#define USEGAS(c) UseGas((c));

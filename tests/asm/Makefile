@@ -41,6 +41,7 @@ all:
 	$(MAKE) -C sload
 	$(MAKE) -C mload
 	$(MAKE) -C swap1
+	$(MAKE) -C dup
 	$(MAKE) -C pc
 
 compare:
@@ -69,6 +70,7 @@ compare:
 	$(MAKE) -C exp compare
 	$(MAKE) -C signextend compare
 	$(MAKE) -C swap1 compare
+	$(MAKE) -C dup compare
 	$(MAKE) -C pc compare
 	$(MAKE) -C gaslimit compare
 	$(MAKE) -C gaslimit compare GASLIMIT=0xffff
@@ -82,7 +84,7 @@ compare:
 	# with segfault $(MAKE) -C callvalue compare
 	$(MAKE) -C codesize compare
 	$(MAKE) -C extcodesize compare
-	# $(MAKE) -C sha3 compare
+	$(MAKE) -C sha3 compare
 	$(MAKE) -C msize compare
 	$(MAKE) -C mload compare
 	$(MAKE) -C sload compare
@@ -141,6 +143,7 @@ run-evm:
 	$(MAKE) -C sload run-evm
 	$(MAKE) -C mload run-evm
 	$(MAKE) -C swap1 run-evm
+	$(MAKE) -C dup run-evm
 	$(MAKE) -C pc run-evm
 
 run-cemu:
@@ -183,6 +186,7 @@ run-cemu:
 	$(MAKE) -C sload run-cemu
 	$(MAKE) -C mload run-cemu
 	$(MAKE) -C swap1 run-cemu
+	$(MAKE) -C dup run-cemu
 	$(MAKE) -C pc run-cemu
 
 clean:
@@ -223,4 +227,5 @@ clean:
 	$(MAKE) -C sload clean
 	$(MAKE) -C mload clean
 	$(MAKE) -C swap1 clean
+	$(MAKE) -C dup clean
 	$(MAKE) -C pc clean

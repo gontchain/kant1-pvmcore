@@ -402,7 +402,8 @@ int CheckRegs(char* regnames)
 {
 	typedef unsigned long long uint64;
 	uint64 regval64;
-	int reg[2],fl = 0, arrsize;
+	unsigned int reg[2];
+	int fl = 0, arrsize;
 	const tDProcCfg *cfg = Device->GetCfg();
 	bool flag;
 	char tmpstr[128];
@@ -452,11 +453,7 @@ int CheckRegs(char* regnames)
 				int t = cfg->regs[i].type;
         reg[0] = 0;
         Device->GetReg(i, 0, (char*)&reg);		  
-<<<<<<< HEAD
 				if (t == 8){//64 bit
-=======
-				if (t >= 8){//64 bit
->>>>>>> 83120b909ffb5490ad91c1b3b8460a37eff69b16
 					if ((RegVal[i][0] != reg[0]) || RegVal[i][1] != reg[1]){
 						RegVal[i][0] = reg[0];
 						RegVal[i][1] = reg[1];

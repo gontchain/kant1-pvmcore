@@ -32,7 +32,7 @@
     </VARS>
     <FLAGS />
     <FUNCTIONS>
-        <KeccakAlg RETSIZE="64" EXTERN="1">
+        <KeccakAlg RETSIZE="0" EXTERN="1">
             <ARGUMENTS>
                 <offs SIZE="32" />
                 <size SIZE="32" />
@@ -45,11 +45,10 @@
         <SaveToStorage RETSIZE="0" EXTERN="1">
             <ARGUMENTS>
                 <offs SIZE="32" />
-                <value SIZE="64" />
             </ARGUMENTS>
             <CODE />
         </SaveToStorage>
-        <LoadFromStorage RETSIZE="64" EXTERN="1">
+        <LoadFromStorage RETSIZE="0" EXTERN="1">
             <ARGUMENTS>
                 <offs SIZE="32" />
             </ARGUMENTS>
@@ -73,6 +72,29 @@
             </ARGUMENTS>
             <CODE />
         </DoCompare>
+        <USEGAS RETSIZE="64">
+            <ARGUMENTS>
+                <value SIZE="64" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="UseGas">
+                    <ARGS>
+                        <ARG name="value" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </USEGAS>
+        <Pop RETSIZE="64">
+            <CODE>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="-">
+                        <REG name="sp" />
+                        <IMM32 value="4" />
+                    </OPERATOR>
+                </OPERATOR>
+            </CODE>
+        </Pop>
         <GetSingleBlockFromStack RETSIZE="64">
             <LOCALVARS>
                 <i SIZE="32" />
@@ -269,1555 +291,13 @@
                 <PRINT_ERROR message="1" />
             </CODE>
         </StopExec>
-        <GetExp RETSIZE="64">
-            <LOCALVARS>
-                <base SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </base>
-                <pow SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </pow>
-                <i SIZE="64" />
-                <res SIZE="64">
-                    <INITAL_EXP>
-                        <IMM32 value="1" />
-                    </INITAL_EXP>
-                </res>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="A" />
-                    </ARGS>
-                </CALL>
-                <FOR>
-                    <FOR_START>
-                        <OPERATOR name=" = ">
-                            <LVAR name="i" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </FOR_START>
-                    <FOR_STOP_COND>
-                        <OPERATOR name=" &lt; ">
-                            <LVAR name="i" />
-                            <LVAR name="pow" />
-                        </OPERATOR>
-                    </FOR_STOP_COND>
-                    <FOR_ITERATION>
-                        <OPERATOR name=" = ">
-                            <LVAR name="i" />
-                            <OPERATOR name="+">
-                                <LVAR name="i" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </OPERATOR>
-                    </FOR_ITERATION>
-                    <CODE>
-                        <OPERATOR name=" = ">
-                            <LVAR name="res" />
-                            <OPERATOR name="*">
-                                <LVAR name="res" />
-                                <LVAR name="base" />
-                            </OPERATOR>
-                        </OPERATOR>
-                    </CODE>
-                </FOR>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="res" />
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </GetExp>
-        <Pop RETSIZE="64">
-            <LOCALVARS>
-                <ret SIZE="64" />
-            </LOCALVARS>
-            <CODE>
-                <OPERATOR name=" = ">
-                    <LVAR name="ret" />
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <LVAR name="ret" />
-                </RETURN>
-            </CODE>
-        </Pop>
-        <Push RETSIZE="0">
-            <ARGUMENTS>
-                <val SIZE="64" />
-            </ARGUMENTS>
-            <CODE>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <ARG name="val" />
-                </OPERATOR>
-            </CODE>
-        </Push>
-        <SignExtend RETSIZE="64">
-            <LOCALVARS>
-                <testBit SIZE="32" />
-                <end_bit SIZE="32" />
-                <number SIZE="64" />
-                <mask SIZE="64" />
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="5" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" &lt; ">
-                            <LVAR name="a" />
-                            <IMM32 value="1F" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <LVAR name="testBit" />
-                            <OPERATOR name="+">
-                                <TYPE name="uint32">
-                                    <OPERATOR name="*">
-                                        <LVAR name="a" />
-                                        <IMM32 value="8" />
-                                    </OPERATOR>
-                                </TYPE>
-                                <IMM32 value="7" />
-                            </OPERATOR>
-                        </OPERATOR>
-                        <OPERATOR name=" = ">
-                            <LVAR name="end_bit" />
-                            <OPERATOR name="+">
-                                <LVAR name="testBit" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </OPERATOR>
-                        <OPERATOR name=" = ">
-                            <LVAR name="mask" />
-                            <OPERATOR name="-">
-                                <OPERATOR name="&lt;&lt;">
-                                    <TYPE name="uint64">
-                                        <IMM32 value="1" />
-                                    </TYPE>
-                                    <LVAR name="testBit" />
-                                </OPERATOR>
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </OPERATOR>
-                        <IF>
-                            <COND>
-                                <OPERATOR name=" == ">
-                                    <BITFIELD>
-                                        <LVAR name="b" />
-                                        <OPERATOR name=":">
-                                            <LVAR name="end_bit" />
-                                            <LVAR name="testBit" />
-                                        </OPERATOR>
-                                    </BITFIELD>
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </COND>
-                            <INNER>
-                                <OPERATOR name=" = ">
-                                    <LVAR name="number" />
-                                    <OPERATOR name="|">
-                                        <LVAR name="b" />
-                                        <OPERATOR name="~">
-                                            <LVAR name="mask" />
-                                        </OPERATOR>
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </INNER>
-                            <ELSE>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <LVAR name="number" />
-                                        <OPERATOR name="&amp;">
-                                            <LVAR name="b" />
-                                            <LVAR name="mask" />
-                                        </OPERATOR>
-                                    </OPERATOR>
-                                </INNER>
-                            </ELSE>
-                        </IF>
-                        <OPERATOR name=" = ">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                            <LVAR name="number" />
-                        </OPERATOR>
-                        <RETURN>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </RETURN>
-                    </INNER>
-                </IF>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </SignExtend>
-        <ByteFromWord RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-                <start_bit SIZE="32">
-                    <INITAL_EXP>
-                        <TYPE name="uint32">
-                            <OPERATOR name="*">
-                                <OPERATOR name="-">
-                                    <IMM32 value="1F" />
-                                    <LVAR name="a" />
-                                </OPERATOR>
-                                <IMM32 value="8" />
-                            </OPERATOR>
-                        </TYPE>
-                    </INITAL_EXP>
-                </start_bit>
-                <end_bit SIZE="32">
-                    <INITAL_EXP>
-                        <OPERATOR name="+">
-                            <LVAR name="start_bit" />
-                            <IMM32 value="7" />
-                        </OPERATOR>
-                    </INITAL_EXP>
-                </end_bit>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <BITFIELD>
-                        <LVAR name="b" />
-                        <OPERATOR name=":">
-                            <LVAR name="end_bit" />
-                            <LVAR name="start_bit" />
-                        </OPERATOR>
-                    </BITFIELD>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </ByteFromWord>
-        <GetModule RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <mod SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </mod>
-                <div SIZE="64" />
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="5" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" == ">
-                            <LVAR name="mod" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </OPERATOR>
-                        <RETURN>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </RETURN>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <LVAR name="div" />
-                                <OPERATOR name="/">
-                                    <LVAR name="a" />
-                                    <LVAR name="mod" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <OPERATOR name="-">
-                                    <LVAR name="a" />
-                                    <OPERATOR name="*">
-                                        <LVAR name="div" />
-                                        <LVAR name="mod" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </OPERATOR>
-                            <RETURN>
-                                <TYPE name="uint64">
-                                    <IMM32 value="0" />
-                                </TYPE>
-                            </RETURN>
-                        </INNER>
-                    </ELSE>
-                </IF>
-            </CODE>
-        </GetModule>
-        <GetModuleAdd RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-                <base SIZE="64">
-                    <INITAL_EXP>
-                        <OPERATOR name="+">
-                            <LVAR name="a" />
-                            <LVAR name="b" />
-                        </OPERATOR>
-                    </INITAL_EXP>
-                </base>
-                <mod SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </mod>
-                <div SIZE="64" />
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="8" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="2" />
-                    </OPERATOR>
-                </OPERATOR>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" == ">
-                            <LVAR name="mod" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </OPERATOR>
-                        <RETURN>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </RETURN>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <LVAR name="div" />
-                                <OPERATOR name="/">
-                                    <LVAR name="base" />
-                                    <LVAR name="mod" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <OPERATOR name="-">
-                                    <LVAR name="base" />
-                                    <OPERATOR name="*">
-                                        <LVAR name="div" />
-                                        <LVAR name="mod" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </OPERATOR>
-                            <RETURN>
-                                <TYPE name="uint64">
-                                    <IMM32 value="0" />
-                                </TYPE>
-                            </RETURN>
-                        </INNER>
-                    </ELSE>
-                </IF>
-            </CODE>
-        </GetModuleAdd>
-        <GetModuleMul RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-                <base SIZE="64">
-                    <INITAL_EXP>
-                        <OPERATOR name="*">
-                            <LVAR name="a" />
-                            <LVAR name="b" />
-                        </OPERATOR>
-                    </INITAL_EXP>
-                </base>
-                <mod SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </mod>
-                <div SIZE="64" />
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="8" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="2" />
-                    </OPERATOR>
-                </OPERATOR>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" == ">
-                            <LVAR name="mod" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </OPERATOR>
-                        <RETURN>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </RETURN>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <LVAR name="div" />
-                                <OPERATOR name="/">
-                                    <LVAR name="base" />
-                                    <LVAR name="mod" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <OPERATOR name="-">
-                                    <LVAR name="base" />
-                                    <OPERATOR name="*">
-                                        <LVAR name="div" />
-                                        <LVAR name="mod" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </OPERATOR>
-                            <RETURN>
-                                <TYPE name="uint64">
-                                    <IMM32 value="0" />
-                                </TYPE>
-                            </RETURN>
-                        </INNER>
-                    </ELSE>
-                </IF>
-            </CODE>
-        </GetModuleMul>
-        <GetModuleS RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <mod SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </mod>
-                <div SIZE="64" />
-                <sign SIZE="64" />
-                <is_signed SIZE="1">
-                    <INITAL_EXP>
-                        <OPERATOR name=" &lt; ">
-                            <SIGNED64>
-                                <LVAR name="a" />
-                            </SIGNED64>
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </INITAL_EXP>
-                </is_signed>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="5" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <LVAR name="sign" />
-                    <OPERATOR name="?">
-                        <OPERATOR name=" != ">
-                            <LVAR name="is_signed" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                        <TYPE name="uint64">
-                            <OPERATOR name="-">
-                                <IMM32 value="0" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </TYPE>
-                        <TYPE name="uint64">
-                            <IMM32 value="1" />
-                        </TYPE>
-                    </OPERATOR>
-                </OPERATOR>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" == ">
-                            <LVAR name="mod" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </OPERATOR>
-                        <RETURN>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </RETURN>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <LVAR name="div" />
-                                <OPERATOR name="/">
-                                    <LVAR name="a" />
-                                    <LVAR name="mod" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <OPERATOR name="*">
-                                    <LVAR name="sign" />
-                                    <OPERATOR name="-">
-                                        <LVAR name="a" />
-                                        <OPERATOR name="*">
-                                            <LVAR name="div" />
-                                            <LVAR name="mod" />
-                                        </OPERATOR>
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </OPERATOR>
-                            <RETURN>
-                                <TYPE name="uint64">
-                                    <IMM32 value="0" />
-                                </TYPE>
-                            </RETURN>
-                        </INNER>
-                    </ELSE>
-                </IF>
-            </CODE>
-        </GetModuleS>
-        <StopOp RETSIZE="64">
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="0" />
-                    </ARGS>
-                </CALL>
-                <PRINT_ERROR message="1" />
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </StopOp>
-        <AddOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name="+">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </AddOp>
-        <SubOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name="-">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </SubOp>
-        <MulOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="5" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name="*">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </MulOp>
-        <DivOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="5" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" == ">
-                            <LVAR name="b" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </OPERATOR>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <OPERATOR name="/">
-                                    <LVAR name="a" />
-                                    <LVAR name="b" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </DivOp>
-        <DivOpS RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="5" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <IF>
-                    <COND>
-                        <OPERATOR name=" == ">
-                            <LVAR name="b" />
-                            <IMM32 value="0" />
-                        </OPERATOR>
-                    </COND>
-                    <INNER>
-                        <OPERATOR name=" = ">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                            <TYPE name="uint64">
-                                <IMM32 value="0" />
-                            </TYPE>
-                        </OPERATOR>
-                    </INNER>
-                    <ELSE>
-                        <INNER>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <SIGNED64>
-                                    <OPERATOR name="/">
-                                        <LVAR name="a" />
-                                        <SIGNED64>
-                                            <LVAR name="b" />
-                                        </SIGNED64>
-                                    </OPERATOR>
-                                </SIGNED64>
-                            </OPERATOR>
-                        </INNER>
-                    </ELSE>
-                </IF>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </DivOpS>
-        <LtOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name=" &lt; ">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </LtOp>
-        <LtOpS RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <SIGNED64>
-                        <OPERATOR name=" &lt; ">
-                            <LVAR name="a" />
-                            <SIGNED64>
-                                <LVAR name="b" />
-                            </SIGNED64>
-                        </OPERATOR>
-                    </SIGNED64>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </LtOpS>
-        <GtOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name=" &gt; ">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </GtOp>
-        <GtOpS RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <SIGNED64>
-                        <OPERATOR name=" &gt; ">
-                            <LVAR name="a" />
-                            <SIGNED64>
-                                <LVAR name="b" />
-                            </SIGNED64>
-                        </OPERATOR>
-                    </SIGNED64>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </GtOpS>
-        <EqOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name=" == ">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </EqOp>
-        <IsZeroOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name=" == ">
-                        <LVAR name="a" />
-                        <IMM32 value="0" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </IsZeroOp>
-        <AndOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name="&amp;">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </AndOp>
-        <OrOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name="|">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </OrOp>
-        <XorOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name="^">
-                        <LVAR name="a" />
-                        <LVAR name="b" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </XorOp>
-        <NotOp RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-            </LOCALVARS>
-            <CODE>
-                <CALL name="UseGas">
-                    <ARGS>
-                        <IMM32 value="3" />
-                    </ARGS>
-                </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <OPERATOR name="~">
-                        <LVAR name="a" />
-                    </OPERATOR>
-                </OPERATOR>
-                <RETURN>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </RETURN>
-            </CODE>
-        </NotOp>
         <CallValue RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="+">
-                        <REG name="sp" />
-                        <IMM32 value="1" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -1826,48 +306,12 @@
             </CODE>
         </CallValue>
         <CallDataCopy RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-                <c SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </c>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="3" />
-                    </OPERATOR>
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -1877,7 +321,7 @@
         </CallDataCopy>
         <CallDataSize RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -1895,48 +339,12 @@
             </CODE>
         </CallDataSize>
         <CodeCopy RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-                <c SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </c>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="3" />
-                    </OPERATOR>
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -1946,7 +354,7 @@
         </CodeCopy>
         <ExtCodeSize RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
@@ -1964,58 +372,12 @@
             </CODE>
         </ExtCodeSize>
         <ExtCodeCopy RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-                <b SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </b>
-                <c SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </c>
-                <d SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </d>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="4" />
-                    </OPERATOR>
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2032,7 +394,7 @@
                 </ca>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2052,29 +414,12 @@
             </CODE>
         </GetAddress>
         <GetBalance RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <TYPE name="uint64">
-                        <IMM32 value="0" />
-                    </TYPE>
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2091,7 +436,7 @@
                 </oa>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2119,7 +464,7 @@
                 </ca>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2139,36 +484,12 @@
             </CODE>
         </GetCaller>
         <GetInputData RETSIZE="64">
-            <LOCALVARS>
-                <addr_val SIZE="32">
-                    <INITAL_EXP>
-                        <TYPE name="uint32">
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                        </TYPE>
-                    </INITAL_EXP>
-                </addr_val>
-                <inp_data SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="input_data">
-                            <LVAR name="addr_val" />
-                        </REG>
-                    </INITAL_EXP>
-                </inp_data>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="3" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="inp_data" />
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2176,16 +497,23 @@
                 </RETURN>
             </CODE>
         </GetInputData>
+        <GetElfSizeStub RETSIZE="64">
+            <CODE>
+                <RETURN>
+                    <CALL name="GetElfSize" />
+                </RETURN>
+            </CODE>
+        </GetElfSizeStub>
         <GetCodeSize RETSIZE="64">
             <LOCALVARS>
                 <elf_size SIZE="64">
                     <INITAL_EXP>
-                        <CALL name="GetElfSize" />
+                        <CALL name="GetElfSizeStub" />
                     </INITAL_EXP>
                 </elf_size>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2211,7 +539,7 @@
                 </gp>
             </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2231,41 +559,12 @@
             </CODE>
         </GetGasPrice>
         <BlockChainHash RETSIZE="64">
-            <LOCALVARS>
-                <a SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </a>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="14" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="CoinBase" />
-                    <IMM32 value="10" />
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="TimeStamp" />
-                    <IMM32 value="1000" />
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="Number" />
-                    <IMM64 value="1234543234" />
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="Difficulty" />
-                    <IMM32 value="420323" />
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="GasLimit" />
-                    <IMM32 value="1000" />
-                </OPERATOR>
                 <CALL name="PushSingleBlockToStack">
                     <ARGS>
                         <TYPE name="uint64">
@@ -2282,7 +581,7 @@
         </BlockChainHash>
         <GetCoinBase RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2296,7 +595,7 @@
         </GetCoinBase>
         <GetTimeStamp RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2310,7 +609,7 @@
         </GetTimeStamp>
         <GetNumber RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2324,7 +623,7 @@
         </GetNumber>
         <GetDifficulty RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2338,7 +637,7 @@
         </GetDifficulty>
         <GetGasLimit RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="2" />
                     </ARGS>
@@ -2351,59 +650,12 @@
             </CODE>
         </GetGasLimit>
         <CreateAccount RETSIZE="64">
-            <LOCALVARS>
-                <endowment SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </endowment>
-                <initOff SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </initOff>
-                <initSize SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </initSize>
-                <account SIZE="64" />
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="7D00" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <LVAR name="account" />
-                    <IMM32 value="123456" />
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="2" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="account" />
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2412,99 +664,12 @@
             </CODE>
         </CreateAccount>
         <MakeCall RETSIZE="64">
-            <LOCALVARS>
-                <callGas SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </callGas>
-                <address SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </address>
-                <value SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </value>
-                <inOff SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </inOff>
-                <inSize SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="4" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </inSize>
-                <outOff SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="5" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </outOff>
-                <outSize SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="6" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </outSize>
-                <call_res SIZE="64">
-                    <INITAL_EXP>
-                        <IMM32 value="0" />
-                    </INITAL_EXP>
-                </call_res>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="28" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="6" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="call_res" />
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2513,99 +678,12 @@
             </CODE>
         </MakeCall>
         <MakeCallCode RETSIZE="64">
-            <LOCALVARS>
-                <callGas SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </callGas>
-                <address SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </address>
-                <value SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </value>
-                <inOff SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </inOff>
-                <inSize SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="4" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </inSize>
-                <outOff SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="5" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </outOff>
-                <outSize SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="6" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </outSize>
-                <call_res SIZE="64">
-                    <INITAL_EXP>
-                        <IMM32 value="0" />
-                    </INITAL_EXP>
-                </call_res>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="28" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="6" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="call_res" />
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -2615,7 +693,7 @@
         </MakeCallCode>
         <Return RETSIZE="64">
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="0" />
                     </ARGS>
@@ -2631,89 +709,12 @@
             </CODE>
         </Return>
         <DelegateCall RETSIZE="64">
-            <LOCALVARS>
-                <callGas SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </INITAL_EXP>
-                </callGas>
-                <address SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </address>
-                <inOff SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="2" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </inOff>
-                <inSize SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </inSize>
-                <outOff SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="4" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </outOff>
-                <outSize SIZE="64">
-                    <INITAL_EXP>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="5" />
-                            </OPERATOR>
-                        </REG>
-                    </INITAL_EXP>
-                </outSize>
-                <call_res SIZE="64">
-                    <INITAL_EXP>
-                        <IMM32 value="0" />
-                    </INITAL_EXP>
-                </call_res>
-            </LOCALVARS>
             <CODE>
-                <CALL name="UseGas">
+                <CALL name="USEGAS">
                     <ARGS>
                         <IMM32 value="28" />
                     </ARGS>
                 </CALL>
-                <OPERATOR name=" = ">
-                    <REG name="sp" />
-                    <OPERATOR name="-">
-                        <REG name="sp" />
-                        <IMM32 value="5" />
-                    </OPERATOR>
-                </OPERATOR>
-                <OPERATOR name=" = ">
-                    <REG name="stack_arr">
-                        <REG name="sp" />
-                    </REG>
-                    <LVAR name="call_res" />
-                </OPERATOR>
                 <RETURN>
                     <TYPE name="uint64">
                         <IMM32 value="0" />
@@ -3520,6 +1521,230 @@
                 </OPERATOR>
             </CODE>
         </MSizeOp>
+        <DupOp RETSIZE="64">
+            <ARGUMENTS>
+                <count SIZE="32" />
+            </ARGUMENTS>
+            <LOCALVARS>
+                <copy_el SIZE="64" ARRSIZE="4" />
+                <offset SIZE="32">
+                    <INITAL_EXP>
+                        <OPERATOR name="*">
+                            <IMM32 value="4" />
+                            <ARG name="count" />
+                        </OPERATOR>
+                    </INITAL_EXP>
+                </offset>
+                <i SIZE="32" />
+            </LOCALVARS>
+            <CODE>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="4" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="copy_el">
+                                <LVAR name="i" />
+                            </LVAR>
+                            <REG name="stack_arr">
+                                <OPERATOR name="-">
+                                    <REG name="sp" />
+                                    <OPERATOR name="+">
+                                        <LVAR name="offset" />
+                                        <LVAR name="i" />
+                                    </OPERATOR>
+                                </OPERATOR>
+                            </REG>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="1" />
+                    </OPERATOR>
+                </OPERATOR>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="4" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <OPERATOR name="+">
+                                    <REG name="sp" />
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </REG>
+                            <LVAR name="copy_el">
+                                <OPERATOR name="-">
+                                    <IMM32 value="3" />
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </LVAR>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+                <OPERATOR name=" = ">
+                    <REG name="sp" />
+                    <OPERATOR name="+">
+                        <REG name="sp" />
+                        <IMM32 value="3" />
+                    </OPERATOR>
+                </OPERATOR>
+            </CODE>
+        </DupOp>
+        <SwapOp RETSIZE="64">
+            <ARGUMENTS>
+                <count SIZE="32" />
+            </ARGUMENTS>
+            <LOCALVARS>
+                <i SIZE="32" />
+                <offs SIZE="32" />
+                <first_el SIZE="64" ARRSIZE="4" />
+            </LOCALVARS>
+            <CODE>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el">
+                        <IMM32 value="3" />
+                    </LVAR>
+                    <REG name="stack_arr">
+                        <OPERATOR name="-">
+                            <REG name="sp" />
+                            <IMM32 value="3" />
+                        </OPERATOR>
+                    </REG>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el">
+                        <IMM32 value="2" />
+                    </LVAR>
+                    <REG name="stack_arr">
+                        <OPERATOR name="-">
+                            <REG name="sp" />
+                            <IMM32 value="2" />
+                        </OPERATOR>
+                    </REG>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el">
+                        <IMM32 value="1" />
+                    </LVAR>
+                    <REG name="stack_arr">
+                        <OPERATOR name="-">
+                            <REG name="sp" />
+                            <IMM32 value="1" />
+                        </OPERATOR>
+                    </REG>
+                </OPERATOR>
+                <OPERATOR name=" = ">
+                    <LVAR name="first_el">
+                        <IMM32 value="0" />
+                    </LVAR>
+                    <REG name="stack_arr">
+                        <REG name="sp" />
+                    </REG>
+                </OPERATOR>
+                <FOR>
+                    <FOR_START>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <IMM32 value="0" />
+                        </OPERATOR>
+                    </FOR_START>
+                    <FOR_STOP_COND>
+                        <OPERATOR name=" &lt; ">
+                            <LVAR name="i" />
+                            <IMM32 value="4" />
+                        </OPERATOR>
+                    </FOR_STOP_COND>
+                    <FOR_ITERATION>
+                        <OPERATOR name=" = ">
+                            <LVAR name="i" />
+                            <OPERATOR name="+">
+                                <LVAR name="i" />
+                                <IMM32 value="1" />
+                            </OPERATOR>
+                        </OPERATOR>
+                    </FOR_ITERATION>
+                    <CODE>
+                        <OPERATOR name=" = ">
+                            <LVAR name="offs" />
+                            <OPERATOR name="-">
+                                <REG name="sp" />
+                                <OPERATOR name="+">
+                                    <OPERATOR name="*">
+                                        <IMM32 value="4" />
+                                        <OPERATOR name="+">
+                                            <ARG name="count" />
+                                            <IMM32 value="1" />
+                                        </OPERATOR>
+                                    </OPERATOR>
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </OPERATOR>
+                        </OPERATOR>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <OPERATOR name="-">
+                                    <REG name="sp" />
+                                    <LVAR name="i" />
+                                </OPERATOR>
+                            </REG>
+                            <REG name="stack_arr">
+                                <LVAR name="offs" />
+                            </REG>
+                        </OPERATOR>
+                        <OPERATOR name=" = ">
+                            <REG name="stack_arr">
+                                <LVAR name="offs" />
+                            </REG>
+                            <LVAR name="first_el">
+                                <LVAR name="i" />
+                            </LVAR>
+                        </OPERATOR>
+                    </CODE>
+                </FOR>
+            </CODE>
+        </SwapOp>
         <PcOp RETSIZE="64">
             <LOCALVARS>
                 <i SIZE="32" />
@@ -3636,6 +1861,52 @@
                 </OPERATOR>
             </CODE>
         </PcOp>
+        <SaveToStorageStub RETSIZE="64">
+            <ARGUMENTS>
+                <addr SIZE="64" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="SaveToStorage">
+                    <ARGS>
+                        <ARG name="addr" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </SaveToStorageStub>
+        <LoadFromStorageStub RETSIZE="64">
+            <ARGUMENTS>
+                <addr SIZE="64" />
+            </ARGUMENTS>
+            <CODE>
+                <CALL name="LoadFromStorage">
+                    <ARGS>
+                        <ARG name="addr" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </LoadFromStorageStub>
+        <KeccakAlgStub RETSIZE="64">
+            <LOCALVARS>
+                <a SIZE="32">
+                    <INITAL_EXP>
+                        <CALL name="GetSingleBlockFromStack" />
+                    </INITAL_EXP>
+                </a>
+                <b SIZE="32">
+                    <INITAL_EXP>
+                        <CALL name="GetSingleBlockFromStack" />
+                    </INITAL_EXP>
+                </b>
+            </LOCALVARS>
+            <CODE>
+                <CALL name="KeccakAlg">
+                    <ARGS>
+                        <LVAR name="a" />
+                        <LVAR name="b" />
+                    </ARGS>
+                </CALL>
+            </CODE>
+        </KeccakAlgStub>
     </FUNCTIONS>
     <ARGLISTS>
         <ArithmOps NUM_ELEMS="12" RETURN_SIZE="64">
@@ -4024,132 +2295,26 @@
                 <OPCODE>
                     <ARG SIZE="8" VAL="250" />
                 </OPCODE>
-                <LOCALVARS>
-                    <callGas SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                        </INITAL_EXP>
-                    </callGas>
-                    <address SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </REG>
-                        </INITAL_EXP>
-                    </address>
-                    <value SIZE="64">
-                        <INITAL_EXP>
-                            <IMM32 value="0" />
-                        </INITAL_EXP>
-                    </value>
-                    <inOff SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="2" />
-                                </OPERATOR>
-                            </REG>
-                        </INITAL_EXP>
-                    </inOff>
-                    <inSize SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="3" />
-                                </OPERATOR>
-                            </REG>
-                        </INITAL_EXP>
-                    </inSize>
-                    <outOff SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="4" />
-                                </OPERATOR>
-                            </REG>
-                        </INITAL_EXP>
-                    </outOff>
-                    <outSize SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="5" />
-                                </OPERATOR>
-                            </REG>
-                        </INITAL_EXP>
-                    </outSize>
-                    <call_res SIZE="64">
-                        <INITAL_EXP>
-                            <IMM32 value="0" />
-                        </INITAL_EXP>
-                    </call_res>
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="28" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <REG name="sp" />
-                        <OPERATOR name="-">
-                            <REG name="sp" />
-                            <IMM32 value="5" />
-                        </OPERATOR>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                        <LVAR name="call_res" />
-                    </OPERATOR>
                 </CODE>
             </INSTRUCTION>
             <INSTRUCTION ASM="REVERT" SIZE="8">
                 <OPCODE>
                     <ARG SIZE="8" VAL="253" />
                 </OPCODE>
-                <LOCALVARS>
-                    <a SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                        </INITAL_EXP>
-                    </a>
-                    <b SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </REG>
-                        </INITAL_EXP>
-                    </b>
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="0" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <REG name="sp" />
-                        <OPERATOR name="-">
-                            <REG name="sp" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </OPERATOR>
                     <CALL name="StopExec">
                         <ARGS />
                     </CALL>
@@ -4159,28 +2324,13 @@
                 <OPCODE>
                     <ARG SIZE="8" VAL="255" />
                 </OPCODE>
-                <LOCALVARS>
-                    <a SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                        </INITAL_EXP>
-                    </a>
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="0" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <REG name="sp" />
-                        <OPERATOR name="-">
-                            <REG name="sp" />
-                            <IMM32 value="1" />
-                        </OPERATOR>
-                    </OPERATOR>
                     <CALL name="StopExec">
                         <ARGS />
                     </CALL>
@@ -4217,7 +2367,7 @@
                 </OPCODE>
                 <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="3" />
                         </ARGS>
@@ -4251,40 +2401,18 @@
                     <ARG SIZE="4" name="count" />
                     <ARG SIZE="4" VAL="8" />
                 </OPCODE>
-                <LOCALVARS>
-                    <a SIZE="64" />
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="3" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <LVAR name="a" />
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <OPERATOR name="+">
-                                    <ARG name="count" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </REG>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <REG name="sp" />
-                        <OPERATOR name="+">
-                            <REG name="sp" />
-                            <IMM32 value="1" />
-                        </OPERATOR>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                        <LVAR name="a" />
-                    </OPERATOR>
+                    <CALL name="DupOp">
+                        <ARGS>
+                            <ARG name="count" />
+                        </ARGS>
+                    </CALL>
                 </CODE>
             </INSTRUCTION>
             <INSTRUCTION ASM="SWAP$count" SIZE="8">
@@ -4292,118 +2420,18 @@
                     <ARG SIZE="4" name="count" />
                     <ARG SIZE="4" VAL="9" />
                 </OPCODE>
-                <LOCALVARS>
-                    <i SIZE="32" />
-                    <offs SIZE="32" />
-                    <first_el SIZE="64" ARRSIZE="4" />
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="3" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="3" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="2" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="3" />
-                            </OPERATOR>
-                        </REG>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="1" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <OPERATOR name="-">
-                                <REG name="sp" />
-                                <IMM32 value="1" />
-                            </OPERATOR>
-                        </REG>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <LVAR name="first_el">
-                            <IMM32 value="0" />
-                        </LVAR>
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                    </OPERATOR>
-                    <FOR>
-                        <FOR_START>
-                            <OPERATOR name=" = ">
-                                <LVAR name="i" />
-                                <IMM32 value="0" />
-                            </OPERATOR>
-                        </FOR_START>
-                        <FOR_STOP_COND>
-                            <OPERATOR name=" &lt; ">
-                                <LVAR name="i" />
-                                <IMM32 value="4" />
-                            </OPERATOR>
-                        </FOR_STOP_COND>
-                        <FOR_ITERATION>
-                            <OPERATOR name=" = ">
-                                <LVAR name="i" />
-                                <OPERATOR name="+">
-                                    <LVAR name="i" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </OPERATOR>
-                        </FOR_ITERATION>
-                        <CODE>
-                            <OPERATOR name=" = ">
-                                <LVAR name="offs" />
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <OPERATOR name="+">
-                                        <OPERATOR name="*">
-                                            <IMM32 value="4" />
-                                            <OPERATOR name="+">
-                                                <ARG name="count" />
-                                                <IMM32 value="1" />
-                                            </OPERATOR>
-                                        </OPERATOR>
-                                        <LVAR name="i" />
-                                    </OPERATOR>
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <OPERATOR name="-">
-                                        <REG name="sp" />
-                                        <LVAR name="i" />
-                                    </OPERATOR>
-                                </REG>
-                                <REG name="stack_arr">
-                                    <LVAR name="offs" />
-                                </REG>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <LVAR name="offs" />
-                                </REG>
-                                <LVAR name="first_el">
-                                    <LVAR name="i" />
-                                </LVAR>
-                            </OPERATOR>
-                        </CODE>
-                    </FOR>
+                    <CALL name="SwapOp">
+                        <ARGS>
+                            <ARG name="count" />
+                        </ARGS>
+                    </CALL>
                 </CODE>
             </INSTRUCTION>
             <INSTRUCTION ASM="LOG$count" SIZE="8">
@@ -4412,42 +2440,9 @@
                     <ARG SIZE="1" VAL="0" />
                     <ARG SIZE="4" VAL="10" />
                 </OPCODE>
-                <LOCALVARS>
-                    <i SIZE="32" />
-                    <l1_data SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <REG name="sp" />
-                            </REG>
-                        </INITAL_EXP>
-                    </l1_data>
-                    <l2_data SIZE="64">
-                        <INITAL_EXP>
-                            <REG name="stack_arr">
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </REG>
-                        </INITAL_EXP>
-                    </l2_data>
-                    <m_ptr SIZE="32">
-                        <INITAL_EXP>
-                            <TYPE name="uint32">
-                                <LVAR name="l1_data" />
-                            </TYPE>
-                        </INITAL_EXP>
-                    </m_ptr>
-                    <m_size SIZE="32">
-                        <INITAL_EXP>
-                            <TYPE name="uint32">
-                                <LVAR name="l2_data" />
-                            </TYPE>
-                        </INITAL_EXP>
-                    </m_size>
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <OPERATOR name="+">
                                 <IMM32 value="177" />
@@ -4458,26 +2453,6 @@
                             </OPERATOR>
                         </ARGS>
                     </CALL>
-                    <CALL name="LogInst">
-                        <ARGS>
-                            <ARG name="count" />
-                            <LVAR name="m_ptr" />
-                        </ARGS>
-                    </CALL>
-                    <OPERATOR name=" = ">
-                        <REG name="log_ptr" />
-                        <OPERATOR name="+">
-                            <ARG name="count" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </OPERATOR>
-                    <OPERATOR name=" = ">
-                        <REG name="sp" />
-                        <OPERATOR name="-">
-                            <REG name="sp" />
-                            <IMM32 value="2" />
-                        </OPERATOR>
-                    </OPERATOR>
                 </CODE>
             </INSTRUCTION>
             <INSTRUCTION ASM="$opcode" SIZE="8">
@@ -4532,21 +2507,17 @@
                             </TYPE>
                         </EXPRESSION>
                         <CASE index="0">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
                             </CALL>
-                            <OPERATOR name=" = ">
-                                <REG name="sp" />
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="4" />
-                                </OPERATOR>
-                            </OPERATOR>
+                            <CALL name="Pop">
+                                <ARGS />
+                            </CALL>
                         </CASE>
                         <CASE index="1">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="3" />
                                 </ARGS>
@@ -4558,7 +2529,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="2">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="3" />
                                 </ARGS>
@@ -4570,7 +2541,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="3">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="3" />
                                 </ARGS>
@@ -4624,61 +2595,31 @@
                             </IF>
                         </CASE>
                         <CASE index="4">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="32" />
                                 </ARGS>
                             </CALL>
-                            <OPERATOR name=" = ">
-                                <LVAR name="data_val" />
-                                <CALL name="LoadFromStorage">
-                                    <ARGS>
-                                        <LVAR name="addr_val" />
-                                    </ARGS>
-                                </CALL>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="sp" />
-                                <OPERATOR name="+">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                                <LVAR name="data_val" />
-                            </OPERATOR>
+                            <CALL name="LoadFromStorageStub">
+                                <ARGS>
+                                    <LVAR name="addr_val" />
+                                </ARGS>
+                            </CALL>
                         </CASE>
                         <CASE index="5">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="0" />
                                 </ARGS>
                             </CALL>
-                            <OPERATOR name=" = ">
-                                <LVAR name="data_val" />
-                                <REG name="stack_arr">
-                                    <REG name="sp" />
-                                </REG>
-                            </OPERATOR>
-                            <OPERATOR name=" = ">
-                                <REG name="sp" />
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </OPERATOR>
-                            <CALL name="SaveToStorage">
+                            <CALL name="SaveToStorageStub">
                                 <ARGS>
                                     <LVAR name="addr_val" />
-                                    <LVAR name="data_val" />
                                 </ARGS>
                             </CALL>
                         </CASE>
                         <CASE index="6">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="8" />
                                 </ARGS>
@@ -4693,43 +2634,14 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="7">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="A" />
                                 </ARGS>
                             </CALL>
-                            <IF>
-                                <COND>
-                                    <OPERATOR name=" != ">
-                                        <REG name="stack_arr">
-                                            <REG name="sp" />
-                                        </REG>
-                                        <IMM32 value="0" />
-                                    </OPERATOR>
-                                </COND>
-                                <INNER>
-                                    <OPERATOR name=" = ">
-                                        <REG name="pc" />
-                                        <TYPE name="uint32">
-                                            <LVAR name="addr_val" />
-                                        </TYPE>
-                                    </OPERATOR>
-                                    <OPERATOR name=" = ">
-                                        <REG name="is_pc_within_inst" />
-                                        <IMM32 value="1" />
-                                    </OPERATOR>
-                                </INNER>
-                            </IF>
-                            <OPERATOR name=" = ">
-                                <REG name="sp" />
-                                <OPERATOR name="-">
-                                    <REG name="sp" />
-                                    <IMM32 value="1" />
-                                </OPERATOR>
-                            </OPERATOR>
                         </CASE>
                         <CASE index="8">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
@@ -4739,7 +2651,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="9">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
@@ -4749,7 +2661,7 @@
                             </CALL>
                         </CASE>
                         <CASE index="10">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="2" />
                                 </ARGS>
@@ -4811,7 +2723,7 @@
                             </OPERATOR>
                         </CASE>
                         <CASE index="11">
-                            <CALL name="UseGas">
+                            <CALL name="USEGAS">
                                 <ARGS>
                                     <IMM32 value="1" />
                                 </ARGS>
@@ -4860,25 +2772,16 @@
                 <OPCODE>
                     <ARG SIZE="8" VAL="32" />
                 </OPCODE>
-                <LOCALVARS>
-                    <res SIZE="64">
-                        <INITAL_EXP>
-                            <IMM32 value="DEADBEEF" />
-                        </INITAL_EXP>
-                    </res>
-                </LOCALVARS>
+                <LOCALVARS />
                 <CODE>
-                    <CALL name="UseGas">
+                    <CALL name="USEGAS">
                         <ARGS>
                             <IMM32 value="1E" />
                         </ARGS>
                     </CALL>
-                    <OPERATOR name=" = ">
-                        <REG name="stack_arr">
-                            <REG name="sp" />
-                        </REG>
-                        <LVAR name="res" />
-                    </OPERATOR>
+                    <CALL name="KeccakAlgStub">
+                        <ARGS />
+                    </CALL>
                 </CODE>
             </INSTRUCTION>
         </Main>
