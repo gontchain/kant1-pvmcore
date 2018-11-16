@@ -2,8 +2,6 @@
 #include <string>
 #include "testVM1.h"
 
-//#define SINGLE_ITERATION
-
 int main()
 {
   int iteration = 0;
@@ -28,7 +26,7 @@ int main()
     {
       // error while start transaction
       printf("undefined state %d\n", client_tmp.GetCurState());
-      exit(-1);
+      return -1;
     }
     printf("iteration %d state %d\n",iteration++,client_tmp.GetCurState());
   }
