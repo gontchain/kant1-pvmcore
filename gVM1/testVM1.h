@@ -17,13 +17,13 @@ public:
     printf("state 1\n");
     SET_NEXT_TRANSACTION(STATE2);
     counter = 10;
-    sstore(uint256(1),uint256(counter));
+    EvmClient->sstore(uint256(1),uint256(counter));
   }
 // state 2
   void State2Process()
   {
     printf("state 2\n");
-    counter = sload(1).to_int();
+    counter = EvmClient->sload(1);
     if(counter > 0)
     {
       counter--;
@@ -33,7 +33,7 @@ public:
     {
       SET_NEXT_TRANSACTION(STATE3);
     }  // end if
-    sstore(uint256(1),uint256(counter));
+    EvmClient->sstore(uint256(1),uint256(counter));
   }// end of state2
   
 // state 3
