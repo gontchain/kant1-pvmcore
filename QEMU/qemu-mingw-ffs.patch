@@ -1,0 +1,11 @@
+diff -Naur qemu.old/include/sysemu/os-win32.h qemu/include/sysemu/os-win32.h
+--- qemu.old/include/sysemu/os-win32.h	2018-11-07 14:35:56.836363700 +0300
++++ qemu/include/sysemu/os-win32.h	2018-11-07 10:44:46.024667200 +0300
+@@ -74,6 +74,7 @@
+ 
+ /* Declaration of ffs() is missing in MinGW's strings.h. */
+ int ffs(int i);
++#define ffs(i) __builtin_ffs(i)
+ 
+ /* Missing POSIX functions. Don't use MinGW-w64 macros. */
+ #undef gmtime_r
