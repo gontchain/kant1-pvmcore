@@ -15,7 +15,7 @@
 extern "C"{
 #endif
 
-void RunProgram(int argc, const char **argv/*char prog_name, unsigned int start_addr, void Environment*/);
+void RunProgram(int argc, const char **argv, unsigned int start_addr/*char prog_name, unsigned int start_addr, void Environment*/);
 
 #ifdef __cplusplus
 }

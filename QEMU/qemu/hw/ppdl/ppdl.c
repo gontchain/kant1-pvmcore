@@ -23,6 +23,8 @@
 #   define KERNEL_LOAD_ADDR 0x100
 #endif
 
+unsigned int load_addr = KERNEL_LOAD_ADDR;
+
 uint64_t elf_entry = 0x0;
 
 static void main_cpu_reset(void *opaque)
@@ -85,9 +87,9 @@ void ppdl_init(MachineState *machine)
         }
         if (kernel_size < 0) {
             kernel_size = load_image_targphys(kernel_filename,
-                                              KERNEL_LOAD_ADDR,
-                                              ram_size - KERNEL_LOAD_ADDR);
-            entry = KERNEL_LOAD_ADDR;
+                                              load_addr,
+                                              ram_size - load_addr);
+            entry = load_addr;
         }
 
         if (kernel_size < 0) {

@@ -72,6 +72,10 @@ endif
 
 all: $(PROGS) stap
 evm: all $(LIB_EVM)
+
+# Dummy command so that make thinks it has done something
+	@true
+
 evm-win32: all $(LIB_EVM_WIN32)
 
 # Dummy command so that make thinks it has done something
