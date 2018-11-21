@@ -1,5 +1,9 @@
 #include "evm_client.h"
+#include "dlfcn.h"
 
+#ifdef _WIN32
+#include "direct.h"
+#endif
 
 // base class for GVM1 
 class TBaseGVM
@@ -66,6 +70,23 @@ public:
     return false; // transaction with this ID did not found
   }// end of RunTransaction
    
+  void RunContractCode(const char *libname, int argc, const char **argv)
+  {
+	  typedef void* (*LibRunFunc)(int, const char**, unsigned int);
+	  void *dl_handle = dlopen(libname, RTLD_LAZY);
+	  if (!dl_handle) {
+		  fprintf(stderr, "dlopen(%s):%s\n", libname
+#ifndef _WIN32
+			  , dlerror());
+#else
+			  , "error reading library"); // GetLastError() call produces include header (windows.h) errors, so just output 'some error occures'
+#endif
+	  }
+	  LibRunFunc runFunction;
+	  *(void**)(&runFunction) = dlsym_wrap(dl_handle, "RunProgram");
+	  runFunction(argc, argv, 0);
+  }
+
   // add state to SM    
   void AddState(TTId aID,TransactionFunc aFunc) 
   {
@@ -73,6 +94,14 @@ public:
     TransArr[TransInitCounter].TId = aID;
     TransArr[TransInitCounter++].Func = aFunc;    
   }
+
+private:
+	static void *dlsym_wrap(void *handle, const char *sym)
+	{
+		void *const ret = dlsym(handle, sym);
+		if (!ret) fprintf(stderr, "Error dlsym(%p, \"%s\"):%s\n", handle, sym, dlerror());
+		return ret;
+	}
 }; // end of class
 
 #define ADD_STATE(id,func){ TransactionFunc f = (TransactionFunc)this->func; AddState(id,f);} 
