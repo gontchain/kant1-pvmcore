@@ -12,6 +12,7 @@ Within the transaction gVM1 can:
   GVM2 virtual machines should be implemented as dynamically linked libraries. For example testVM1 contains code of run Ethereum Virtual Machine (EVM - contract, where EVM is implemented as QEMU based simulator.
 
   // example of running EVM within the transaction of gVM1
+  
   if(counter > 0)
     {
       counter--;
