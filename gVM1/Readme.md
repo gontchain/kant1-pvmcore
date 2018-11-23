@@ -14,8 +14,8 @@ Within the transaction gVM1 can:
   // example of running EVM within the transaction of gVM1
   
   if(counter > 0)
-    {
-      counter--;
+  {
+     counter--;
       // path to evm library
 	  char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll";
     // arguments of EVM run
