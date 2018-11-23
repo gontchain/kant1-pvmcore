@@ -15,16 +15,23 @@ Within the transaction gVM1 can:
   
   if(counter > 0)
   {
+  
      counter--;
-      // path to evm library
-	  char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll";
+  
+  // path to evm library
+
+	char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll";
     // arguments of EVM run
-	  const char* argv[6] = { evm_lib, "-nodebug", "-nodefaults", "-nographic", "-kernel", "add.bin" };
-	  const int argc = 6;
-    // run EVM
+	
+	const char* argv[6] = { evm_lib, "-nodebug", "-nodefaults", "-nographic", "-kernel", "add.bin" };
+	const int argc = 6;
+
+	// run EVM
 	  RunContractCode(evm_lib, argc, argv);
-    // set next transaction state
-      SET_NEXT_TRANSACTION(STATE2);
+	
+	// set next transaction state
+      
+      	SET_NEXT_TRANSACTION(STATE2);
     }
   
   
