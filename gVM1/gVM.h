@@ -72,19 +72,19 @@ public:
    
   void RunContractCode(const char *libname, int argc, const char **argv)
   {
-	  typedef void* (*LibRunFunc)(int, const char**, unsigned int);
-	  void *dl_handle = dlopen(libname, RTLD_LAZY);
-	  if (!dl_handle) {
-		  fprintf(stderr, "dlopen(%s):%s\n", libname
+    typedef void* (*LibRunFunc)(int, const char**, unsigned int);
+    void *dl_handle = dlopen(libname, RTLD_LAZY);
+    if (!dl_handle) {
+      fprintf(stderr, "dlopen(%s):%s\n", libname,
 #ifndef _WIN32
-			  , dlerror());
+        dlerror());
 #else
-			  , "error reading library"); // GetLastError() call produces include header (windows.h) errors, so just output 'some error occures'
+        "error reading library"); // GetLastError() call produces include header (windows.h) errors, so just output 'some error occures'
 #endif
-	  }
-	  LibRunFunc runFunction;
-	  *(void**)(&runFunction) = dlsym_wrap(dl_handle, "RunProgram");
-	  runFunction(argc, argv, 0);
+    }
+    LibRunFunc runFunction;
+    *(void**)(&runFunction) = dlsym_wrap(dl_handle, "RunProgram");
+    runFunction(argc, argv, 0);
   }
 
   // add state to SM    
@@ -96,12 +96,12 @@ public:
   }
 
 private:
-	static void *dlsym_wrap(void *handle, const char *sym)
-	{
-		void *const ret = dlsym(handle, sym);
-		if (!ret) fprintf(stderr, "Error dlsym(%p, \"%s\"):%s\n", handle, sym, dlerror());
-		return ret;
-	}
+  static void *dlsym_wrap(void *handle, const char *sym)
+  {
+    void *const ret = dlsym(handle, sym);
+    if (!ret) fprintf(stderr, "Error dlsym(%p, \"%s\"):%s\n", handle, sym, dlerror());
+    return ret;
+  }
 }; // end of class
 
 #define ADD_STATE(id,func){ TransactionFunc f = (TransactionFunc)this->func; AddState(id,f);} 

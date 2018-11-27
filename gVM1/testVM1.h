@@ -27,7 +27,12 @@ public:
     if(counter > 0)
     {
       counter--;
-	  char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll";
+#ifndef _WIN32
+#define _MAX_PATH 260
+	  char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.so";
+#else
+    char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll";
+#endif
 	  const char* argv[6] = { evm_lib, "-nodebug", "-nodefaults", "-nographic", "-kernel", "add.bin" };
 	  const int argc = 6;
 	  RunContractCode(evm_lib, argc, argv);
