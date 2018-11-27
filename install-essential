@@ -23,7 +23,7 @@ CURDIR=`pwd`
  if [ ! -d "$CURDIR/systemc" ]; then
     sudo mkdir -p $CURDIR/systemc
      echo Getting SystemC...
-     wget -O systemc.tar.gz http://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.2.tar.gz
+     wget -O systemc.tar.gz http://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.1a.tar.gz
      mkdir tmp_systemc
      tar -xzf systemc.tar.gz -C tmp_systemc --strip-components=1
      cd tmp_systemc
@@ -43,5 +43,3 @@ CURDIR=`pwd`
  else
      echo SystemC is already installed!
  fi
-
- sudo ln -s -f /opt/systemc/lib/libsystemc-2.3.2.so /usr/lib/libsystemc-2.3.2.so
