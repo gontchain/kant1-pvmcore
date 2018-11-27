@@ -40,7 +40,7 @@ all:
 	$(MAKE) -C callvalue
 	$(MAKE) -C codesize
 	$(MAKE) -C extcodesize
-	$(MAKE) -C sha3
+	$(MAKE) -C keccak256
 	$(MAKE) -C msize
 	$(MAKE) -C sload
 	$(MAKE) -C mload
@@ -87,7 +87,7 @@ test-qemu:
 	# with segfault $(MAKE) -C callvalue test-qemu
 	$(MAKE) -C codesize test-qemu
 	$(MAKE) -C extcodesize test-qemu
-	$(MAKE) -C sha3 test-qemu
+	$(MAKE) -C keccak256 test-qemu
 	$(MAKE) -C msize test-qemu
 	$(MAKE) -C sload test-qemu
 	$(MAKE) -C mload test-qemu
@@ -148,7 +148,7 @@ test-cemu:
 	# with segfault $(MAKE) -C callvalue test-cemu
 	$(MAKE) -C codesize test-cemu
 	$(MAKE) -C extcodesize test-cemu
-	$(MAKE) -C sha3 test-cemu
+	$(MAKE) -C keccak256 test-cemu
 	$(MAKE) -C msize test-cemu
 	$(MAKE) -C sload test-cemu
 	$(MAKE) -C mload test-cemu
@@ -209,7 +209,7 @@ compare:
 	# with segfault $(MAKE) -C callvalue compare
 	$(MAKE) -C codesize compare
 	$(MAKE) -C extcodesize compare
-	$(MAKE) -C sha3 compare
+	$(MAKE) -C keccak256 compare
 	$(MAKE) -C msize compare
 	$(MAKE) -C sload compare
 	$(MAKE) -C mload compare
@@ -268,7 +268,7 @@ run-qemu:
 	# with segfault $(MAKE) -C callvalue run-qemu
 	$(MAKE) -C codesize run-qemu
 	$(MAKE) -C extcodesize run-qemu
-	$(MAKE) -C sha3 run-qemu
+	$(MAKE) -C keccak256 run-qemu
 	$(MAKE) -C msize run-qemu
 	$(MAKE) -C sload run-qemu
 	$(MAKE) -C mload run-qemu
@@ -313,7 +313,7 @@ run-evm:
 	# with segfault $(MAKE) -C callvalue run-evm
 	$(MAKE) -C codesize run-evm
 	$(MAKE) -C extcodesize run-evm
-	$(MAKE) -C sha3 run-evm
+	$(MAKE) -C keccak256 run-evm
 	$(MAKE) -C msize run-evm
 	$(MAKE) -C sload run-evm
 	$(MAKE) -C mload run-evm
@@ -358,7 +358,7 @@ run-cemu:
 	# with segfault $(MAKE) -C callvalue run-cemu
 	$(MAKE) -C codesize run-cemu
 	$(MAKE) -C extcodesize run-cemu
-	$(MAKE) -C sha3 run-cemu
+	$(MAKE) -C keccak256 run-cemu
 	$(MAKE) -C msize run-cemu
 	$(MAKE) -C sload run-cemu
 	$(MAKE) -C mload run-cemu
@@ -401,7 +401,7 @@ clean:
 	$(MAKE) -C callvalue clean
 	$(MAKE) -C codesize clean
 	$(MAKE) -C extcodesize clean
-	$(MAKE) -C sha3 clean
+	$(MAKE) -C keccak256 clean
 	$(MAKE) -C msize clean
 	$(MAKE) -C sload clean
 	$(MAKE) -C mload clean
