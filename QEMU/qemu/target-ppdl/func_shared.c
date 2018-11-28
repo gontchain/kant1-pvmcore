@@ -176,7 +176,6 @@ uint64_t CallDataSize(CPUPPDLState *env) {
 uint64_t StopExec(CPUPPDLState *env) {
 	helper_error_message(env, 1, 0x0);
 	result_message(env);
-	exit(0);
 }
 
 uint64_t GetCoinBase(CPUPPDLState *env) {

@@ -125,6 +125,12 @@ int main(int argc, char **argv)
 #define MAX_VIRTIO_CONSOLES 1
 #define MAX_SCLP_CONSOLES 1
 
+#ifdef EVM
+#include <setjmp.h>
+
+jmp_buf evm_jmp_exit;
+#endif
+
 static const char *data_dir[16];
 static int data_dir_idx;
 const char *bios_name = NULL;
@@ -4612,6 +4618,11 @@ int vl_main(int ignore_sigint, int no_sdl, int no_gui_timer,
             exit(1);
         }
     }
+
+#ifdef EVM
+    if (setjmp(evm_jmp_exit))
+        return 0;
+#endif
 
     main_loop();
     bdrv_close_all();
