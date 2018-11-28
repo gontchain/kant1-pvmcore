@@ -85,6 +85,7 @@ public:
     LibRunFunc runFunction;
     *(void**)(&runFunction) = dlsym_wrap(dl_handle, "RunProgram");
     runFunction(argc, argv, 0);
+    dlclose(dl_handle);
   }
 
   // add state to SM    
