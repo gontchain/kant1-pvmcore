@@ -86,7 +86,7 @@ public:
     sprintf(argv, "%s -nodebug -nographic -nodefaults -kernel %s", libname, bin);
     STARTUPINFO si; si.cb = sizeof(si); ZeroMemory(&si, sizeof(si));
     PROCESS_INFORMATION pi; ZeroMemory(&pi, sizeof(pi));
-    if (!CreateProcess(libname,   // No module name (use command line)
+    if (!CreateProcess(NULL,   // No module name (use command line)
         argv,        // Command line
         NULL,           // Process handle not inheritable
         NULL,           // Thread handle not inheritable
