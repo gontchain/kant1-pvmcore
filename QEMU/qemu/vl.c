@@ -4620,15 +4620,8 @@ int vl_main(int ignore_sigint, int no_sdl, int no_gui_timer,
     }
 
 #ifdef EVM
-    if (setjmp(evm_jmp_exit)) {
-        bdrv_close_all();
-        pause_all_vcpus();
-        res_free();
-#   ifdef CONFIG_TPM
-        tpm_cleanup();
-#   endif
+    if (setjmp(evm_jmp_exit))
         return 0;
-    }
 #endif
 
     main_loop();
