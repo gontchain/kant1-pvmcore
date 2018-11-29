@@ -73,16 +73,17 @@ public:
 
   void RunContractCode(char* libname, char* bin)
   {
-    char argv[_MAX_PATH];
-    sprintf(argv, "%s -nodebug -nographic -nodefaults -kernel %s", libname, bin);
 #ifndef _WIN32
+    char* argv[7] = { libname, "-nodebug", "-nodefaults", "-nographic", "-kernel", bin, NULL };
     int pid, status;
     if (pid = fork()) {
       waitpid(pid, &status, 0); // wait for exit
     } else {
-      execvp(libname, argv);
+      execvp(*argv, argv);
     }
 #else
+    char argv[_MAX_PATH];
+    sprintf(argv, "%s -nodebug -nographic -nodefaults -kernel %s", libname, bin);
     STARTUPINFO si; si.cb = sizeof(si); ZeroMemory(&si, sizeof(si));
     PROCESS_INFORMATION pi; ZeroMemory(&pi, sizeof(pi));
     if (!CreateProcess(libname,   // No module name (use command line)
