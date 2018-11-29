@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28010.2019
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gVm1", "gVm1.vcxproj", "{E68E98AD-C31C-4F56-B247-32595CB77875}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1} = {BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dlfcn", "..\dlfcn-win32\vc14\dlfcn.vcxproj", "{BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1}"
 EndProject
@@ -27,7 +24,6 @@ Global
 		{E68E98AD-C31C-4F56-B247-32595CB77875}.Release|x86.ActiveCfg = Release|Win32
 		{E68E98AD-C31C-4F56-B247-32595CB77875}.Release|x86.Build.0 = Release|Win32
 		{BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1}.Debug|x64.ActiveCfg = Debug|x64
-		{BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1}.Debug|x64.Build.0 = Debug|x64
 		{BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1}.Debug|x86.ActiveCfg = Debug|Win32
 		{BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1}.Debug|x86.Build.0 = Debug|Win32
 		{BDBEE16D-B543-4F02-A0E4-A2DBEFA123B1}.Release|x64.ActiveCfg = Release|x64

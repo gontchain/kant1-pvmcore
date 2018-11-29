@@ -1,6 +1,10 @@
 #include "evm_client.h"
+#ifndef _WIN32
 #include <unistd.h>
 #include <sys/wait.h>
+#else
+#include <windows.h>
+#endif
 
 // base class for GVM1 
 class TBaseGVM
@@ -66,15 +70,44 @@ public:
     } // for(...
     return false; // transaction with this ID did not found
   }// end of RunTransaction
-   
-  void RunContractCode(char **argv)
+
+  void RunContractCode(char* libname, char* bin)
   {
+    char argv[_MAX_PATH];
+    sprintf(argv, "%s -nodebug -nographic -nodefaults -kernel %s", libname, bin);
+#ifndef _WIN32
     int pid, status;
     if (pid = fork()) {
       waitpid(pid, &status, 0); // wait for exit
     } else {
-      execvp(*argv, argv);
+      execvp(libname, argv);
     }
+#else
+    STARTUPINFO si; si.cb = sizeof(si); ZeroMemory(&si, sizeof(si));
+    PROCESS_INFORMATION pi; ZeroMemory(&pi, sizeof(pi));
+    if (!CreateProcess(libname,   // No module name (use command line)
+        argv,        // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory
+        &si,            // Pointer to STARTUPINFO structure
+        &pi)           // Pointer to PROCESS_INFORMATION structure
+        )
+    {
+        printf("CreateProcess failed (%d).\n", GetLastError());
+        return;
+    }
+
+    // Wait until child process exits.
+    WaitForSingleObject(pi.hProcess, INFINITE);
+
+    // Close process and thread handles.
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+#endif
   }
 
   // add state to SM    

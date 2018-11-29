@@ -33,8 +33,8 @@ public:
 #else
       char evm_lib[_MAX_PATH] = "..\\QEMU\\qemu\\ppdl-softmmu\\qemu-system-ppdl.exe";
 #endif
-      char* argv[7] = { evm_lib, "-nodebug", "-nodefaults", "-nographic", "-kernel", "add.bin", NULL };
-      RunContractCode(argv);
+      char bin[10] = "add.bin";
+      RunContractCode(evm_lib, bin);
       SET_NEXT_TRANSACTION(STATE2);
     }
     else
