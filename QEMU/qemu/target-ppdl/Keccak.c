@@ -4,7 +4,7 @@
 #include "string.h"
 
 #include "Keccak.h"
-#include "Endian.h"
+#include "SHA_Endian.h"
 #include "Rotation.h"
 
 //#include <systemc.h>
