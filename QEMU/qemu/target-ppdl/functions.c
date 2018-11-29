@@ -11,11 +11,6 @@
 #include "gascost.h"
 #include "Keccak.h"
 
-#ifdef EVM
-#include <setjmp.h>
-extern jmp_buf evm_jmp_exit;
-#endif
-
 struct Storage {
     uint32 key;
     uint64 value[4];
@@ -73,7 +68,7 @@ void result_message(CPUArchState* env) {
         printf("%02X", val);
     }
     printf("\n");
-    longjmp(evm_jmp_exit, 0);
+    exit(0);
 }
 
 void SaveToStorage(CPUArchState* env, uint32 offs) {
