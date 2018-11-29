@@ -29,13 +29,12 @@ public:
       counter--;
 #ifndef _WIN32
 #define _MAX_PATH 260
-	  char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.so";
+	    char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/qemu-system-ppdl";
 #else
-    char evm_lib[_MAX_PATH] = "../QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll";
+      char evm_lib[_MAX_PATH] = "..\\QEMU\\qemu\\ppdl-softmmu\\qemu-system-ppdl.exe";
 #endif
-	  const char* argv[6] = { evm_lib, "-nodebug", "-nodefaults", "-nographic", "-kernel", "add.bin" };
-	  const int argc = 6;
-	  RunContractCode(evm_lib, argc, argv);
+      char* argv[7] = { evm_lib, "-nodebug", "-nodefaults", "-nographic", "-kernel", "add.bin", NULL };
+      RunContractCode(argv);
       SET_NEXT_TRANSACTION(STATE2);
     }
     else
