@@ -51,6 +51,11 @@ After cloning a project, you need to install:
 
 4. Download and build [SystemC](http://www.accellera.org/downloads/standards/systemc) (recommended version is 2.3.2). Use MS Visual Studio for building. Place SystemC directory at *C:\systemc-2.3.2*.
 
+*Note:* in order to use evm library (*QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll*) and simulator (*QEMU/qemu/ppdl-softmmu/qemu-system-ppdl.exe*) under Windows it is necessary to append PATH environment variable with MinGW libraries path (e.g., *C:\cygwin64\usr\x86_64-w64-wingw32\sys-root\mingw\bin*).
+
+*Note:* if using **gVm1** from Visual Studio, PATH manipulations described above are not necessary.
+
+
 ## Building
 
 * In order to build the project, run:

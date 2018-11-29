@@ -49,7 +49,12 @@
 
 3. Установить MS Visual Studio (рекомендуется MS Visual Studio 2017), необходимую для сборки cemu и его библиотек
 
-4. Загрузить и собрать [SystemC](http://www.accellera.org/downloads/standards/systemc) (рекомендуется версия 2.3.2). Для сборки использовать MS Visual Studio. Каталог SystemC расположить по пути *C:\systemc-2.3.2*.
+4. Загрузить и собрать [SystemC](http://www.accellera.org/downloads/standards/systemc) (строго рекомендуется версия 2.3.2). Для сборки использовать MS Visual Studio. Каталог SystemC расположить по пути *C:\systemc-2.3.2*.
+
+*Примечание:* для использования библиотеки evm (*QEMU/qemu/ppdl-softmmu/libevm-ppdl.dll*) и симулятора (*QEMU/qemu/ppdl-softmmu/qemu-system-ppdl.exe*) под Windows необходимо добавить путь к библиотекам MinGW к переменной PATH (напр., *C:\cygwin64\usr\x86_64-w64-wingw32\sys-root\mingw\bin*).
+
+*Примечание:* при использовании **gVm1** из Visual Studio вышеуказанные манипуляции с PATH проделывать необязательно.
+
 
 ## Сборка проекта
 
