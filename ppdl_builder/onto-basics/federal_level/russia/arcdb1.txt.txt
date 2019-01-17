@@ -1,0 +1,14 @@
+INST "2017",(64,
+int2 0b01,
+int3 0b001,
+int2 0b01,
+int5 0b00000,
+int3 0b000,
+int6 0b000000,
+int3 0b000,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}

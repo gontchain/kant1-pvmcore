@@ -1,0 +1,70 @@
+INST "uik-2914",(64,
+int2 0b01,
+int3 0b001,
+int2 0b01,
+int5 0b00001,
+int3 0b001,
+int6 0b000001,
+int3 0b001,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}
+INST "uik-2915",(64,
+int2 0b01,
+int3 0b001,
+int2 0b01,
+int5 0b00001,
+int3 0b001,
+int6 0b000001,
+int3 0b010,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}
+INST "uik-2916",(64,
+int2 0b01,
+int3 0b001,
+int2 0b01,
+int5 0b00001,
+int3 0b001,
+int6 0b000001,
+int3 0b011,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}
+INST "uik-2917",(64,
+int2 0b01,
+int3 0b001,
+int2 0b01,
+int5 0b00001,
+int3 0b001,
+int6 0b000001,
+int3 0b100,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}
+INST "uik-2918",(64,
+int2 0b01,
+int3 0b001,
+int2 0b01,
+int5 0b00001,
+int3 0b001,
+int6 0b000001,
+int3 0b101,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}

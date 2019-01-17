@@ -1,0 +1,25 @@
+﻿	w uik-2914;
+	wn 1
+	plevel 0
+	k 1
+;;
+	w uik-2915;
+	wn 2
+	plevel 0
+	k 1
+;;
+	w uik-2916;
+	wn 3
+	plevel 0
+	k 1
+;;
+	w uik-2917;
+	wn 4
+	plevel 0
+	k 1
+;;
+	w uik-2918;
+	wn 5
+	plevel 0
+	k 1
+;;

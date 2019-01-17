@@ -1,0 +1,10 @@
+﻿	w federal-level;
+	wn 1
+	plevel 0
+	k 1
+;;
+	w private-level;
+	wn 2
+	plevel 0
+	k 1
+;;

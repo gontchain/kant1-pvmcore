@@ -1,0 +1,28 @@
+INST "federal-level",(64,
+int2 0b01,
+int3 0b000,
+int2 0b00,
+int5 0b00000,
+int3 0b000,
+int6 0b000000,
+int3 0b000,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}
+INST "private-level",(64,
+int2 0b10,
+int3 0b000,
+int2 0b00,
+int5 0b00000,
+int3 0b000,
+int6 0b000000,
+int3 0b000,
+int6 0b000000,
+int34 0b0000000000000000000000000000000000
+)
+{
+// print instruction's functionalty here
+}
